@@ -466,7 +466,7 @@ WHERE a.geom &amp;&amp; b.geom
     the bounding box operators
     (of which the most commonly used is <xref linkend="geometry_overlaps" />;
     see <xref linkend="operators-bbox" /> for the full list)
-    and the distance operators used in nearest-neighbour queries
+    and the distance operators used in nearest-neighbor queries
     (the most common being <xref linkend="geometry_distance_knn" />;
     see <xref linkend="operators-distance" /> for the full list.)
     </para>
@@ -527,6 +527,10 @@ WHERE ST_DWithin( geom, 'SRID=312;POINT(100000 200000)', 100 )
     whose bounding boxes overlap the expanded extent
     and hence which <emphasis>might</emphasis> be within the required distance.
     The actual distance is then computed to confirm whether to include the record in the result set.
+    </para>
+
+    <para>For more information and examples see the
+        <ulink url="https://postgis.net/workshops/postgis-intro/indexing.html">PostGIS Workshop</ulink>.
     </para>
 
 	</sect1>

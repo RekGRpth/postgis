@@ -11,40 +11,61 @@
     <para>The Open Geospatial Consortium (OGC) developed the
     <ulink url="https://www.ogc.org/standards/sfa"><emphasis>Simple Features Access</emphasis></ulink>
     standard (SFA) to provide a model for geospatial data.
-    It defines the fundamental spatial data type of Geometry, with
-    a set of subtypes that represent various kinds and dimensions of geometric shapes.
-    The latest SFA version
-    <ulink url="https://portal.ogc.org/files/?artifact_id=25355"><emphasis>Simple Features Access - Part 1: Common architecture v1.2.1</emphasis></ulink>
-    adds subtypes for the more complex geometric objects PolyhedralSurfaces, Triangles and TINs.
+    It defines the fundamental spatial type of <emphasis role="bold">Geometry</emphasis>,
+    along with operations which manipulate and transform geometry values
+    to perform spatial analysis tasks.
+    PostGIS implements the OGC Geometry model as the PostgreSQL data types
+    <link linkend="PostGIS_Geometry">geometry</link> and
+    <link linkend="PostGIS_Geography">geography</link>.
+    </para>
+    <para>
+    Geometry is an <emphasis>abstract</emphasis> type.
+    Geometry values belong to one of its <emphasis>concrete</emphasis> subtypes
+    which represent various kinds and dimensions of geometric shapes.
+    These include the <emphasis role="bold">atomic</emphasis> types
+    <link linkend="Point">Point</link>,
+    <link linkend="LineString">LineString</link>,
+    <link linkend="LinearRing">LinearRing</link> and
+    <link linkend="Polygon">Polygon</link>,
+    and the <emphasis role="bold">collection</emphasis> types
+    <link linkend="MultiPoint">MultiPoint</link>,
+    <link linkend="MultiLineString">MultiLineString</link>,
+    <link linkend="MultiPolygon">MultiPolygon</link> and
+    <link linkend="GeometryCollection">GeometryCollection</link>.
+    The <ulink url="https://portal.ogc.org/files/?artifact_id=25355"><emphasis>Simple Features Access - Part 1: Common architecture v1.2.1</emphasis></ulink>
+    adds subtypes for the structures
+    <link linkend="PolyhedralSurface">PolyhedralSurface</link>,
+    <link linkend="Triangle">Triangle</link> and
+    <link linkend="TIN">TIN</link>.
     </para>
 
-    <para>The geometry types model shapes on the 2-dimensional Cartesian plane
-    constructed from points and line segments.
+    <para>Geometry models shapes in the 2-dimensional Cartesian plane.
+    The PolyhedralSurface, Triangle, and TIN types can also represent shapes in 3-dimensional space.
     The size and location of shapes are specified by their <emphasis role="bold">coordinates</emphasis>.
-    The points and line segments are defined by one or two coordinates in the plane.
-    Each coordinate has a X and Y value determining its location in the plane.
+    Each coordinate has a X and Y <emphasis role="bold">ordinate</emphasis> value determining its location in the plane.
+    Shapes are constructed from points or line segments, with points specified by a single coordinate,
+    and line segments by two coordinates.
     </para>
 
-    <para>Coordinates may also contain optional Z and M ordinate values.
-    The Z ordinate is usually used to represent elevation above the plane.
-    The M ordinate can be used to contain a measure value,
-    which may represent time or distance.
+    <para>Coordinates may contain optional Z and M ordinate values.
+    The Z ordinate is often used to represent elevation.
+    The M ordinate contains a measure value, which may represent time or distance.
     If Z or M values are present in a geometry value, they must be defined for each point in the geometry.
     If a geometry has Z or M ordinates the <emphasis role="bold">coordinate dimension</emphasis> is 3D;
     if it has both Z and M the coordinate dimension is 4D.
     </para>
 
-    <para>Each geometry value is associated with a
+    <para>Geometry values are associated with a
     <emphasis role="bold">spatial reference system</emphasis>
     indicating the coordinate system in which it is embedded.
-    See <xref linkend="spatial_ref_sys" />.
-    The spatial reference system is identifed by a SRID number.
+    The spatial reference system is identified by the geometry SRID number.
+    The units of the X and Y axes are determined by the spatial reference system.
     In <emphasis role="bold">planar</emphasis> reference systems the X and Y coordinates typically
     represent easting and northing,
     while in <emphasis role="bold">geodetic</emphasis> systems
     they represent longitude and latitude.
-    The units of the X and Y axes are determined by the reference system.
     SRID 0 represents an infinite Cartesian plane with no units assigned to its axes.
+    See <xref linkend="spatial_ref_sys" />.
     </para>
 
     <para>The geometry <emphasis role="bold">dimension</emphasis> is a property of geometry types.
@@ -58,37 +79,63 @@
     or no elements (for collections).
     </para>
 
+    <para>An important property of geometry values is their spatial
+    <emphasis role="bold">extent</emphasis> or <emphasis role="bold">bounding box</emphasis>,
+    which the OGC model calls <emphasis role="bold">envelope</emphasis>.
+    This is the 2 or 3-dimensional box which encloses the coordinates of a geometry.
+    It is an efficient way to represent a geometry's
+    extent in coordinate space and to check whether two geometries interact.
+   </para>
+
     <para>The geometry model allows evaluating topological spatial relationships as
     described in  <xref linkend="DE-9IM" />.
     To support this the concepts of
-    <emphasis role="bold">interior</emphasis>, <emphasis role="bold">boundary</emphasis>
-    and <emphasis role="bold">exterior</emphasis>
+    <emphasis role="bold">interior</emphasis>,
+    <emphasis role="bold">boundary</emphasis> and
+    <emphasis role="bold">exterior</emphasis>
     are defined for each geometry type.
+    Geometries are topologically closed, so they always contain their boundary.
+    The boundary is a geometry of dimension one less than that of the geometry itself.
+    </para>
+
+    <para>The OGC geometry model defines validity rules for each geometry type.
+    These rules ensure that geometry values represents realistic
+    situations (e.g. it is possible to specify a polygon
+    with a hole lying outside the shell, but this makes no sense geometrically
+    and is thus invalid).
+    PostGIS also allows storing and manipulating invalid geometry values.
+    This allows detecting and fixing them if needed.
+    See <xref linkend="OGC_Validity" />
     </para>
 
     <sect3 id="Point">
         <title>Point</title>
         <para>A Point is a 0-dimensional geometry that represents a single location in coordinate space.</para>
-        <programlisting>POINT (1 2)</programlisting>
+<programlisting>POINT (1 2)
+POINT Z (1 2 3)
+POINT ZM (1 2 3 4)
+</programlisting>
     </sect3>
 
     <sect3 id="LineString">
         <title>LineString</title>
-        <para>A LineString is a 1-dimensional line formed by a contigous sequence of line segments.
+        <para>A LineString is a 1-dimensional line formed by a contiguous sequence of line segments.
         Each line segment is defined by two points, with the end point of one segment
         forming the start point of the next segment.
-        A LineString must have at least two points.
+        An OGC-valid LineString has either zero or two or more points,
+        but PostGIS also allows single-point LineStrings.
         LineStrings may cross themselves (self-intersect).
-        A LineString is closed if the start and end points are the same.
+        A LineString is <emphasis role="bold">closed</emphasis> if the start and end points are the same.
+        A LineString is <emphasis role="bold">simple</emphasis> if it does not self-intersect.
         </para>
-        <programlisting>LINESTRING (1 2, 3 4)</programlisting>
+        <programlisting>LINESTRING (1 2, 3 4, 5 6)</programlisting>
     </sect3>
 
     <sect3 id="LinearRing">
         <title>LinearRing</title>
-        <para>A LinearRing is a LineString which is closed
-        and simple (non-intersecting).</para>
-        <programlisting>LINEARRING (0 0 0,4 0 0,4 4 0,0 4 0,0 0 0)</programlisting>
+        <para>A LinearRing is a LineString which is both closed and simple.
+        The first and last points must be equal, and the line must not self-intersect.</para>
+        <programlisting>LINEARRING (0 0 0, 4 0 0, 4 4 0, 0 4 0, 0 0 0)</programlisting>
     </sect3>
 
     <sect3 id="Polygon">
@@ -96,7 +143,7 @@
         <para>A Polygon is a 2-dimensional planar region,
         delimited by an exterior boundary (the shell)
         and zero or more interior boundaries (holes).
-        The boundaries are formed by LinearRings.
+        Each boundary is a <link linkend="LinearRing">LinearRing</link>.
         </para>
         <programlisting>POLYGON ((0 0 0,4 0 0,4 4 0,0 4 0,0 0 0),(1 1 0,2 1 0,2 2 0,1 2 0,1 1 0))</programlisting>
     </sect3>
@@ -110,7 +157,7 @@
     <sect3 id="MultiLineString">
         <title>MultiLineString</title>
         <para>A MultiLineString is a collection of LineStrings.
-        A MultiLineString is closed if each of its element is closed.
+        A MultiLineString is closed if each of its elements is closed.
         </para>
         <programlisting>MULTILINESTRING ( (0 0,1 1,1 2), (2 3,3 2,5 4) )</programlisting>
     </sect3>
@@ -118,15 +165,15 @@
     <sect3 id="MultiPolygon">
         <title>MultiPolygon</title>
         <para>A MultiPolygon is a collection of non-overlapping, non-adjacent Polygons.
-        Polygons in the collection may touch in only a finite number of points.
+        Polygons in the collection may touch only at a finite number of points.
         </para>
         <programlisting>MULTIPOLYGON (((1 5, 5 5, 5 1, 1 1, 1 5)), ((6 5, 9 1, 6 1, 6 5)))</programlisting>
     </sect3>
 
     <sect3 id="GeometryCollection">
         <title>GeometryCollection</title>
-        <para>A GeometryCollection is a heterogenous (mixed) collection of geometries.</para>
-        <programlisting>GEOMETRYCOLLECTION ( POINT(2 3), LINESTRING(2 3,3 4))</programlisting>
+        <para>A GeometryCollection is a heterogeneous (mixed) collection of geometries.</para>
+        <programlisting>GEOMETRYCOLLECTION ( POINT(2 3), LINESTRING(2 3, 3 4))</programlisting>
     </sect3>
 
     <sect3 id="PolyhedralSurface">
@@ -134,7 +181,7 @@
         <para>A PolyhedralSurface is a contiguous collection of patches or facets which share some edges.
         Each patch is a planar Polygon.
         If the Polygon coordinates have Z ordinates then the surface is 3-dimensional.</para>
-        <programlisting>POLYHEDRALSURFACE (
+        <programlisting>POLYHEDRALSURFACE Z (
   ((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),
   ((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)),
   ((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),
@@ -145,15 +192,20 @@
 
     <sect3 id="Triangle">
         <title>Triangle</title>
-        <para>A Triangle is a polygon defined by 3 distinct non-collinear points.</para>
+        <para>A Triangle is a polygon defined by three distinct non-collinear vertices.
+            Because a Triangle is a polygon it is specified by four coordinates,
+            with the first and fourth being equal.
+        </para>
         <programlisting>TRIANGLE ((0 0, 0 9, 9 0, 0 0))</programlisting>
     </sect3>
 
-    <sect3 id="Tin">
-        <title>Tin</title>
-        <para>A Tin is a collection of non-overlapping Triangles
-        representing a triangulated irregular network.</para>
-        <programlisting>TIN( ((0 0 0, 0 0 1, 0 1 0, 0 0 0)), ((0 0 0, 0 1 0, 1 1 0, 0 0 0)) )</programlisting>
+    <sect3 id="TIN">
+        <title>TIN</title>
+        <para>A TIN is a collection of non-overlapping
+            <link linkend="Triangle">Triangle</link>s representing a
+            <ulink url="https://en.wikipedia.org/wiki/Triangulated_irregular_network">Triangulated Irregular Network</ulink>.
+        </para>
+        <programlisting>TIN Z ( ((0 0 0, 0 0 1, 0 1 0, 0 0 0)), ((0 0 0, 0 1 0, 1 1 0, 0 0 0)) )</programlisting>
     </sect3>
 
 
@@ -166,7 +218,7 @@
       <ulink url="https://www.iso.org/obp/ui/#iso:std:iso-iec:13249:-3:ed-5:v1:en"><emphasis>ISO/IEC 13249-3 SQL Multimedia - Spatial</emphasis></ulink>
       standard (SQL/MM) extends the
 	  OGC SFA to define Geometry subtypes containing curves with circular arcs.
-      The SQL/MM types supprt 3DM, 3DZ and 4D coordinates.
+      The SQL/MM types support 3DM, 3DZ and 4D coordinates.
 	  </para>
 	  <note>
 		<para>All floating point comparisons within the SQL-MM implementation
@@ -177,14 +229,15 @@
         <title>CircularString</title>
 
         <para>CircularString is the basic curve type, similar to a
-        LineString in the linear world.  A single arc segment requires three
+        LineString in the linear world.  A single arc segment is specified by three
         points: the start and end points (first and third) and some other
-        point on the arc.  The exception to this is for a closed circle,
-        where the start and end points are the same.  In this case the
-        second point MUST be the center of the arc, ie the opposite side of
-        the circle.  To chain arcs together, the last point of the previous
-        arc is the first point of the next arc, just like in a
-        LineString.  This means that a valid circular string must have an
+        point on the arc.
+        To specify a closed circle the start and end points are the same
+        and the middle point is the opposite point on the circle diameter
+        (which is the center of the arc).
+        In a sequence of arcs the end point of the previous
+        arc is the start point of the next arc, just like the segments of a LineString.
+        This means that a CircularString must have an
         odd number of points greater than 1.</para>
 
 		<programlisting>CIRCULARSTRING(0 0, 1 1, 1 0)
@@ -247,7 +300,7 @@ CIRCULARSTRING(0 0, 4 0, 4 4, 0 4, 0 0)</programlisting>
 	<sect2 id="OpenGISWKBWKT">
 	  <title>WKT and WKB</title>
 
-	  <para>The OGC SFA specification defines two standard formats for representing
+	  <para>The OGC SFA specification defines two formats for representing
 	  geometry values for external use: Well-Known Text (WKT) and Well-Known
 	  Binary (WKB). Both WKT and WKB include information about the type
 	  of the object and the coordinates which define it.</para>
@@ -325,7 +378,7 @@ geometry = ST_GeomFromText(text WKT, SRID);</programlisting>
 	  <programlisting>INSERT INTO geotable ( geom, name )
   VALUES ( ST_GeomFromText('POINT(-126.4 45.32)', 312), 'A Place');</programlisting>
 
-    <para>Well-Known Binary (WKB) provides a portable, faithful representation
+    <para>Well-Known Binary (WKB) provides a portable, full-precision representation
       of spatial data as binary data (arrays of bytes).
       Examples of the WKB representations of spatial objects are:</para>
 
@@ -403,7 +456,7 @@ geometry = ST_GeomFromWKB(bytea WKB, SRID);
 		<para>OGC SFA specifications initially supported only 2D geometries,
 		and the geometry SRID is not included in the input/output representations.
         The OGC SFA specification 1.2.1 (which aligns with the ISO 19125 standard)
-        adds support for 3D (ZYZ and XYM) and 4D (XYZM) coordinates,
+        adds support for 3D (ZYZ) and measured (XYM and XYZM) coordinates,
 		but still does not include the SRID value.</para>
 
 		<para>Because of these limitations PostGIS defined extended EWKB and EWKT formats.
@@ -557,47 +610,93 @@ geometry = ST_GeomFromEWKT(text EWKT);</programlisting>
 
 	  <para>The PostGIS <varname>geography</varname> data type provides native support for spatial features represented on "geographic" coordinates (sometimes called "geodetic" coordinates, or "lat/lon", or "lon/lat"). Geographic coordinates are spherical coordinates expressed in angular units (degrees). </para>
 
-	  <para>The basis for the PostGIS geometry data type is a plane. The shortest path between two points on the plane is a straight line. That means calculations on geometries (areas, distances, lengths, intersections, etc) can be calculated using cartesian mathematics and straight line vectors.</para>
+	  <para>The basis for the PostGIS geometry data type is a plane.
+      The shortest path between two points on the plane is a straight line.
+      That means functions on geometries (areas, distances, lengths, intersections, etc)
+      are calculated using straight line vectors and cartesian mathematics.
+      This makes them simpler to implement and faster to execute,
+      but also makes them inaccurate for data on the spheroidal surface of the earth.
+      </para>
 
-	  <para>The basis for the PostGIS geographic data type is a sphere. The shortest path between two points on the sphere is a great circle arc. That means that calculations on geographies (areas, distances, lengths, intersections, etc) must be calculated on the sphere, using more complicated mathematics. For more accurate measurements, the calculations must take the actual spheroidal shape of the world into account.</para>
+	  <para>The PostGIS geography data type is based on a spherical model.
+      The shortest path between two points on the sphere is a great circle arc.
+      Functions on geographies (areas, distances, lengths, intersections, etc) are calculated using arcs on the sphere.
+      By taking the spheroidal shape of the world into account, the functions provide more accurate results.</para>
 
-	  <para>Because the underlying mathematics is much more complicated, there are fewer functions defined for the geography type than for the geometry type. Over time, as new algorithms are added, the capabilities of the geography type will expand.</para>
+	  <para>Because the underlying mathematics is more complicated, there are fewer functions defined for the geography type than for the geometry type.
+      Over time, as new algorithms are added the capabilities of the geography type will expand.
+      As a workaround one can convert back and forth between geometry and geography types.</para>
 
-		<para>It uses a data type called <varname>geography</varname>. None of the GEOS functions support the <varname>geography</varname>
-	  type. As a workaround one can convert back and forth between geometry and geography types.</para>
+	  <para>Like the geometry data type, geography data is associated
+      with a spatial reference system via a spatial reference system identifier (SRID).
+        Any geodetic (long/lat based) spatial reference system defined in the <varname>spatial_ref_sys</varname> table can be used.
+        (Prior to PostGIS 2.2, the geography type supported only WGS 84 geodetic (SRID:4326)).
+		You can add your own custom geodetic spatial reference system as described in <xref linkend="user-spatial-ref-sys" />.</para>
 
-	  <para>Prior to PostGIS 2.2, the geography type only supported WGS 84 long lat (SRID:4326).
-		For PostGIS 2.2 and above, any long/lat based spatial reference system defined in the <varname>spatial_ref_sys</varname> table can be used.
-		You can even add your own custom spheroidal spatial reference system as described in <ulink url="http://www.bostongis.com/blog/index.php?/archives/266-geography-type-is-not-limited-to-earth.html">geography type is not limited to earth</ulink>.</para>
+	  <para>For all spatial reference systems the units returned by measurement functions
+      (e.g. <xref linkend="ST_Distance" />, <xref linkend="ST_Length" />, <xref linkend="ST_Perimeter" />, <xref linkend="ST_Area" />)
+      and for the distance argument of <xref linkend="ST_DWithin" /> are in meters.</para>
 
-		<para>Regardless which spatial reference system you use, the units returned by the measurement (<xref linkend="ST_Distance" />, <xref linkend="ST_Length" />, <xref linkend="ST_Perimeter" />, <xref linkend="ST_Area" />) and for input of <xref linkend="ST_DWithin" /> are in meters.</para>
+	<sect2 id="Create_Geography_Tables">
+		<title>Creating Geography Tables</title>
 
-	  <para>The geography type uses the PostgreSQL typmod definition format so that a table with a geography field
-			can be added in a single step.  All the standard OGC formats except for curves are supported.</para>
+		<para>You can create a table to store geography data using the
+        <ulink url="https://www.postgresql.org/docs/current/sql-createtable.html">CREATE TABLE</ulink>
+        SQL statement with a column of type <varname>geography</varname>.
+        The following example creates a table with a geography column storing 2D LineStrings
+        in the WGS84 geodetic coordinate system (SRID 4326):</para>
 
-	<sect2 id="Geography_Basics">
-		<title>Geography Basics</title>
-		<para>The geography type does not support curves, TINS, or POLYHEDRALSURFACEs, but other geometry types are supported. Standard geometry type data will autocast to geography if it is of SRID 4326.  You can also use the EWKT and EWKB
-			conventions to insert data.</para>
+<programlisting>CREATE TABLE global_points (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(64),
+    location geography(POINT,4326)
+  );</programlisting>
 
+		<para>The geography type supports two optional type modifiers:</para>
+
+        <itemizedlist>
+		<listitem>
+        <para>the spatial type modifier restricts the kind of shapes and dimensions allowed in the column.
+		Values allowed for the spatial type are: POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, GEOMETRYCOLLECTION.
+        The geography type does not support curves, TINS, or POLYHEDRALSURFACEs.
+        The modifier supports coordinate dimensionality restrictions by adding suffixes: Z, M and ZM.
+        For example, a modifier of 'LINESTRINGM' only allows linestrings with three dimensions, and treats the third dimension as a measure.
+		Similarly, 'POINTZM' requires four dimensional (XYZM) data.
+        </para>
+		</listitem>
+		<listitem>
+        <para>the SRID modifier restricts the spatial reference system SRID to a particular number.
+        If omitted, the SRID defaults to 4326 (WGS84 geodetic), and all calculations are performed using WGS84.
+        </para>
+		</listitem>
+		</itemizedlist>
+
+		<para></para>
+
+        <para>Examples of creating tables with geography columns:</para>
 		<itemizedlist>
 		<listitem>
-		  <para>POINT: Creating a table with 2D point geography when srid is not specified defaults to 4326 WGS 84 long lat:</para>
+		  <para>Create a table with 2D POINT geography with the default SRID 4326 (WGS84 long/lat):</para>
 		  <para><programlisting>CREATE TABLE ptgeogwgs(gid serial PRIMARY KEY, geog geography(POINT) );</programlisting></para>
-		  <para>POINT: Creating a table with 2D point geography in NAD83 longlat:</para>
+		</listitem>
+		<listitem>
+		  <para>Create a table with 2D POINT geography in NAD83 longlat:</para>
 		  <para><programlisting>CREATE TABLE ptgeognad83(gid serial PRIMARY KEY, geog geography(POINT,4269) );</programlisting></para>
-		  <para>Creating a table with z coordinate point and explicitly specifying srid</para>
+		</listitem>
+		<listitem>
+		  <para>Create a table with 3D (XYZ) POINTs and an explicit SRID of 4326:</para>
 		  <para><programlisting>CREATE TABLE ptzgeogwgs84(gid serial PRIMARY KEY, geog geography(POINTZ,4326) );</programlisting></para>
 		</listitem>
 		<listitem>
-			<para>LINESTRING</para>
+			<para>Create a table with 2D LINESTRING geography with the default SRID 4326:</para>
 			<para><programlisting>CREATE TABLE lgeog(gid serial PRIMARY KEY, geog geography(LINESTRING) );</programlisting></para>
 		</listitem>
 		<listitem>
-			<para>POLYGON</para>
-			<para><programlisting>--polygon NAD 1927 long lat
-CREATE TABLE lgeognad27(gid serial PRIMARY KEY, geog geography(POLYGON,4267) );</programlisting></para>
+			<para>Create a table with 2D POLYGON geography with the SRID 4267 (NAD 1927 long lat):</para>
+			<para><programlisting>CREATE TABLE lgeognad27(gid serial PRIMARY KEY, geog geography(POLYGON,4267) );</programlisting></para>
 		</listitem>
+		<!-- TODO: Add other examples -->
+        <!--
 		<listitem>
 			<para>MULTIPOINT</para>
 		</listitem>
@@ -610,89 +709,98 @@ CREATE TABLE lgeognad27(gid serial PRIMARY KEY, geog geography(POLYGON,4267) );<
 		<listitem>
 			<para>GEOMETRYCOLLECTION</para>
 		</listitem>
-		<!-- TODO: Add other examples -->
+        -->
 		</itemizedlist>
-		<para>The geography fields get registered in the <varname>geography_columns</varname> system view.</para>
+		<para>Geography fields are registered in the <varname>geography_columns</varname> system view.
+		You can query the <varname>geography_columns</varname> view and see that the table is listed:</para>
 
-		<para>Now, check the "geography_columns" view and see that your table is listed.</para>
+<programlisting>
+SELECT * FROM geography_columns;</programlisting>
 
-		<para>You can create a new table with a GEOGRAPHY column using the CREATE TABLE syntax.</para>
-
-		<para>
-<programlisting>CREATE TABLE global_points (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(64),
-    location GEOGRAPHY(POINT,4326)
-  );</programlisting>
-		</para>
-
-		<para>Note that the location column has type GEOGRAPHY and that geography type supports two optional modifiers: a type modifier that restricts the kind of shapes and dimensions allowed in the column; an SRID modifier that restricts the coordinate reference identifier to a particular number.</para>
-		<para>Allowable values for the type modifier are: POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON. The modifier also supports dimensionality restrictions through suffixes: Z, M and ZM. So, for example a modifier of 'LINESTRINGM' would only allow line strings with three dimensions in, and would treat the third dimension as a measure.
-		Similarly, 'POINTZM' would expect four dimensional data.</para>
-		<para>If you do not specify an SRID, the SRID will default to 4326 WGS 84 long/lat will be used, and all calculations will proceed using WGS84.</para>
-		<para>Once you have created your table, you can see it in the GEOGRAPHY_COLUMNS table:</para>
-		<para><programlisting>
--- See the contents of the metadata view
-SELECT * FROM geography_columns;</programlisting></para>
-
-<para>You can insert data into the table the same as you would if it was using a GEOMETRY column:</para>
-
-<para><programlisting>-- Add some data into the test table
-INSERT INTO global_points (name, location) VALUES ('Town', 'SRID=4326;POINT(-110 30)');
-INSERT INTO global_points (name, location) VALUES ('Forest', 'SRID=4326;POINT(-109 29)');
-INSERT INTO global_points (name, location) VALUES ('London', 'SRID=4326;POINT(0 49)');</programlisting></para>
-
-<para>Creating an index works the same as GEOMETRY.
+<para>Creating a spatial index works the same as for geometry columns.
 	PostGIS will note that the column type is GEOGRAPHY and create an appropriate sphere-based index instead of the usual planar index used for GEOMETRY.</para>
 
-<para><programlisting>-- Index the test table with a spherical index
-  CREATE INDEX global_points_gix ON global_points USING GIST ( location );</programlisting>
+<programlisting>-- Index the test table with a spherical index
+CREATE INDEX global_points_gix ON global_points USING GIST ( location );</programlisting>
+
+	</sect2>
+
+<sect2 id="Use_Geography_Tables">
+	<title>Using Geography Tables</title>
+
+<para>You can insert data into geography tables in the same way as geometry.
+Geometry data will autocast to the geography type if it has SRID 4326.
+The <link linkend="EWKB_EWKT">EWKT and EWKB</link> formats can also be used
+to specify geography values.</para>
+
+<programlisting>-- Add some data into the test table
+INSERT INTO global_points (name, location) VALUES ('Town', 'SRID=4326;POINT(-110 30)');
+INSERT INTO global_points (name, location) VALUES ('Forest', 'SRID=4326;POINT(-109 29)');
+INSERT INTO global_points (name, location) VALUES ('London', 'SRID=4326;POINT(0 49)');
+</programlisting>
+
+<para>Any geodetic (long/lat) spatial reference system listed in
+<varname>spatial_ref_sys</varname> table may be specified as a geography SRID.
+Non-geodetic coordinate systems raise an error if used.
 </para>
 
-<para>Query and measurement functions use units of meters. So distance parameters should be expressed in meters, and return values should be expected in meters (or square meters for areas).</para>
-
-<para><programlisting>-- Show a distance query and note, London is outside the 1000km tolerance
-  SELECT name FROM global_points WHERE ST_DWithin(location, 'SRID=4326;POINT(-110 29)'::geography, 1000000);</programlisting>
-</para>
-
-<para>You can see the power of GEOGRAPHY in action by calculating how close a plane flying from Seattle to London (LINESTRING(-122.33 47.606, 0.0 51.5)) comes to Reykjavik (POINT(-21.96 64.15)).</para>
-
-<para><programlisting>-- Distance calculation using GEOGRAPHY (122.2km)
-  SELECT ST_Distance('LINESTRING(-122.33 47.606, 0.0 51.5)'::geography, 'POINT(-21.96 64.15)'::geography);</programlisting>
-</para>
-
-<para><programlisting>-- Distance calculation using GEOMETRY (13.3 "degrees")
-  SELECT ST_Distance('LINESTRING(-122.33 47.606, 0.0 51.5)'::geometry, 'POINT(-21.96 64.15)'::geometry);</programlisting>
-</para>
-
-<para>Testing different lon/lat projects.
-Any long lat spatial reference system listed in <varname>spatial_ref_sys</varname> table is allowed.</para>
-<para>	<programlisting>-- NAD 83 lon/lat
+<programlisting>-- NAD 83 lon/lat
 SELECT 'SRID=4269;POINT(-123 34)'::geography;
                     geography
 ----------------------------------------------------
  0101000020AD1000000000000000C05EC00000000000004140
-(1 row)</programlisting>
+</programlisting>
 
 <programlisting>-- NAD27 lon/lat
 SELECT 'SRID=4267;POINT(-123 34)'::geography;
-
                     geography
 ----------------------------------------------------
  0101000020AB1000000000000000C05EC00000000000004140
-(1 row)</programlisting>
+</programlisting>
 
-<programlisting>-- NAD83 UTM zone meters, yields error since its a meter based projection
+<programlisting>-- NAD83 UTM zone meters - gives an error since it is a meter-based planar projection
 SELECT 'SRID=26910;POINT(-123 34)'::geography;
 
 ERROR:  Only lon/lat coordinate systems are supported in geography.
-LINE 1: SELECT 'SRID=26910;POINT(-123 34)'::geography;</programlisting></para>
+</programlisting>
 
-<para>The GEOGRAPHY type calculates the true shortest distance over the sphere between Reykjavik and the great circle flight path between Seattle and London.</para>
+<para>Query and measurement functions use units of meters. So distance parameters should be expressed in meters, and return values should be expected in meters (or square meters for areas).</para>
 
-<para> <ulink url="http://gc.kls2.com/cgi-bin/gc?PATH=SEA-LHR">Great Circle mapper</ulink>
-The GEOMETRY type calculates a meaningless cartesian distance between Reykjavik and the straight line path from Seattle to London plotted on a flat map of the world. The nominal units of the result might be called "degrees", but the result doesn't correspond to any true angular difference between the points, so even calling them "degrees" is inaccurate.</para>
+<programlisting>-- A distance query using a 1000km tolerance
+SELECT name FROM global_points WHERE ST_DWithin(location, 'SRID=4326;POINT(-110 29)'::geography, 1000000);</programlisting>
+
+
+<para>You can see the power of geography in action by calculating how close a plane flying
+a great circle route from Seattle to London (LINESTRING(-122.33 47.606, 0.0 51.5))
+comes to Reykjavik (POINT(-21.96 64.15))
+(<ulink url="http://gc.kls2.com/cgi-bin/gc?PATH=SEA-LHR">map the route</ulink>).
+</para>
+
+<para>The geography type calculates the true shortest distance of 122.235 km over the sphere
+between Reykjavik and the great circle flight path between Seattle and London.</para>
+
+<programlisting>-- Distance calculation using GEOGRAPHY
+SELECT ST_Distance('LINESTRING(-122.33 47.606, 0.0 51.5)'::geography, 'POINT(-21.96 64.15)'::geography);
+   st_distance
+-----------------
+ 122235.23815667</programlisting>
+
+<para>
+The geometry type calculates a meaningless cartesian distance between Reykjavik
+and the straight line path from Seattle to London plotted on a flat map of the world.
+The nominal units of the result is "degrees",
+but the result doesn't correspond to any true angular difference between the points,
+so even calling them "degrees" is inaccurate.</para>
+
+<programlisting>-- Distance calculation using GEOMETRY
+SELECT ST_Distance('LINESTRING(-122.33 47.606, 0.0 51.5)'::geometry, 'POINT(-21.96 64.15)'::geometry);
+      st_distance
+--------------------
+ 13.342271221453624
+</programlisting>
+
 	</sect2>
+
 	<sect2 id="PostGIS_GeographyVSGeometry">
 	  <title>When to use the Geography data type</title>
 	  <para>The geography data type allows you to store data in longitude/latitude coordinates, but at a cost: there are fewer functions defined on GEOGRAPHY than there are on GEOMETRY; those functions that are defined take more CPU time to execute.</para>
@@ -705,8 +813,8 @@ The GEOMETRY type calculates a meaningless cartesian distance between Reykjavik 
 		Simply load your data up as longitude/latitude and go from there.</para></listitem>
 	</itemizedlist>
 	<para>Refer to <xref linkend="PostGIS_TypeFunctionMatrix" /> for compare between
-			what is supported for Geography vs. Geometry.  For a brief listing and description of Geography functions, refer to
-				<xref linkend="PostGIS_GeographyFunctions" />
+		what is supported for Geography vs. Geometry.  For a brief listing and description of Geography functions, refer to
+		<xref linkend="PostGIS_GeographyFunctions" />
 		</para>
 	</sect2>
 	<sect2 id="PostGIS_Geography_AdvancedFAQ">
@@ -773,25 +881,83 @@ The GEOMETRY type calculates a meaningless cartesian distance between Reykjavik 
 	<sect2 id="Create_Spatial_Table">
 	  <title>Creating a Spatial Table</title>
 
-	  <para>Creating a table with spatial data, can be done in one step. As shown in the following example
-	  which creates a roads table with a 2D linestring geometry column in WGS84 long lat</para>
-	  <programlisting>CREATE TABLE ROADS (ID serial, ROAD_NAME text, geom geometry(LINESTRING,4326) );</programlisting>
+		<para>You can create a table to store geometry data using the
+        <ulink url="https://www.postgresql.org/docs/current/sql-createtable.html">CREATE TABLE</ulink>
+        SQL statement with a column of type <varname>geometry</varname>.
+        The following example creates a table with a geometry column storing 2D (XY) LineStrings
+        in the BC-Albers coordinate system (SRID 3005):</para>
 
-	  <para>We can add additional columns using standard ALTER TABLE command as we do in this next example where we add a 3-D linestring.</para>
+<programlisting>CREATE TABLE roads (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(64),
+    geom geometry(LINESTRING,3005)
+  );</programlisting>
+
+		<para>The <varname>geometry</varname> type supports two optional <emphasis role="bold">type modifiers</emphasis>:</para>
+
+        <itemizedlist>
+		<listitem>
+        <para>the <emphasis role="bold">spatial type modifier</emphasis>
+        restricts the kind of shapes and dimensions allowed in the column.
+		The value can be any of the supported
+        <link linkend="RefObject">geometry subtypes</link>
+        (e.g. POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, GEOMETRYCOLLECTION, etc).
+        The modifier supports coordinate dimensionality restrictions by adding suffixes: Z, M and ZM.
+        For example, a modifier of 'LINESTRINGM' allows only linestrings with three dimensions, and treats the third dimension as a measure.
+		Similarly, 'POINTZM' requires four dimensional (XYZM) data.
+        </para>
+		</listitem>
+		<listitem>
+        <para>the <emphasis role="bold">SRID modifier</emphasis> restricts the
+        <link linkend="spatial_ref_sys">spatial reference system</link> SRID to a particular number.
+        If omitted, the SRID defaults to 0.
+        </para>
+		</listitem>
+		</itemizedlist>
+
+		<para></para>
+
+        <para>Examples of creating tables with geometry columns:</para>
+		<itemizedlist>
+		<listitem>
+		  <para>Create a table holding any kind of geometry with the default SRID:</para>
+		  <para><programlisting>CREATE TABLE geoms(gid serial PRIMARY KEY, geom geometry );</programlisting></para>
+		</listitem>
+		<listitem>
+		  <para>Create a table with 2D POINT geometry with the default SRID:</para>
+		  <para><programlisting>CREATE TABLE pts(gid serial PRIMARY KEY, geom geometry(POINT) );</programlisting></para>
+		</listitem>
+		<listitem>
+		  <para>Create a table with 3D (XYZ) POINTs and an explicit SRID of 3005:</para>
+		  <para><programlisting>CREATE TABLE pts(gid serial PRIMARY KEY, geom geometry(POINTZ,3005) );</programlisting></para>
+		</listitem>
+		<listitem>
+			<para>Create a table with 4D (XYZM) LINESTRING geometry with the default SRID:</para>
+			<para><programlisting>CREATE TABLE lines(gid serial PRIMARY KEY, geom geometry(LINESTRINGZM) );</programlisting></para>
+		</listitem>
+		<listitem>
+			<para>Create a table with 2D POLYGON geometry with the SRID 4267 (NAD 1927 long lat):</para>
+			<para><programlisting>CREATE TABLE polys(gid serial PRIMARY KEY, geom geometry(POLYGON,4267) );</programlisting></para>
+		</listitem>
+		</itemizedlist>
+
+	  <para>It is possible to have more than one geometry column in a table.
+        This can be specified when the table is created, or a column can be added using the
+        <ulink url="https://www.postgresql.org/docs/current/sql-altertable.html">ALTER TABLE</ulink>
+        SQL statement.
+        This example adds a column that can hold 3D LineStrings:</para>
+
 	  <programlisting>ALTER TABLE roads ADD COLUMN geom2 geometry(LINESTRINGZ,4326);</programlisting>
 	</sect2>
 
 	<sect2 id="geometry_columns">
 	  <title>GEOMETRY_COLUMNS View</title>
 
-        <para>The OpenGIS "Simple Features Specification for SQL" defines
-        the <varname>GEOMETRY_COLUMNS</varname> metadata table to describe geometry table structure.
-        In order to ensure that metadata remains consistent,
-        operations such as creating and removing a spatial column are carried out
-        through special procedures defined by OpenGIS.</para>
-
-	  <para>In PostGIS <varname>geometry_columns</varname> is a view reading from database system catalog tables.
-	  Its structure is:</para>
+      <para>The OGC <emphasis>Simple Features Specification for SQL</emphasis> defines
+      the <varname>GEOMETRY_COLUMNS</varname> metadata table to describe geometry table structure.
+      In PostGIS <varname>geometry_columns</varname> is a view reading from database system catalog tables.
+      This ensures that the spatial metadata information is always consistent with the currently defined tables and views.
+	  The view structure is:</para>
 
 	  <programlisting>\d geometry_columns</programlisting>
 <screen>             View "public.geometry_columns"
@@ -813,9 +979,8 @@ The GEOMETRY type calculates a meaningless cartesian distance between Reykjavik 
 
 		  <listitem>
 			<para>The fully qualified name of the feature table containing the
-			geometry column. Note that the terms "catalog" and "schema" are
-			Oracle-ish. There is no PostgreSQL analogue of "catalog" so that
-			column is left blank . For "schema" the PostgreSQL schema name is
+			geometry column. There is no PostgreSQL analogue of "catalog" so that
+			column is left blank. For "schema" the PostgreSQL schema name is
 			used (<varname>public</varname> is the default).</para>
 		  </listitem>
 		</varlistentry>
@@ -832,8 +997,7 @@ The GEOMETRY type calculates a meaningless cartesian distance between Reykjavik 
 		  <term>coord_dimension</term>
 
 		  <listitem>
-			<para>The spatial dimension (2, 3 or 4 dimensional) of the
-			column.</para>
+			<para>The coordinate dimension (2, 3 or 4) of the column.</para>
 		  </listitem>
 		</varlistentry>
 
@@ -859,12 +1023,6 @@ The GEOMETRY type calculates a meaningless cartesian distance between Reykjavik 
 			MULTIPOINTM, MULTILINESTRINGM, MULTIPOLYGONM, GEOMETRYCOLLECTIONM.
 			For heterogeneous (mixed-type) collections, you can use "GEOMETRY"
 			as the type.</para>
-
-			<note>
-			  <para>This attribute is (probably) not part of the OpenGIS
-			  specification, but is required for ensuring type
-			  homogeneity.</para>
-			</note>
 		  </listitem>
 		</varlistentry>
 	  </variablelist>
@@ -1487,7 +1645,7 @@ gisdb=# SELECT
 
 	  <programlisting>ALTER TABLE mytable
   ADD CONSTRAINT geometry_valid_check
-	CHECK (ST_IsValid(the_geom));</programlisting>
+	CHECK (ST_IsValid(geom));</programlisting>
 
 	  <para>If you encounter any strange error messages such as "GEOS
 	  Intersection() threw an error!" when calling PostGIS functions with valid
@@ -1497,12 +1655,9 @@ gisdb=# SELECT
 		valid input.</para>
 
 	  <note>
-		<para>Strictly compliant OGC geometries cannot have Z or M values. The
-		<link linkend="ST_IsValid">ST_IsValid()</link> function won't consider
-		higher dimensioned geometries invalid! Invocations of <link
-		linkend="AddGeometryColumn">AddGeometryColumn()</link> will add a
-		constraint checking geometry dimensions, so it is enough to specify 2
-		there.</para>
+		<para>The <link linkend="ST_IsValid">ST_IsValid()</link>
+        function does not check the Z and M dimensions.
+        </para>
 	  </note>
 </sect1>
 
@@ -1795,7 +1950,7 @@ AVERYLONGCOLUMNNAME DBFFIELD2</programlisting>
       <listitem>
         <para>
           When used, this flag will prevent the generation of <code>ANALYZE</code> statements.
-          Without the -Z flag (default behaviour), the <code>ANALYZE</code> statements will
+          Without the -Z flag (default behavior), the <code>ANALYZE</code> statements will
           be generated.
         </para>
       </listitem>
@@ -2012,21 +2167,19 @@ WHERE
   </sect1>
 
   <sect1 id="build-indexes">
-	<title>Building Spatial Indexes</title>
+	<title>Spatial Indexes</title>
 
-	<para>Indexes make using a spatial database for large data sets
-	possible. Without indexing, a search for features would require a
+	<para>Spatial indexes make using a spatial database for large data sets
+	possible. Without indexing, a search for features requires a
 	sequential scan of every record in the database. Indexing speeds up
 	searching by organizing the data into a structure which can be quickly
-	traversed to find records.
+	traversed to find matching records.
     </para>
     <para>The B-tree index method commonly used for attribute data
     is not very useful for spatial data, since it only supports storing and querying
     data in a single dimension.
-    Data such as geometry which has 2 or more dimensions)
+    Data such as geometry (which has 2 or more dimensions)
     requires an index method that supports range query across all the data dimensions.
-    (That said, it is possible to effectively index so-called XY (point) data using a B-tree
-    and explict range searches.)
     One of the key advantages of PostgreSQL for spatial data handling is that it offers several kinds of
 	index methods which work well for multi-dimensional data: GiST, BRIN and SP-GiST indexes.</para>
 
@@ -2059,8 +2212,16 @@ WHERE
 	  </listitem>
 	</itemizedlist>
 
-    <para>For more information see the
-    <ulink url="https://postgis.net/workshops/postgis-intro/indexing.html">PostGIS Workshop</ulink>,
+    <para>Spatial indexes store only the bounding box of geometries.
+    Spatial queries use the index as a <emphasis role="bold">primary filter</emphasis>
+    to quickly determine a set of geometries potentially matching the query condition.
+    Most spatial queries require a <emphasis role="bold">secondary filter</emphasis>
+    that uses a spatial predicate function to test a more specific spatial condition.
+    For more information on queying with spatial predicates see <xref linkend="using-query-indexes" />.
+    </para>
+
+    <para>See also the
+    <ulink url="https://postgis.net/workshops/postgis-intro/indexing.html">PostGIS Workshop section on spatial indexes</ulink>,
     and the <ulink url="https://www.postgresql.org/docs/current/indexes.html">PostgreSQL manual</ulink>.
     </para>
 
@@ -2259,10 +2420,7 @@ CREATE INDEX [indexname] ON [tablename]
 
     <para>As it is the case for GiST indexes, SP-GiST indexes are lossy, in the
 		sense that they store the bounding box enclosing spatial objects.
-		SP-GiST indexes can be considered as an alternative to GiST indexes. The
-		performance tests reveal that SP-GiST indexes are especially beneficial
-		when there are many overlapping objects, that is, with so-called
-		“spaghetti data”.</para>
+		SP-GiST indexes can be considered as an alternative to GiST indexes.</para>
 
 		<para>Once a GIS data table exceeds a few thousand rows, an SP-GiST index
 		may be used to speed up spatial searches of the data. The syntax for

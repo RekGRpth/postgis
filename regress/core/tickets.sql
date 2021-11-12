@@ -303,7 +303,7 @@ SELECT '#650', ST_AsText(ST_Collect(ARRAY[ST_MakePoint(0,0), ST_MakePoint(1,1), 
 --SELECT '#662', ST_MakePolygon(ST_AddPoint(ST_AddPoint(ST_MakeLine(ST_SetSRID(ST_MakePointM(i+m,j,m),4326),ST_SetSRID(ST_MakePointM(j+m,i-m,m),4326)),ST_SetSRID(ST_MakePointM(i,j,m),4326)),ST_SetSRID(ST_MakePointM(i+m,j,m),4326))) As the_geom FROM generate_series(-10,50,20) As i CROSS JOIN generate_series(50,70, 20) As j CROSS JOIN generate_series(1,2) As m ORDER BY i, j, m, i*j*m LIMIT 1;
 
 -- #667 --
-SELECT '#667', ST_AsEWKT(ST_LineToCurve(ST_Buffer(ST_SetSRID(ST_Point(i,j),4326), j))) As the_geom FROM generate_series(-10,50,10) As i CROSS JOIN generate_series(40,70, 20) As j ORDER BY i, j, i*j LIMIT 1;
+SELECT '#667', ST_AsText( ST_LineToCurve(ST_Buffer(ST_SetSRID(ST_Point(i,j),4326), j)), 4 ) As the_geom FROM generate_series(-10,50,10) As i CROSS JOIN generate_series(40,70, 20) As j ORDER BY i, j, i*j LIMIT 1;
 
 -- #677 --
 SELECT '#677.deprecated',round(ST_DistanceSpheroid(ST_GeomFromEWKT('MULTIPOLYGON(((-10 40,-10 55,-10 70,5 40,-10 40)))'), ST_GeomFromEWKT('MULTIPOINT(20 40,20 55,20 70,35 40,35 55,35 70,50 40,50 55,50 70)'), 'SPHEROID["GRS_1980",6378137,298.257222101]')) As result;
@@ -1390,3 +1390,45 @@ SELECT '#4949', 'Arctic Stereographic forward', ST_AsEWKT(ST_SnapToGrid(ST_Trans
 SELECT '#4949', 'Antarctic Stereographic forward', ST_AsEWKT(ST_SnapToGrid(ST_Transform(
   'SRID=4326;POINT(-36.75 -54.25)'::geometry, 3031),0.1));
 
+-- #4916, #4770, #4724, #4916, #4940
+SELECT '#4770.a',
+ ST_Union(NULL::geometry) OVER (ORDER BY b)
+FROM (VALUES ('A0006', 300),
+	         ('A0006', 302)) t(a, b);
+
+WITH w AS (
+  SELECT
+    ST_Union(g) OVER (PARTITION BY b ORDER BY a) AS g,
+    Sum(b) OVER (PARTITION BY b ORDER BY a) AS s
+  FROM (VALUES ('POINT(0 0)'::geometry, 'A0006', 300),
+  	           ('POINT(1 1)'::geometry, 'A0006', 302)) t(g, a, b)
+)
+SELECT '#4770.b', ST_AsText(g), s FROM w;
+
+WITH w AS (
+  SELECT
+    ST_Union(g) OVER (PARTITION BY a ORDER BY b) AS g,
+    Sum(b) OVER (PARTITION BY a ORDER BY b) AS s
+  FROM (VALUES ('POINT(0 0)'::geometry, 'A0006', 300),
+  	           ('POINT(1 1)'::geometry, 'A0006', 302)) t(g, a, b)
+)
+SELECT '#4770.c', ST_AsText(g), s FROM w;
+
+-- https://trac.osgeo.org/postgis/ticket/4799
+SELECT
+    '#4799', ST_AsGeoJSON(data.*, geom_column => 'geom2', maxdecimaldigits => 3)
+FROM
+    (SELECT
+        1 AS id,
+        ST_SnapToGrid(ST_Transform(geom, 3035), 1) geom1,
+        ST_SnapToGrid(ST_Transform(geom, 25832), 1) geom2
+    FROM
+        ST_SetSRID(ST_MakePoint(7, 51), 4326) geom
+    ) data;
+
+
+-- https://trac.osgeo.org/postgis/ticket/5008
+SELECT
+	'#5008',
+	ST_DWithin('POINT EMPTY', 'POINT(0 0)', 'Inf'),
+	ST_DWithin('POINT(1 1)', 'POLYGON EMPTY', 'Inf');

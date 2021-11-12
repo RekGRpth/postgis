@@ -483,7 +483,7 @@ BEGIN
     ) --}{
     SELECT ring_id, geom as ring_geom, side_faces
     FROM all_rings_with_ring_geom
-  LOOP --{
+  LOOP --}{
 
     found_rings := found_rings + 1;
 
@@ -546,7 +546,7 @@ BEGIN
       EXCEPTION WHEN unique_violation THEN
         retrec.error = 'face has multiple shells';
         retrec.id1 = rec.side_faces[1];
-        retrec.id2 = NULL;
+        retrec.id2 = rec.ring_id;
         RETURN NEXT retrec;
       END;
     ELSE -- }{ It's an hole (CW)
@@ -892,6 +892,8 @@ BEGIN
   END LOOP;
 
   IF has_invalid_edge_linking THEN
+    DROP TABLE IF EXISTS pg_temp.hole_check;
+    DROP TABLE IF EXISTS pg_temp.shell_check;
     RETURN; -- does not make sense to continue
   END IF;
 
@@ -904,6 +906,7 @@ BEGIN
 
   IF has_invalid_rings THEN
     DROP TABLE IF EXISTS pg_temp.hole_check;
+    DROP TABLE IF EXISTS pg_temp.shell_check;
     RETURN; -- does not make sense to continue
   END IF;
 

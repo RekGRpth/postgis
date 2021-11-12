@@ -941,7 +941,7 @@ ptarrayarc_contains_point_partial(const POINTARRAY *pa, const POINT2D *pt, int c
 		}
 
 		/* Going "down"! */
-		if ( side > 0 && (seg2->y <= pt->y) && (pt->y < seg1->y) )
+		if ( side > 0 && (seg3->y <= pt->y) && (pt->y < seg1->y) )
 		{
 			wn--;
 		}
@@ -1278,12 +1278,12 @@ closest_point_on_segment(const POINT4D *p, const POINT4D *A, const POINT4D *B, P
 	 */
 	r = ( (p->x-A->x) * (B->x-A->x) + (p->y-A->y) * (B->y-A->y) )/( (B->x-A->x)*(B->x-A->x) +(B->y-A->y)*(B->y-A->y) );
 
-	if (r<0)
+	if (r<=0)
 	{
 		*ret = *A;
 		return;
 	}
-	if (r>1)
+	if (r>=1)
 	{
 		*ret = *B;
 		return;
@@ -1296,17 +1296,50 @@ closest_point_on_segment(const POINT4D *p, const POINT4D *A, const POINT4D *B, P
 }
 
 int
+ptarray_closest_segment_2d(const POINTARRAY *pa, const POINT2D *qp, double *dist)
+{
+	const POINT2D *start = getPoint2d_cp(pa, 0), *end = NULL;
+	uint32_t t, seg=0;
+	double mindist=DBL_MAX;
+
+	/* Loop through pointarray looking for nearest segment */
+	for (t=1; t<pa->npoints; t++)
+	{
+		double dist_sqr;
+		end = getPoint2d_cp(pa, t);
+		dist_sqr = distance2d_sqr_pt_seg(qp, start, end);
+
+		if (dist_sqr < mindist)
+		{
+			mindist = dist_sqr;
+			seg=t-1;
+			if ( mindist == 0 )
+			{
+				LWDEBUG(3, "Breaking on mindist=0");
+				break;
+			}
+		}
+
+		start = end;
+	}
+
+	if ( dist ) *dist = sqrt(mindist);
+	return seg;
+}
+
+
+int
 ptarray_closest_vertex_2d(const POINTARRAY *pa, const POINT2D *qp, double *dist)
 {
 	uint32_t t, pn=0;
-	POINT2D *p;
+	const POINT2D *p;
 	double mindist = DBL_MAX;
 
 	/* Loop through pointarray looking for nearest segment */
 	for (t=0; t<pa->npoints; t++)
 	{
 		double dist_sqr;
-		getPoint2d_p_ro(pa, t, &p);
+		p = getPoint2d_cp(pa, t);
 		dist_sqr = distance2d_sqr_pt_pt(p, qp);
 
 		if (dist_sqr < mindist)
