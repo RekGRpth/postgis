@@ -39,6 +39,9 @@ BEGIN {
 #
 #  Run the <testname>.sql script
 #  Check output against <testname>_expected
+#
+#  Use `-` as the testname to drop into an interactive shell
+#
 ##################################################################
 
 ##################################################################
@@ -388,6 +391,24 @@ foreach $TEST (@ARGV)
 	my $TEST_OBJ_COUNT_PRE;
 	my $TEST_OBJ_COUNT_POST;
 	my $TEST_START_TIME;
+
+	if ( "${TEST}" eq '-' )
+	{
+		my $scriptdir = scriptdir($libver, $OPT_EXTENSIONS);
+		print "-- Entering interactive shell --\n";
+		# TODO: add more variables?
+		my $cmd = "psql -Xq"
+		  . " -v \"regdir=$REGDIR\""
+		  . " -v \"scriptdir=$scriptdir\""
+		  . " -v \"schema=$OPT_SCHEMA.\""
+		  # TODO: inject search_path somehow
+		  #. " -c \"SET search_path TO public,$OPT_SCHEMA,topology\""
+		  . " ${DB}"
+		;
+		my $rv = system($cmd);
+		print "-- Moving on with tests, if any --\n";
+		next;
+	}
 
 	# catch a common mistake (strip trailing .sql)
 	$TEST =~ s/.sql$//;
