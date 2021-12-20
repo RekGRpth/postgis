@@ -47,3 +47,22 @@ CREATE VIEW upgrade_view_test_subdivide AS
 SELECT
 	ST_Subdivide(g1, 256) as geometry_subdivide
 FROM upgrade_test;
+
+-- Add view using ST_ForceX function
+-- NOTE: 3.1.0 changed them from taking only geometry
+--       to also take optional zvalue/mvalue params
+CREATE VIEW upgrade_view_test_force_dims AS
+SELECT
+	ST_Force3D(g1) as geometry_force3d,
+	ST_Force3DZ(g1) as geometry_force3dz,
+	ST_Force3DM(g1) as geometry_force3dm,
+	ST_Force4D(g1) as geometry_force4d
+FROM upgrade_test;
+
+-- Add view using ST_AsKML function
+-- NOTE: 2.0.0 changed them to add default params
+CREATE VIEW upgrade_view_test_askml AS
+SELECT
+	ST_AsKML(g1) as geometry_askml,
+	ST_AsKML(g2) as geography_askml
+FROM upgrade_test;
