@@ -187,10 +187,20 @@ if test "x$XSLTPROC" = "x"; then
   CAN_BUILD_COMMENTS=no
 fi
 
+AC_PATH_PROG([XML2POT], [xml2pot], [])
+if test "x$XML2POT" = "x"; then
+	AC_MSG_WARN([xml2pot is not installed so translations cannot be updated])
+fi
+
+AC_PATH_PROG([MSGMERGE], [msgmerge], [])
+if test "x$MSGMERGE" = "x"; then
+	AC_MSG_WARN([msgmerge is not installed so translations cannot be updated])
+fi
+
 CAN_BUILD_PDF=${CAN_BUILD_COMMENTS}
 
-AC_PATH_PROG([IMAGEMAGICK], [convert], [])
-if test "x$IMAGEMAGICK" = "x"; then
+AC_PATH_PROG([CONVERT], [convert], [])
+if test "x$CONVERT" = "x"; then
 	AC_MSG_WARN([ImageMagick does not seem to be installed. Documentation cannot be built])
   CAN_BUILD_PDF=no
 fi
@@ -1798,7 +1808,7 @@ AC_MSG_RESULT([ -------- Documentation Generation -------- ])
 AC_MSG_RESULT([  xsltproc:             ${XSLTPROC}])
 AC_MSG_RESULT([  xsl style sheets:     ${XSLBASE}])
 AC_MSG_RESULT([  dblatex:              ${DBLATEX}])
-AC_MSG_RESULT([  convert:              ${IMAGEMAGICK}])
+AC_MSG_RESULT([  convert:              ${CONVERT}])
 AC_MSG_RESULT([  mathml2.dtd:          ${MATHML2_DTD}])
 AC_MSG_RESULT()
 
