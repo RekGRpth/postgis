@@ -11,6 +11,28 @@ files to be in sync with the source code, ``make html-localized`` or
 ``make pdf-localized`` to build the localized html or pdf manual for
 all enabled languages
 
+Adding languages
+----------------
+
+Adding new languages implies (relative to doc/ dir):
+
+  - Adding the language to the `translations` variable
+    in Makefile.in
+
+  - Re-running ./configure
+
+  - Running `make update-po`
+
+  - Adding a Makefile under the new language directory
+    (take the Makefile from another language as a template,
+    and only change the DOCSUFFIX)
+
+  - Check the new language works:
+    make -C po/<newlanguage>
+
+  - Add to the git repository the changes in the Makefile.in
+    and all the new files in the po/<newlanguage>/
+
 Using transifex
 ---------------
 
@@ -31,9 +53,34 @@ NOTE: the recommended workflow is:
  make pull-tx
  do:
   make html-localized || edit
- until success 
+ until success
  if edits:
   make push-tx
   make pull-tx
   commit changes to repo
  fi
+
+Using weblate [EXPERIMENTAL]
+----------------------------
+
+Weblate web-ui to translation was setup here:
+https://weblate.osgeo.org/projects/postgis
+
+Translations made via Weblate will automatically be pushed
+to the a configured repository (currently robe's fork) with
+'weblate' as a committer, see commit 2d5247b0c as an example.
+
+Changes to the templates should be automatically fetched by Weblate
+via webhook, see https://git.osgeo.org/gitea/postgis/postgis/settings/hooks
+(currently broken because the configured repository does not match the
+URL of the official repository)
+
+Local changes to the translation files can be uploaded manually
+to weblate with a command like the following:
+
+  wlc upload \
+    postgis/introductionxml/it \
+    --input po/it_IT/introduction.xml.po
+
+NOTE: wlc 1.2 is known to be not functional, while wlc 1.12
+      (current latest when installed via pip) seems fine
