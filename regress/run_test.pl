@@ -50,9 +50,10 @@ BEGIN {
 
 our $DB = $ENV{"POSTGIS_REGRESS_DB"} || "postgis_reg";
 our $REGDIR = abs_path(dirname($0));
-our $SHP2PGSQL = $REGDIR . "/../loader/shp2pgsql";
-our $PGSQL2SHP = $REGDIR . "/../loader/pgsql2shp";
-our $RASTER2PGSQL = $REGDIR . "/../raster/loader/raster2pgsql";
+our $TOP_BUILDDIR = $ENV{"POSTGIS_TOP_BUILD_DIR"} || ${REGDIR} . '/..';
+our $SHP2PGSQL = $TOP_BUILDDIR . "/loader/shp2pgsql";
+our $PGSQL2SHP = $TOP_BUILDDIR . "/loader/pgsql2shp";
+our $RASTER2PGSQL = $TOP_BUILDDIR . "/raster/loader/raster2pgsql";
 our $sysdiff = !system("diff --strip-trailing-cr $0 $0 2> /dev/null");
 
 ##################################################################
@@ -156,7 +157,7 @@ $ENV{"PGOPTIONS"} = $PGOPTIONS;
 my $PATH = $ENV{"PATH"}; # this is useless
 
 # Calculate the regression directory locations
-my $STAGED_INSTALL_DIR = $REGDIR . "/00-regress-install";
+my $STAGED_INSTALL_DIR = $TOP_BUILDDIR . "/regress/00-regress-install";
 my $STAGED_SCRIPTS_DIR = $STAGED_INSTALL_DIR . "/share/contrib/postgis";
 
 my $OBJ_COUNT_PRE = 0;
