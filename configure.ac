@@ -496,15 +496,12 @@ if test "x$LIBLWGEOM_ONLY" = "xno"; then
   PGSQL_SHAREDIR=`"$PG_CONFIG" --sharedir`
 
   AC_MSG_RESULT([checking PostgreSQL version... $PGSQL_FULL_VERSION])
-  dnl Ensure that we are using PostgreSQL >= 9.6
-  if test $POSTGIS_PGSQL_VERSION -lt 96; then
-    AC_MSG_ERROR([PostGIS requires PostgreSQL >= 9.6])
+  dnl Ensure that we are using PostgreSQL >= 11
+  if test $POSTGIS_PGSQL_VERSION -lt 110; then
+    AC_MSG_ERROR([PostGIS requires PostgreSQL >= 11])
   fi
 
-  HAVE_SPGIST=no
-  if test $POSTGIS_PGSQL_VERSION -gt 100; then
-    HAVE_SPGIST=yes
-  fi
+  HAVE_SPGIST=yes
 
   dnl Note: We don't need the server-side LDFLAGS or CPPFLAGS because we get these from PGXS
 
@@ -1650,7 +1647,7 @@ AC_CHECK_LIB(c++, main, [HAVE_CPP=yes], [HAVE_CPP=no])
 AC_CHECK_LIB(stdc++, main, [HAVE_STDCPP=yes], [HAVE_STDCPP=no])
 
 if test "x$HAVE_CPP" = "xyes"; then
-	WFLATGEOBUF_LDFLAGS="-lc++"
+	FLATGEOBUF_LDFLAGS="-lc++"
 elif test "x$HAVE_STDCPP" = "xyes"; then
 	FLATGEOBUF_LDFLAGS="-lstdc++"
 else
