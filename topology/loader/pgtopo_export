@@ -13,14 +13,17 @@
 set -e
 
 usage() {
-  echo "Usage: $0 [--skip-layers] [ -f <dumpfile> ] <dbname> <toponame>"
+  echo "Usage: $(basename $0) [--skip-layers] [ -f <dumpfile> ] <dbname> <toponame>"
 }
 
 SKIP_LAYERS=no
 OUTFILE=-
 
 while test -n "$1"; do
-  if test "$1" = '--skip-layers'; then
+  if test "$1" = '--help' || test "$1" = '-h'; then
+    usage
+    exit 0
+  elif test "$1" = '--skip-layers'; then
     SKIP_LAYERS=yes
     shift
   elif test "$1" = '-f'; then
@@ -52,6 +55,13 @@ test -n "${TOPONAME}" || {
   usage >&2
   exit 1
 }
+
+if test "${OUTFILE}" = "-"; then
+  if [ -t 1 ]; then
+    echo "Exporting to terminal is not supported, please redirect stdout or specify a destination with -f" >&2
+    exit 1
+  fi
+fi
 
 TMPDIR=${TMPDIR-/tmp}
 WORKDIR=${TMPDIR}/pgtopo_export_$$
