@@ -73,10 +73,10 @@ PGXS := @PGXS@
 NO_TEMP_INSTALL=yes
 include $(PGXS)
 
-top_builddir = @top_builddir@
+#top_builddir = @top_builddir@
 VPATH := @srcdir@
 INSTALL = @INSTALL@
-LIBTOOL = @LIBTOOL@
+#LIBTOOL = @LIBTOOL@
 
 # Set PERL _after_ the include of PGXS
 PERL=@PERL@
