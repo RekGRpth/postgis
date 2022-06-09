@@ -654,11 +654,13 @@ POINT(0.5 1)
         but often values between 0.3 and 0.1 produce reasonable results.
         </para>
 
-        <para>Technically, the target percent determines a length as a fraction of the difference between
+        <para>Technically, the <varname>param_pctconvex</varname> determines a length as a fraction of the difference between
         the longest and shortest edges in the Delaunay Triangulation of the input points.
         Edges longer than this length are "eroded" from the triangulation.
         The triangles remaining form the concave hull.
         </para>
+
+        <para>For point and linear inputs, the hull will enclose all the points of the inputs. For polygonal inputs, the hull will enclose all the points of the input <emphasis>and also</emphasis> all the areas covered by the input. If you want a point-wise hull of a polygonal input, convert it to points first, using <xref linkend="ST_Points" />.</para>
 
        <para>This is not an aggregate function.
         To compute the concave hull of a set of geometries use <xref linkend="ST_Collect" />
@@ -2402,6 +2404,58 @@ FROM (SELECT  'POLYGON((0 0, 8 8, 0 16, 0 0))'::geometry geom) As foo;
             <para><xref linkend="ST_Simplify" />, <xref linkend="ST_SimplifyVW" /></para>
           </refsection>
     </refentry>
+
+
+    <refentry id="ST_SimplifyPolygonHull">
+      <refnamediv>
+        <refname>ST_SimplifyPolygonHull</refname>
+        <refpurpose>Computes a boundary-respecting fully exterior or fully interior hull of a polygonal geometry.</refpurpose>
+      </refnamediv>
+
+      <refsynopsisdiv>
+        <funcsynopsis>
+         <funcprototype>
+            <funcdef>geometry <function>ST_SimplifyPolygonHull</function></funcdef>
+            <paramdef><type>geometry </type> <parameter>param_geom</parameter></paramdef>
+            <paramdef><type>float </type> <parameter>vertex_fraction</parameter></paramdef>
+            <paramdef choice="opt"><type>boolean </type> <parameter>is_outer = true</parameter></paramdef>
+          </funcprototype>
+        </funcsynopsis>
+      </refsynopsisdiv>
+
+      <refsection>
+        <title>Description</title>
+
+        <para>Computes a boundary-respecting hull of a polygonal geometry. An "outer" hull completely covers the input geometry. An "inner" hull is completely contained by the input geometry. The degree of reduction in vertices is controlled by the <varname>vertex_fraction</varname> parameter. Larger values produce less concave results. A vertex fraction of 1.0 produces a convex hull; a value of 0.0 produces the original geometry.</para>
+
+        <para>The simplification operates by removing the line segments that generate the least amount of extra area, progressively, until the vertex target is reached. To get "nice" results with geometries that have long lines without vertices, it might be necessary to first "pre-segmentize" before running the process, as shown below.</para>
+      </refsection>
+      <refsection>
+        <title>Examples</title>
+
+    <para>
+    <informalfigure>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/st_simplifypolygonhull01.png" />
+        </imageobject>
+        <caption><para>Polygonal simplification of a MultiPolygon</para></caption>
+      </mediaobject>
+    </informalfigure>
+    <programlisting>SELECT ST_SimplifyPolygonHull(
+  ST_Segmentize(ST_Letters('xt'), 2.0),
+    0.1);
+    </programlisting>
+    </para>
+
+      </refsection>
+
+      <refsection>
+        <title>See Also</title>
+        <para><xref linkend="ST_ConvexHull" />, <xref linkend="ST_SimplifyVW" />, <xref linkend="ST_ConcaveHull" /></para>
+      </refsection>
+    </refentry>
+
 
     <refentry id="ST_SetEffectiveArea">
       <refnamediv>
