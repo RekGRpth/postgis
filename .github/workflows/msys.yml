@@ -3,6 +3,8 @@ on: [push, pull_request]
 
 jobs:
   mingw:
+    # disable msys for now
+    if: github.repository == 'nomatch'
     name: mingw
     runs-on: windows-latest
     strategy:
