@@ -17,6 +17,7 @@ export MAKE_EXTENSION=1
 export DUMP_RESTORE=0
 export MAKE_LOGBT=0
 export NO_SFCGAL=0
+export MAKE_UPGRADE=1
 
 ## end variables passed in by jenkins
 
@@ -66,7 +67,7 @@ fi
     --with-geosconfig=${PROJECTS}/geos/rel-${GEOS_VER}w${OS_BUILD}/bin/geos-config \
     --with-gdalconfig=${PROJECTS}/gdal/rel-${GDAL_VER}w${OS_BUILD}/bin/gdal-config \
     --without-interrupt-tests \
-    --prefix=${PROJECTS}/pg/rel/pg${PG_VER}w${OS_BUILD}
+    --prefix=${PROJECTS}/pg/rel/pg${PG_VER}w${OS_BUILD} --with-library-minor-version
 make clean
 make
 
