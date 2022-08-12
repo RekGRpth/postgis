@@ -125,7 +125,8 @@ sub has_split_raster_ext
   my $fullver = shift;
   # unpackaged is always current, so does have
   # split raster already.
-  return 1 if $fullver =~ /^unpackaged/;
+  return 1 if $fullver =~ /^unpackaged$/;
+  $fullver =~ s/unpackaged//;
   my @ver = split(/\./, $fullver);
   return 0 if ( $ver[0] < 3 );
   return 1;
@@ -1383,7 +1384,7 @@ sub load_sql_file
 	if ( -e $file )
 	{
 		# ON_ERROR_STOP is used by psql to return non-0 on an error
-		my $psql_opts = "--no-psqlrc --variable ON_ERROR_STOP=true";
+		my $psql_opts = "--quiet --no-psqlrc --variable ON_ERROR_STOP=true";
 		my $cmd = "psql $psql_opts -c 'CREATE SCHEMA IF NOT EXISTS $OPT_SCHEMA' ";
 		$cmd .= "-c 'SET search_path TO $OPT_SCHEMA,topology'";
 		$cmd .= " -Xf $file $DB >> $REGRESS_LOG 2>&1";
@@ -1716,7 +1717,7 @@ sub upgrade_spatial_extensions
       return 1;
     }
 
-    if ( $OPT_WITH_RASTER )
+    if ( $OPT_WITH_RASTER && has_split_raster_ext(${nextver}) )
     {
         my $sql = "ALTER EXTENSION postgis_raster UPDATE TO '${nextver}'";
 
