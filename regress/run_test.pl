@@ -51,9 +51,6 @@ BEGIN {
 our $DB = $ENV{"POSTGIS_REGRESS_DB"} || "postgis_reg";
 our $REGDIR = abs_path(dirname($0));
 our $TOP_BUILDDIR = $ENV{"POSTGIS_TOP_BUILD_DIR"} || ${REGDIR} . '/..';
-our $SHP2PGSQL = $TOP_BUILDDIR . "/loader/shp2pgsql";
-our $PGSQL2SHP = $TOP_BUILDDIR . "/loader/pgsql2shp";
-our $RASTER2PGSQL = $TOP_BUILDDIR . "/raster/loader/raster2pgsql";
 our $sysdiff = !system("diff --strip-trailing-cr $0 $0 2> /dev/null");
 
 ##################################################################
@@ -97,6 +94,7 @@ GetOptions (
 	'expect' => \$OPT_EXPECT,
 	'extensions' => \$OPT_EXTENSIONS,
 	'schema=s' => \$OPT_SCHEMA,
+	'build-dir=s' => \$TOP_BUILDDIR,
 	'after-create-script=s' => \@OPT_HOOK_AFTER_CREATE,
 	'before-uninstall-script=s' => \@OPT_HOOK_BEFORE_UNINSTALL,
 	'before-upgrade-script=s' => \@OPT_HOOK_BEFORE_UPGRADE,
@@ -107,6 +105,10 @@ if ( @ARGV < 1 )
 {
 	usage();
 }
+
+our $SHP2PGSQL = $TOP_BUILDDIR . "/loader/shp2pgsql";
+our $PGSQL2SHP = $TOP_BUILDDIR . "/loader/pgsql2shp";
+our $RASTER2PGSQL = $TOP_BUILDDIR . "/raster/loader/raster2pgsql";
 
 if ( $OPT_UPGRADE_PATH )
 {
@@ -177,7 +179,8 @@ foreach my $exec ( ($SHP2PGSQL, $PGSQL2SHP) )
 	{
 		print "failed\n";
 		print STDERR "Unable to find $exec executable.\n";
-		die "HINT: set POSTGIS_TOP_BUILD_DIR env variable to the build dir.\n";
+		print STDERR "TOP_BUILDDIR is ${TOP_BUILDDIR}\n";
+		die "HINT: use POSTGIS_TOP_BUILD_DIR env or --build-dir switch the specify top build dir.\n";
 	}
 
 }
@@ -233,6 +236,14 @@ psql -tAc "
 " template1
 `));
 
+my $defextver = `
+psql -XtAc "
+	SELECT default_version
+	FROM pg_catalog.pg_available_extensions
+	WHERE name = 'postgis'
+" template1
+`;
+
 my $dbcount = @dblist;
 
 if ( $dbcount == 0 )
@@ -264,7 +275,6 @@ else
 
 my $pgvernum = sql("SELECT current_setting('server_version_num')");
 my $libver = sql("select postgis_lib_version()");
-my $defextver = sql("select default_version from pg_available_extensions where name = 'postgis'");
 
 if ( ! $libver )
 {
@@ -585,6 +595,9 @@ Options:
   --clean         cleanup test logs on exit
   --expect        save obtained output as expected
   --extension     load using extensions
+  --build-dir <path>
+                  specify where to find the top build dir of PostGIS,
+                  to find binaries and scripts
   --after-create-script <path>
                   script to load after spatial db creation
                   (multiple switches supported, to be run in given order)
@@ -1470,12 +1483,8 @@ sub prepare_spatial_extensions
 		}
  	}
 
-	if ( $OPT_WITH_RASTER && (
-		# NOTE: this code is assuming that the default version
-		# (!$OPT_UPGRADE_FROM) has split raster extension
-		! $OPT_UPGRADE_FROM ||
-		has_split_raster_ext($OPT_UPGRADE_FROM)
-	) )
+	my $extver = $OPT_UPGRADE_FROM ? $OPT_UPGRADE_FROM : $OPT_UPGRADE_TO ? $OPT_UPGRADE_TO : $defextver;
+	if ( $OPT_WITH_RASTER && has_split_raster_ext($extver) )
 	{
 		my $sql = "CREATE EXTENSION postgis_raster";
 		if ( $OPT_UPGRADE_FROM ) {
@@ -1664,41 +1673,28 @@ sub upgrade_spatial_extensions
       die;
     }
 
-    # Handle raster split if coming from pre-split and going
-    # to splitted raster
-    if ( $OPT_UPGRADE_FROM && has_split_raster_ext($OPT_UPGRADE_TO) &&
-         ! has_split_raster_ext($OPT_UPGRADE_FROM) )
+    # Handle raster split if coming from pre-split extension
+    # and going to splitted raster
+    if ( $OPT_UPGRADE_FROM &&
+         ( not $OPT_UPGRADE_FROM =~ /^unpackaged/ ) &&
+         has_split_raster_ext($OPT_UPGRADE_TO) &&
+         not has_split_raster_ext($OPT_UPGRADE_FROM) )
     {
-      if ( $OPT_WITH_RASTER )
-      {
-        # upgrade of postgis must have unpackaged raster, so
-        # we create it again here
-				my $sql = package_extension_sql('postgis_raster', ${nextver});
+      # upgrade of postgis must have unpackaged raster, so
+      # we create it again here
+      my $sql = package_extension_sql('postgis_raster', ${nextver});
 
-        print "Upgrading PostGIS Raster in '${DB}' using: ${sql}\n" ;
+      print "Packaging PostGIS Raster in '${DB}' using: ${sql}\n" ;
 
-        my $cmd = "psql $psql_opts -c \"" . $sql . "\" $DB >> $REGRESS_LOG 2>&1";
-        my $rv = system($cmd);
-        if ( $rv ) {
-          fail "Error encountered creating EXTENSION POSTGIS_RASTER from unpackaged on upgrade", $REGRESS_LOG;
-          die;
-        }
+      my $cmd = "psql $psql_opts -c \"" . $sql . "\" $DB >> $REGRESS_LOG 2>&1";
+      my $rv = system($cmd);
+      if ( $rv ) {
+        fail "Error encountered creating EXTENSION POSTGIS_RASTER from unpackaged on upgrade", $REGRESS_LOG;
+        die;
       }
-      else
+
+      if ( ! $OPT_WITH_RASTER )
       {
-        # Raster support was not requested, so drop it if
-        # left unpackaged
-        print "Packaging PostGIS Raster in '${DB}' for later drop using: ${sql}\n" ;
-
-				$sql = package_extension_sql('postgis_raster', ${nextver});
-
-        $cmd = "psql $psql_opts -c \"" . $sql . "\" $DB >> $REGRESS_LOG 2>&1";
-        $rv = system($cmd);
-        if ( $rv ) {
-          fail "Error encountered creating EXTENSION POSTGIS_RASTER from unpackaged on upgrade", $REGRESS_LOG;
-          die;
-        }
-
         print "Dropping PostGIS Raster in '${DB}' using: ${sql}\n" ;
 
         $sql = "DROP EXTENSION postgis_raster";
