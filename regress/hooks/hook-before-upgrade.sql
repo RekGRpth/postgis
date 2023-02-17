@@ -68,7 +68,22 @@ FROM upgrade_test;
 -- Break probin of all postgis functions, as we expect
 -- the upgrade procedure to replace them all
 UPDATE pg_proc SET probin = probin || '-uninstalled'
-WHERE probin like '%postgis%';
+WHERE probin like '%postgis%'
+-- When testing dump/restore keep the type-output
+-- function as they are needed for pg_dump
+AND (
+	:opt_dumprestore = 0 OR
+	oid NOT IN (
+		SELECT typoutput
+		FROM pg_type
+		WHERE typname IN ( 'geometry', 'geography', 'raster' )
+			UNION ALL
+		SELECT typmodout
+		FROM pg_type
+		WHERE typname IN ( 'geometry', 'geography', 'raster' )
+	)
+);
+
 
 -- Change SECURITY of postgis_version() to DEFINER
 -- to verify the bit is reset upon upgrade
