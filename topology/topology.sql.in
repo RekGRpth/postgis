@@ -190,6 +190,8 @@
 
 #include "sqldefines.h"
 
+-- INSTALL VERSION: POSTGIS_LIB_VERSION
+
 CREATE SCHEMA topology;
 COMMENT ON SCHEMA topology IS 'PostGIS Topology schema';
 
@@ -321,6 +323,8 @@ ON topology.layer FOR EACH ROW EXECUTE PROCEDURE topology.LayerTrigger();
 
 --
 -- TopoGeometry type
+--
+-- Availability: 1.1.0
 --
 CREATE TYPE topology.TopoGeometry AS (
   topology_id integer,

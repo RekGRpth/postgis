@@ -49,7 +49,9 @@ BEGIN {
 
 our $DB = $ENV{"POSTGIS_REGRESS_DB"} || "postgis_reg";
 our $REGDIR = $ENV{"POSTGIS_REGRESS_DIR"} || abs_path(dirname($0));
-our $TOP_BUILDDIR = $ENV{"POSTGIS_TOP_BUILD_DIR"} || ${REGDIR} . '/..';
+our $TOP_SOURCEDIR = ${REGDIR} . '/..';
+our $ABS_TOP_SOURCEDIR = abs_path(${TOP_SOURCEDIR});
+our $TOP_BUILDDIR = $ENV{"POSTGIS_TOP_BUILD_DIR"} || ${TOP_SOURCEDIR};
 our $sysdiff = !system("diff --strip-trailing-cr $0 $0 2> /dev/null");
 
 ##################################################################
@@ -77,6 +79,8 @@ my $OPT_WITH_SFCGAL = 0;
 my $OPT_EXPECT = 0;
 my $OPT_EXTENSIONS = 0;
 my @OPT_HOOK_AFTER_CREATE;
+my @OPT_HOOK_AFTER_RESTORE;
+my @OPT_HOOK_BEFORE_DUMP;
 my @OPT_HOOK_BEFORE_TEST;
 my @OPT_HOOK_AFTER_TEST;
 my @OPT_HOOK_BEFORE_UNINSTALL;
@@ -110,7 +114,9 @@ GetOptions (
 	'before-uninstall-script=s' => \@OPT_HOOK_BEFORE_UNINSTALL,
 	'before-test-script=s' => \@OPT_HOOK_BEFORE_TEST,
 	'before-upgrade-script=s' => \@OPT_HOOK_BEFORE_UPGRADE,
-	'after-upgrade-script=s' => \@OPT_HOOK_AFTER_UPGRADE
+	'before-dump-script=s' => \@OPT_HOOK_BEFORE_DUMP,
+	'after-upgrade-script=s' => \@OPT_HOOK_AFTER_UPGRADE,
+	'after-restore-script=s' => \@OPT_HOOK_AFTER_RESTORE
 	);
 
 if ( @ARGV < 1 )
@@ -371,17 +377,6 @@ sub semver_lessthan
 	return @bcomp ? 1 : 0;
 }
 
-if ( $OPT_UPGRADE )
-{
-    print "Upgrading from postgis $libver\n";
-
-    foreach my $hook (@OPT_HOOK_BEFORE_UPGRADE)
-    {
-        print "Running before-upgrade-script $hook\n";
-        die unless load_sql_file($hook, 1);
-    }
-}
-
 if ( $OPT_DUMPRESTORE )
 {
     my $DBDUMP = dump_db();
@@ -401,31 +396,31 @@ if ( $OPT_DUMPRESTORE )
         die;
     }
 
-    # Extension based spatial db do not need the target
-    # database to be prepared in any way, script based
-    # spatial db requires being prepared.
-    if ( not $OPT_EXTENSIONS )
-    {
-        die unless prepare_spatial();
-    }
-
     die unless restore_db($DBDUMP);
+
+    # Update libver
+    $libver = sql("select postgis_lib_version()");
 
     unlink($DBDUMP);
 }
 
 if ( $OPT_UPGRADE )
 {
-    unless ( $OPT_DUMPRESTORE )
+    print "Upgrading from postgis $libver\n";
+
+    foreach my $hook (@OPT_HOOK_BEFORE_UPGRADE)
     {
-        if ( $OPT_EXTENSIONS )
-        {
-            die unless upgrade_spatial_extensions();
-        }
-        else
-        {
-            die unless upgrade_spatial();
-        }
+        print "Running before-upgrade-script $hook\n";
+        die unless load_sql_file($hook, 1);
+    }
+
+    if ( $OPT_EXTENSIONS )
+    {
+        die unless upgrade_spatial_extensions();
+    }
+    else
+    {
+        die unless upgrade_spatial();
     }
 
     foreach my $hook (@OPT_HOOK_AFTER_UPGRADE)
@@ -695,6 +690,12 @@ Options:
   --before-uninstall-script <path>
                   script to load before spatial extension uninstall
                   (multiple switches supported, to be run in given order)
+  --before-dump-script <path>
+                  script to load before dump, if --dumprestore is given
+                  (multiple switches supported, to be run in given order)
+  --after-restore-script <path>
+                  script to load after restore, if --dumprestore is given
+                  (multiple switches supported, to be run in given order)
   --before-upgrade-script <path>
                   script to load before upgrade
                   (multiple switches supported, to be run in given order)
@@ -715,6 +716,12 @@ Options:
 sub start_test
 {
     my $test = shift;
+    my $abstest = abs_path($test);
+    if ( defined($abstest) )
+    {
+        $test = $abstest;
+    }
+    $test =~ s|${ABS_TOP_SOURCEDIR}/||;
     print " $test ";
 	$RUN++;
     show_progress();
@@ -1698,7 +1705,10 @@ sub package_extension_sql
 # Upgrade an existing database (soft upgrade)
 sub upgrade_spatial
 {
-    print "Upgrading PostGIS in '${DB}' \n" ;
+    my $version = shift;
+    my $scriptdir = scriptdir($version);
+
+    print "Upgrading PostGIS in '${DB}' using scripts from $scriptdir\n" ;
 
     my $script = "${STAGED_SCRIPTS_DIR}/postgis_upgrade.sql";
     print "Upgrading core\n";
@@ -2018,6 +2028,12 @@ sub dump_db
     my $rv;
     my $DBDUMP = $TMPDIR . '/' . $DB . '.dump';
 
+    foreach my $hook (@OPT_HOOK_BEFORE_DUMP)
+    {
+        print "Running before-dump-script $hook\n";
+        die unless load_sql_file($hook, 1);
+    }
+
     print "Dumping database '${DB}'\n";
 
     $rv = system("pg_dump -Fc -f${DBDUMP} ${DB} >> $REGRESS_LOG 2>&1");
@@ -2033,8 +2049,20 @@ sub restore_db
 {
     my $rv;
     my $DBDUMP = shift;
+    my $ext_dump = $OPT_EXTENSIONS && $OPT_UPGRADE_FROM !~ /^unpackaged/;
 
-    if ( $OPT_EXTENSIONS ) {
+    # If dump is not from extension-based database
+    # we need to prepare the target
+    unless ( $ext_dump )
+    {
+		if ( $OPT_UPGRADE_FROM =~ /^unpackaged(.*)/ ) {
+			die unless prepare_spatial($1);
+		} else {
+			die unless prepare_spatial();
+        }
+    }
+
+    if ( $ext_dump ) {
         print "Restoring database '${DB}' using pg_restore\n";
         $rv = system("pg_restore -d ${DB} ${DBDUMP} >> $REGRESS_LOG 2>&1");
     } else {
@@ -2058,6 +2086,12 @@ sub restore_db
             fail("Error encountered adding topology to search path after restore", $REGRESS_LOG);
             return 0;
         }
+    }
+
+    foreach my $hook (@OPT_HOOK_AFTER_RESTORE)
+    {
+        print "Running after-restore-script $hook\n";
+        die unless load_sql_file($hook, 1);
     }
 
     return 1;
