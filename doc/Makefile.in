@@ -30,6 +30,7 @@ datadir = @datadir@
 builddir = @builddir@
 top_builddir = @top_builddir@
 mandir = @mandir@
+abs_srcdir = @abs_srcdir@
 
 POSTGIS_MAJOR_VERSION=@POSTGIS_MAJOR_VERSION@
 POSTGIS_MINOR_VERSION=@POSTGIS_MINOR_VERSION@
@@ -59,8 +60,11 @@ ifeq ($(XSLTPROCFLAGS),)
 	XSLTPROCFLAGS=--nonet
 endif
 
+XSLT_PATH= \
+	.:./ent:$(abs_srcdir):$(abs_srcdir)/ent
+
 XSLTPROC_PATH_OPT= \
-	--path $(srcdir):$(srcdir)/ent:.
+	--path $(XSLT_PATH)
 
 XSLTPROC_COMMONOPTS= \
 	$(XSLTPROC_PATH_OPT) \
@@ -176,20 +180,21 @@ XML_SOURCES = \
 	tag_geography_transform.xml \
 	using_postgis_dataman.xml \
 	using_postgis_query.xml \
-	using_raster_dataman.xml
+	using_raster_dataman.xml \
+	xsl-config.xml
 
 XSL_GENERATED_SOURCES = \
-	list_3d_functions.xls.xml \
-	list_aggregates.xls.xml \
-	list_box_functions.xls.xml \
-	list_curved_geometry_functions.xls.xml \
-	list_dump_functions.xls.xml \
-	list_geography_functions.xls.xml \
-	list_new_functions.xls.xml \
-	list_raster_functions.xls.xml \
-	list_sqlmm_functions.xls.xml \
-	list_window_functions.xls.xml \
-	table_body_function_support_matrix.xls.xml
+	list_3d_functions.xsl.xml \
+	list_aggregates.xsl.xml \
+	list_box_functions.xsl.xml \
+	list_curved_geometry_functions.xsl.xml \
+	list_dump_functions.xsl.xml \
+	list_geography_functions.xsl.xml \
+	list_new_functions.xsl.xml \
+	list_raster_functions.xsl.xml \
+	list_sqlmm_functions.xsl.xml \
+	list_window_functions.xsl.xml \
+	table_body_function_support_matrix.xsl.xml
 
 XML_GENERATED_SOURCES = \
 	$(XSL_GENERATED_SOURCES) \
@@ -261,7 +266,7 @@ endif
 ifeq ($(XSLTPROC),)
 $(XSL_GENERATED_SOURCES): requirements_not_met_xsltproc
 else
-$(XSL_GENERATED_SOURCES): %.xls.xml: xsl/%.xml.xls postgis-out.xml
+$(XSL_GENERATED_SOURCES): %.xsl.xml: xsl/%.xml.xsl postgis-out.xml xsl-config.xml
 	grep -v '\&postgis_special;' postgis-out.xml | $(XSLTPROC) --novalid $(XSLTPROC_PATH_OPT) -o $@ $< -
 endif
 
@@ -319,6 +324,7 @@ postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSIO
 	   false; \
 	else \
 		$(DBLATEX) -T native -t pdf \
+		   -x "--path $(XSLT_PATH)" \
 		   -I "${PWD}/html" \
 		   -P doc.collab.show=0 \
 		   -P figure.note="${PWD}/html/images/note" \
@@ -327,7 +333,7 @@ postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSIO
 		   -P figure.warning="${PWD}/html/images/warning" \
 		   -P figure.caution="${PWD}/html/images/caution" \
 		   -P latex.output.revhistory=0 \
-		   -s "${PWD}/texstyle.sty" \
+		   -s "$(abs_srcdir)/texstyle.sty" \
 		   -o postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).pdf $<; \
 	fi
 
