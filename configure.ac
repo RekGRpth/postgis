@@ -237,6 +237,14 @@ fi
 AC_SUBST(CAN_BUILD_COMMENTS)
 AC_SUBST(CAN_BUILD_PDF)
 
+CAN_BUILD_EPUB=${CAN_BUILD_COMMENTS}
+AC_PATH_PROG([DBTOEPUB], [dbtoepub], [])
+if test "x$DBTOEPUB" = "x"; then
+  AC_MSG_WARN([dbtoepub is not installed so EPUB documentation cannot be built])
+  CAN_BUILD_EPUB=no
+fi
+AC_SUBST(CAN_BUILD_EPUB)
+
 AC_PATH_PROG([XMLLINT], [xmllint], [])
 if test "x$XMLLINT" = "x"; then
 	AC_MSG_WARN([xmllint is not installed so documentation cannot be checked])
@@ -1771,7 +1779,7 @@ AC_CONFIG_FILES([GNUmakefile
    doc/Makefile
    doc/Makefile.comments
    $TRANSLATIONS_MAKEFILE_LIST
-   doc/html/image_src/Makefile
+   doc/html/images/Makefile
    utils/Makefile
    $RT_MAKEFILE_LIST
    $DEPS_MAKEFILE_LIST])

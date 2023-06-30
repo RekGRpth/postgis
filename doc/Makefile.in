@@ -31,6 +31,7 @@ builddir = @builddir@
 top_builddir = @top_builddir@
 mandir = @mandir@
 abs_srcdir = @abs_srcdir@
+abs_builddir = @abs_builddir@
 
 POSTGIS_MAJOR_VERSION=@POSTGIS_MAJOR_VERSION@
 POSTGIS_MINOR_VERSION=@POSTGIS_MINOR_VERSION@
@@ -51,6 +52,8 @@ CAN_UPDATE_TRANSLATIONS=@CAN_UPDATE_TRANSLATIONS@
 XMLLINT=@XMLLINT@
 CAN_BUILD_COMMENTS=@CAN_BUILD_COMMENTS@
 PERL=@PERL@
+#CAN_BUILD_PDF=@CAN_BUILD_PDF@
+#CAN_BUILD_EPUB=@CAN_BUILD_EPUB@
 
 # To allow network access use:
 #
@@ -61,7 +64,7 @@ ifeq ($(XSLTPROCFLAGS),)
 endif
 
 XSLT_PATH= \
-	.:./ent:$(abs_srcdir):$(abs_srcdir)/ent
+	$(abs_builddir):$(abs_srcdir)
 
 XSLTPROC_PATH_OPT= \
 	--path $(XSLT_PATH)
@@ -103,7 +106,7 @@ MSGINIT=@MSGINIT@
 XML2POT=@XML2POT@
 
 # DOCBOOK to EPUB
-DBTOEPUB=dbtoepub
+DBTOEPUB=@DBTOEPUB@
 
 # Directories for postgresql subdirectories
 PGSQL_DOCDIR=@PGSQL_DOCDIR@
@@ -117,6 +120,10 @@ endif
 
 ifeq ($(CAN_BUILD_PDF),yes)
 BUILD_TARGET += pdf
+endif
+
+ifeq ($(CAN_BUILD_EPUB),yes)
+BUILD_TARGET += epub
 endif
 
 # TODO: add "html" to the BUILD_TARGET if it can be built
@@ -318,35 +325,41 @@ html/postgis$(DOCSUFFIX).html: postgis-out.xml Makefile images $(XML_INPUTS)
 
 
 postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).pdf: postgis-out.xml images $(XML_INPUTS)
-	if test x"$(DBLATEX)" = x; then \
-	   echo "Error: dblatex not found, can't build pdf"; \
-	   echo "       try installing dblatex and then re-run configure"; \
-	   false; \
-	else \
-		$(DBLATEX) -T native -t pdf \
-		   -x "--path $(XSLT_PATH)" \
-		   -I "${PWD}/html" \
-		   -P doc.collab.show=0 \
-		   -P figure.note="${PWD}/html/images/note" \
-		   -P figure.tip="${PWD}/html/images/tip" \
-		   -P figure.important="${PWD}/html/images/important" \
-		   -P figure.warning="${PWD}/html/images/warning" \
-		   -P figure.caution="${PWD}/html/images/caution" \
-		   -P latex.output.revhistory=0 \
-		   -s "$(abs_srcdir)/texstyle.sty" \
-		   -o postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).pdf $<; \
-	fi
+ifeq ($(DBLATEX),)
+	@echo
+	@echo "configure was unable to find the 'dblatex' utility program."
+	@echo "To create pdf files, install dblatex and then re-run configure."
+	@echo
+	@false
+else
+	$(DBLATEX) -T native -t pdf \
+		 -x "--path $(XSLT_PATH)" \
+		 -I "$(abs_builddir)/html" \
+		 -P doc.collab.show=0 \
+		 -P figure.note="images/note" \
+		 -P figure.tip="images/tip" \
+		 -P figure.important="images/important" \
+		 -P figure.warning="images/warning" \
+		 -P figure.caution="images/caution" \
+		 -P latex.output.revhistory=0 \
+		 -s "$(abs_srcdir)/texstyle.sty" \
+		 -b xetex \
+		 -o postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).pdf $<
+endif
 
 postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).epub: postgis-out.xml images $(XML_INPUTS)
-	if test x"$(DBTOEPUB)" = x; then \
-	   echo "Error: dbtoepub not found, can't build epub"; \
-	   echo "       try installing dbtoepub"; \
-	   false; \
-	else \
-		$(DBTOEPUB) -c "${PWD}/html/style.css" \
-		 -o postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).epub \
-		  $<; \
-	fi
+ifeq ($(DBTOEPUB),)
+	@echo
+	@echo "configure was unable to find the 'dbtoepub' utility program."
+	@echo "To create pdf files, install dbtoepub and then re-run configure."
+	@echo
+	@false
+else
+	ln -fs html/images .; # work around https://trac.osgeo.org/postgis/ticket/5422
+	$(DBTOEPUB) -c "${PWD}/html/style.css" \
+	 -o postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).epub \
+		$<
+endif
 
 epub: postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).epub
 
@@ -365,23 +378,24 @@ doxygen: doxygen.cfg
 	doxygen $<
 
 images:
-	$(MAKE) -C html/image_src images
+	$(MAKE) -C html/images images
 
 images-clean:
-	$(MAKE) -C html/image_src images-clean
+	$(MAKE) -C html/images images-clean
 
 clean:
 	rm -f html/*.html
 	rm -f postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}.pdf
 	rm -f *.epub
-	$(MAKE) -C html/image_src clean
+	rm images # work around https://trac.osgeo.org/postgis/ticket/5422
 	rm -f $(XML_GENERATED_SOURCES)
+	$(MAKE) -C html/images clean
 	rm -f postgis_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql
 	rm -f raster_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql
 	rm -f *.tmp
 
 distclean: clean
-	$(MAKE) -C html/image_src distclean
+	$(MAKE) -C html/images distclean
 	rm -f Makefile Makefile.comments html/image_src/Makefile
 	for lang in $(translations); do \
 		rm -f po/$$lang/Makefile; \
@@ -431,7 +445,8 @@ docs-install: html/postgis.html html/style.css
 	mkdir -p $(DESTDIR)$(PGSQL_DOCDIR)/postgis/images
 	$(INSTALL_DATA) html/postgis.html $(DESTDIR)$(PGSQL_DOCDIR)/postgis/
 	$(INSTALL_DATA) html/style.css $(DESTDIR)$(PGSQL_DOCDIR)/postgis/
-	$(INSTALL_DATA) html/images/* $(DESTDIR)$(PGSQL_DOCDIR)/postgis/images/
+	$(INSTALL_DATA) html/images/*.png $(DESTDIR)$(PGSQL_DOCDIR)/postgis/images/
+	$(INSTALL_DATA) html/images/*.gif $(DESTDIR)$(PGSQL_DOCDIR)/postgis/images/
 	$(INSTALL_DATA) ../README.postgis $(DESTDIR)$(PGSQL_DOCDIR)/postgis/README.postgis
 
 docs-uninstall:
