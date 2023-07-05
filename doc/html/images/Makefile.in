@@ -15,6 +15,14 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 srcdir = @srcdir@
 
+prefix = @prefix@
+datarootdir = @datarootdir@
+docdir = @docdir@
+htmldir = @htmldir@
+
+INSTALL=@INSTALL@
+INSTALL_DATA=@INSTALL_DATA@
+
 CC=@CC@
 CFLAGS=@CFLAGS@ @PROJ_CPPFLAGS@
 CPPFLAGS = -I$(top_builddir)/liblwgeom -I$(top_srcdir)/liblwgeom @CPPFLAGS@
@@ -77,6 +85,7 @@ GENERATED_IMAGES= \
 	st_concavehull03.png \
 	st_concavehull04.png \
 	st_convexhull01.png \
+	st_coverageinvalidlocations01.png \
 	st_coveragesimplify01.png \
 	st_coveragesimplify02.png \
 	st_coverageunion01.png \
@@ -213,13 +222,25 @@ GENERATED_IMAGES_RESIZED= \
 	de9im12.png \
 	de9im13.png
 
+ALL_IMAGES = \
+	$(GENERATED_IMAGES) \
+	$(GENERATED_IMAGES_RESIZED) \
+	$(STATIC_IMAGES)
+
 OBJS=styles.o generator.o
 
 # Build the generator
 all: generator
 
 # generate the images
-images: $(GENERATED_IMAGES) $(GENERATED_IMAGES_RESIZED) $(STATIC_IMAGES)
+images: $(ALL_IMAGES)
+
+images-install: $(ALL_IMAGES)
+	mkdir -p $(DESTDIR)$(htmldir)/images
+	$(INSTALL_DATA) $(ALL_IMAGES) $(DESTDIR)$(htmldir)/images/
+
+images-uninstall:
+	rm -f $(ALL_IMAGES:%=$(DESTDIR)$(htmldir)/images/%)
 
 # Command to build each of the .o files
 $(OBJS): %.o: %.c
@@ -257,6 +278,6 @@ distclean: clean
 	rm -f Makefile
 
 images-clean:
-	rm -f $(GENERATED_IMAGES) $(GENERATED_IMAGES_RESIZED) $(STATIC_IMAGES)
+	rm -f $(ALL_IMAGES)
 
 .NOTPARALLEL:
