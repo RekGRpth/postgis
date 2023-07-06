@@ -609,23 +609,16 @@ SELECT ST_Covers(geog_poly, geog_pt) As poly_covers_pt,
     <title>Description</title>
 
     <para>Compares two geometry objects and
-    returns <varname>true</varname> if their intersection "spatially cross", that is, the
-    geometries have some, but not all interior points in common. The
-    intersection of the interiors of the geometries must be non-empty
+    returns <varname>true</varname> if their intersection "spatially crosses"; 
+    that is, the geometries have some, but not all interior points in common. 
+    The intersection of the interiors of the geometries must be non-empty
     and must have dimension less than the maximum dimension
-    of the two input geometries. Additionally, the intersection of the two
-    geometries must not equal either of the source geometries. Otherwise, it
+    of the two input geometries, and the intersection of the two
+    geometries must not equal either geometry. Otherwise, it
     returns <varname>false</varname>.</para>
 
-    <para>In mathematical terms, this is:</para>
-
-    <informalfigure>
-    <mediaobject>
-      <imageobject>
-      <imagedata fileref="images/st_crosses-math.png" />
-      </imageobject>
-    </mediaobject>
-    </informalfigure>
+    <para>In mathematical terms:
+    <emphasis>ST_Crosses(A, B) ⇔ (dim( Int(A) ⋂ Int(B) ) &lt; max( dim( Int(A) ), dim( Int(B) ) )) ∧ (a ⋂ b ≠ a) ∧ (a ⋂ b ≠ b) </emphasis></para>
 
     <para>Geometries cross if their DE-9IM Intersection Matrix matches:</para>
 
@@ -641,16 +634,16 @@ SELECT ST_Covers(geog_poly, geog_pt) As poly_covers_pt,
     <listitem>
       <para><code>0********</code> for Line/Line situations</para>
     </listitem>
+
+    <listitem>
+      <para>the result is <varname>false</varname> for Point/Point and Area/Area situations </para>
+    </listitem>
     </itemizedlist>
 
-    <para>For Point/Point and Area/Area situations this predicate returns
-    <varname>false</varname>.</para>
-
-    <para>The OpenGIS Simple Features Specification defines this predicate
+  <note><para>The OpenGIS Simple Features Specification defines this predicate
     only for Point/Line, Point/Area, Line/Line, and Line/Area situations.
     JTS / GEOS extends the definition to apply to Line/Point, Area/Point and
-    Area/Line situations as well. This makes the relation
-    symmetric.</para>
+    Area/Line situations as well. This makes the relation symmetric.</para></note>
 
   <note><para>&index_aware;</para></note>
 
@@ -1692,15 +1685,8 @@ SELECT pat.name AS relationship, pat.val AS pattern,
     For Point/Point inputs the relationship is always <varname>FALSE</varname>,
     since points do not have a boundary.</para>
 
-    <para>In mathematical terms, this relationship is:</para>
-
-    <informalfigure>
-      <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/st_touches-math.png" />
-      </imageobject>
-      </mediaobject>
-    </informalfigure>
+    <para>In mathematical terms:
+    <emphasis>ST_Touches(A, B) ⇔ (Int(A) ⋂ Int(B) ≠ ∅) ∧ (a ⋂ b ≠ ∅) </emphasis></para>
 
     <para>This relationship holds if the DE-9IM Intersection Matrix for the two geometries matches one of:</para>
 

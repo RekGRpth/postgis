@@ -74,6 +74,10 @@ XSLT_PATH= \
 XSLTPROC_PATH_OPT= \
 	--path $(XSLT_PATH)
 
+XSLTPROC_CUSTOM_VARS = \
+	--stringparam postgis_version $(POSTGIS_MAJOR_VERSION).$(POSTGIS_MINOR_VERSION) \
+	--stringparam postgis_language $(patsubst -%,%,$(DOCSUFFIX))/
+
 XSLTPROC_COMMONOPTS= \
 	$(XSLTPROC_PATH_OPT) \
 	--param section.autolabel 1 \
@@ -96,6 +100,7 @@ XSLTPROC_COMMONOPTS= \
 	$(XSLTPROCFLAGS)
 
 XSLTPROC_CHUNKED_HTML_OPTS = \
+	--stringparam admon.graphics.path ../images/ \
 	--stringparam img.src.path ../ \
 	--stringparam html.stylesheet ../style.css
 
@@ -226,9 +231,9 @@ GENERATED_COMMENT_FILES = $(patsubst \
 )
 
 GENERATED_CHEATSHEET_FILES = $(patsubst \
-	$(srcdir)/xsl/%.xsl, \
-	html/%, \
-	$(wildcard $(srcdir)/xsl/*_cheatsheet.html.xsl) \
+	$(abs_srcdir)/xsl/%.html.xsl, \
+	html/%$(DOCSUFFIX).html, \
+	$(wildcard $(abs_srcdir)/xsl/*_cheatsheet.html.xsl) \
 )
 
 VPATH = $(srcdir)
@@ -281,7 +286,7 @@ endif
 ifeq ($(XSLTPROC),)
 $(XSL_GENERATED_SOURCES): requirements_not_met_xsltproc
 else
-$(XSL_GENERATED_SOURCES): %.xsl.xml: xsl/%.xml.xsl postgis-out.xml xsl-config.xml $(TAG_GENERATED_SOURCES)
+$(XSL_GENERATED_SOURCES): %.xsl.xml: xsl/%.xml.xsl postgis-out.xml xsl-config.xml $(TAG_GENERATED_SOURCES) $(XML_SOURCES)
 	grep -v '\&postgis_special;' postgis-out.xml | $(XSLTPROC) --novalid $(XSLTPROC_PATH_OPT) -o $@ $< -
 endif
 
@@ -297,9 +302,10 @@ endif
 $(GENERATED_COMMENT_FILES): %.sql: xsl/%.sql.xsl $(XML_INPUTS) postgis-out.xml
 	$(XSLTPROC) --novalid $(XSLTPROC_PATH_OPT) -o $@ $< postgis-out.xml
 
-$(GENERATED_CHEATSHEET_FILES): html/%.html: xsl/%.html.xsl $(XML_INPUTS) postgis-out.xml
-	$(XSLTPROC) --novalid $(XSLTPROC_PATH_OPT) -o $@ $< postgis-out.xml
+$(GENERATED_CHEATSHEET_FILES): html/%$(DOCSUFFIX).html: xsl/%.html.xsl $(XML_INPUTS) postgis-out.xml
+	$(XSLTPROC) --novalid $(XSLTPROC_PATH_OPT) $(XSLTPROC_CUSTOM_VARS) -o $@ $< postgis-out.xml
 
+# TODO: use a postgis_release_version variable passed via --stringparam
 postgis-out.xml: postgis.xml Makefile
 	$(PERL) -lpe "s'@@LAST_RELEASE_VERSION@@'${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}'g;s'@@POSTGIS_DOWNLOAD_URL@@'${POSTGIS_DOWNLOAD_URL}'g;" $< > $@
 
@@ -410,9 +416,20 @@ html-clean:
 	rm -rf html/postgis-web$(DOCSUFFIX)/
 	rm -rf html/postgis-web-mobile$(DOCSUFFIX)/
 
-clean: html-clean
-	rm -f *.pdf
-	rm -f *.epub
+pdf-clean:
+	rm -f postgis*$(DOCSUFFIX).pdf
+
+epub-clean:
+	rm -f postgis*$(DOCSUFFIX).epub
+
+cheatsheet-install: $(GENERATED_CHEATSHEET_FILES)
+	mkdir -p $(DESTDIR)$(htmldir)
+	$(INSTALL_DATA) $(GENERATED_CHEATSHEET_FILES) $(DESTDIR)$(htmldir)/
+
+cheatsheet-clean:
+	rm -f $(GENERATED_CHEATSHEET_FILES)
+
+clean: images-clean html-clean html-clean-localized pdf-clean pdf-clean-localized epub-clean epub-clean-localized cheatsheet-clean cheatsheet-clean-localized
 	rm -f images # work around https://trac.osgeo.org/postgis/ticket/5422
 	rm -f $(XML_GENERATED_SOURCES)
 	rm -f $(TAG_GENERATED_SOURCES)
@@ -420,15 +437,13 @@ clean: html-clean
 	rm -f postgis_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql
 	rm -f raster_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql
 	rm -f *.tmp
+	$(MAKE) clean-localized
 
-distclean: clean
+distclean: clean distclean-localized
 	$(MAKE) -C html/images distclean
-	rm -f Makefile Makefile.comments html/image_src/Makefile
-	for lang in $(translations); do \
-		rm -f po/$$lang/Makefile; \
-	done
+	rm -f Makefile Makefile.comments
 
-maintainer-clean: clean images-clean
+maintainer-clean: distclean
 	rm -f postgis_comments.sql raster_comments.sql topology_comments.sql tiger_geocoder_comments.sql sfcgal_comments.sql
 
 ifneq ($(CAN_BUILD_COMMENTS),yes)
@@ -437,7 +452,7 @@ else
 comments: postgis_comments.sql raster_comments.sql topology_comments.sql sfcgal_comments.sql tiger_geocoder_comments.sql
 endif
 
-cheatsheets: html/postgis_cheatsheet.html html/raster_cheatsheet.html html/topology_cheatsheet.html html/sfcgal_cheatsheet.html html/tiger_geocoder_cheatsheet.html
+cheatsheets: $(GENERATED_CHEATSHEET_FILES)
 
 ifneq ($(CAN_BUILD_COMMENTS),yes)
 comments-install:

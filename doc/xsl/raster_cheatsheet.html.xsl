@@ -7,15 +7,17 @@
 	 Purpose: This is an xsl transform that generates PostgreSQL COMMENT ON FUNCTION ddl
 	 statements from postgis xml doc reference
      ******************************************************************** -->
+
+	<xsl:include href="common_utils.xsl" />
+	<xsl:include href="common_cheatsheet.xsl" />
+
 	<xsl:output method="text" />
-	<xsl:variable name='postgis_version'>3.4</xsl:variable>
-	<xsl:variable name='new_tag'>Availability: <xsl:value-of select="$postgis_version" /></xsl:variable>
-	<xsl:variable name='enhanced_tag'>Enhanced: <xsl:value-of select="$postgis_version" /></xsl:variable>
-	<xsl:variable name='include_examples'>false</xsl:variable>
-	<xsl:variable name='output_purpose'>true</xsl:variable>
-	<xsl:variable name='linkstub'>https://postgis.net/docs/manual-<xsl:value-of select="$postgis_version" />/</xsl:variable>
+
 <xsl:template match="/">
-	<xsl:text><![CDATA[<html><head><title>PostGIS Raster Cheat Sheet</title>
+	<xsl:text><![CDATA[<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PostGIS Raster Cheat Sheet</title>
 	<style type="text/css">
 <!--
 table { page-break-inside:avoid; page-break-after:auto }
@@ -192,66 +194,5 @@ code {font-size: 8pt}
 
 
 	</xsl:template>
-
-<!--General replace macro hack to make up for the fact xsl 1.0 does not have a built in one.
-	Not needed for xsl 2.0 lifted from http://www.xml.com/pub/a/2002/06/05/transforming.html -->
-	<xsl:template name="globalReplace">
-	  <xsl:param name="outputString"/>
-	  <xsl:param name="target"/>
-	  <xsl:param name="replacement"/>
-	  <xsl:choose>
-		<xsl:when test="contains($outputString,$target)">
-		  <xsl:value-of select=
-			"concat(substring-before($outputString,$target),
-				   $replacement)"/>
-		  <xsl:call-template name="globalReplace">
-			<xsl:with-param name="outputString"
-				 select="substring-after($outputString,$target)"/>
-			<xsl:with-param name="target" select="$target"/>
-			<xsl:with-param name="replacement"
-				 select="$replacement"/>
-		  </xsl:call-template>
-		</xsl:when>
-		<xsl:otherwise>
-		  <xsl:value-of select="$outputString"/>
-		</xsl:otherwise>
-	  </xsl:choose>
-	</xsl:template>
-
-<xsl:template name="break">
-  <xsl:param name="text" select="."/>
-  <xsl:choose>
-    <xsl:when test="contains($text, '&#xa;')">
-      <xsl:value-of select="substring-before($text, '&#xa;')"/>
-      <![CDATA[<br/>]]>
-      <xsl:call-template name="break">
-        <xsl:with-param
-          name="text"
-          select="substring-after($text, '&#xa;')"
-        />
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="$text"/>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<!--macro to pull out function parameter names so we can provide a pretty arg list prefix for each function -->
-<xsl:template name="list_in_params">
-	<xsl:param name="func" />
-	<xsl:for-each select="$func">
-		<xsl:if test="count(paramdef/parameter)  &gt; 0"> </xsl:if>
-		<xsl:for-each select="paramdef">
-			<xsl:choose>
-				<xsl:when test="not( contains(parameter, 'OUT') )">
-					<xsl:value-of select="parameter" />
-					<xsl:if test="position()&lt;last()"><xsl:text>, </xsl:text></xsl:if>
-				</xsl:when>
-			</xsl:choose>
-
-		</xsl:for-each>
-	</xsl:for-each>
-</xsl:template>
 
 </xsl:stylesheet>
