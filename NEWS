@@ -9,6 +9,7 @@ PostGIS 3.4.0dev
     also shown if different from run-time (Paul Ramsey, Sandro Santilli)
 
 * New Features *
+  - #5055, complete manual internationalization (Sandro Santilli)
   - #5052, target version support in postgis_extensions_upgrade
     (Sandro Santilli)
   - #5306, expose version of GEOS at compile time (Sandro Santilli)
@@ -39,6 +40,8 @@ PostGIS 3.4.0dev
   - GH734, Additional metadata on Proj installation in postgis_proj_version (Paul Ramsey)
   - #5177, allow building tools without PostgreSQL server headers (Sandro Santilli)
   - ST_Project signature for geometry, and two-point signature (Paul Ramsey)
+  - #4913, ST_AsSVG support for curve types CircularString, CompoundCurve, MultiCurve,
+           and MultiSurface (Regina Obe)
 
 * Bug Fix *
 
