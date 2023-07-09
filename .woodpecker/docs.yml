@@ -1,29 +1,781 @@
+variables:
+  - &test_image 'docker.osgeo.org/postgis/build-test:trisquel3'
+  - &when_path
+      include:
+        # Common docs path
+        # related config files
+        - ".woodpecker/docs.yml"
+        # Makefiles
+        - "doc/Makefile.in"
+        # XML sources
+        - "doc/*.xml"
+        # Internationalization Makefiles
+        - "doc/po/Makefile.local"
+
 pipeline:
   prepare:
-    image: docker.osgeo.org/postgis/build-test:trisquel3
+    image: *test_image
     pull: true
     commands:
       - ./autogen.sh
       - mkdir -p build-docs && cd build-docs
       - ../configure --without-pg
       - make postgis_revision.h
+    when:
+      path: *when_path
   check-xml:
-    image: docker.osgeo.org/postgis/build-test:trisquel3
+    image: *test_image
     commands:
       - make -C build-docs/doc check
+    when:
+      path: *when_path
   build-html:
-    image: docker.osgeo.org/postgis/build-test:trisquel3
+    image: *test_image
+    group: output
     commands:
       - make -C build-docs/doc html
+    when:
+      path: *when_path
   build-cheatsheets:
-    image: docker.osgeo.org/postgis/build-test:trisquel3
+    image: *test_image
+    group: output
     commands:
       - make -C build-docs/doc/ cheatsheets
+    when:
+      path: *when_path
   build-chunked-html:
-    image: docker.osgeo.org/postgis/build-test:trisquel3
+    image: *test_image
+    group: output
     commands:
       - make -C build-docs/doc html
+    when:
+      path: *when_path
   build-pdf:
-    image: docker.osgeo.org/postgis/build-test:trisquel3
+    image: *test_image
+    group: output
     commands:
       - make -C build-docs/doc/ pdf
+    when:
+      path: *when_path
+
+  # DO NOT EDIT PAST THIS LINE, use update-docs-localized.sh to update #
+  check-it_IT:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/it_IT local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/it_IT/Makefile.in"
+          - "doc/po/it_IT/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  check-pt_BR:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/pt_BR local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/pt_BR/Makefile.in"
+          - "doc/po/pt_BR/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  check-fr:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/fr local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/fr/Makefile.in"
+          - "doc/po/fr/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  check-es:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/es local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/es/Makefile.in"
+          - "doc/po/es/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  check-pl:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/pl local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/pl/Makefile.in"
+          - "doc/po/pl/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  check-ko_KR:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ko_KR local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ko_KR/Makefile.in"
+          - "doc/po/ko_KR/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  check-de:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/de local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/de/Makefile.in"
+          - "doc/po/de/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  check-ja:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ja local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ja/Makefile.in"
+          - "doc/po/ja/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  check-ru:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ru local-check
+    group: localized-check
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ru/Makefile.in"
+          - "doc/po/ru/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-it_IT:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/it_IT local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/it_IT/Makefile.in"
+          - "doc/po/it_IT/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-pt_BR:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/pt_BR local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/pt_BR/Makefile.in"
+          - "doc/po/pt_BR/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-fr:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/fr local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/fr/Makefile.in"
+          - "doc/po/fr/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-es:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/es local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/es/Makefile.in"
+          - "doc/po/es/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-pl:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/pl local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/pl/Makefile.in"
+          - "doc/po/pl/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-ko_KR:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ko_KR local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ko_KR/Makefile.in"
+          - "doc/po/ko_KR/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-de:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/de local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/de/Makefile.in"
+          - "doc/po/de/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-ja:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ja local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ja/Makefile.in"
+          - "doc/po/ja/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  html-ru:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ru local-html
+    group: localized-html
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ru/Makefile.in"
+          - "doc/po/ru/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-it_IT:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/it_IT local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/it_IT/Makefile.in"
+          - "doc/po/it_IT/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-pt_BR:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/pt_BR local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/pt_BR/Makefile.in"
+          - "doc/po/pt_BR/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-fr:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/fr local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/fr/Makefile.in"
+          - "doc/po/fr/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-es:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/es local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/es/Makefile.in"
+          - "doc/po/es/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-pl:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/pl local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/pl/Makefile.in"
+          - "doc/po/pl/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-ko_KR:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ko_KR local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ko_KR/Makefile.in"
+          - "doc/po/ko_KR/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-de:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/de local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/de/Makefile.in"
+          - "doc/po/de/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-ja:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ja local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ja/Makefile.in"
+          - "doc/po/ja/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  cheatsheets-ru:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ru local-cheatsheets
+    group: localized-cheatsheets
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ru/Makefile.in"
+          - "doc/po/ru/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-it_IT:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/it_IT local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/it_IT/Makefile.in"
+          - "doc/po/it_IT/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-pt_BR:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/pt_BR local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/pt_BR/Makefile.in"
+          - "doc/po/pt_BR/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-fr:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/fr local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/fr/Makefile.in"
+          - "doc/po/fr/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-es:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/es local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/es/Makefile.in"
+          - "doc/po/es/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-pl:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/pl local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/pl/Makefile.in"
+          - "doc/po/pl/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-ko_KR:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ko_KR local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ko_KR/Makefile.in"
+          - "doc/po/ko_KR/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-de:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/de local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/de/Makefile.in"
+          - "doc/po/de/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-ja:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ja local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ja/Makefile.in"
+          - "doc/po/ja/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"
+  pdf-ru:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/ru local-pdf
+    group: localized-pdf
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/ru/Makefile.in"
+          - "doc/po/ru/*.po"
+          # Common docs path
+          # related config files
+          - ".woodpecker/docs.yml"
+          # Makefiles
+          - "doc/Makefile.in"
+          # XML sources
+          - "doc/*.xml"
+          # Internationalization Makefiles
+          - "doc/po/Makefile.local"

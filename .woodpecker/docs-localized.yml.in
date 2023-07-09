@@ -1,0 +1,11 @@
+  @TARGET@-@LANG@:
+    image: *test_image
+    commands:
+      - make -C build-docs/doc/po/@LANG@ local-@TARGET@
+    group: localized-@TARGET@
+    when:
+      path:
+        include:
+          # Localized assets
+          - "doc/po/@LANG@/Makefile.in"
+          - "doc/po/@LANG@/*.po"
