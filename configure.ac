@@ -9,7 +9,7 @@ dnl * the terms of the GNU General Public Licence. See the COPYING file.
 dnl *
 dnl **********************************************************************
 
-AC_INIT
+AC_INIT( [postgis], m4_esyscmd_s([utils/extract_majmin_version.sh]) )
 
 # test to see if srcdir already configured, when
 # building out of tree
