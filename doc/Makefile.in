@@ -376,7 +376,8 @@ else
 		 -P figure.warning="images/warning" \
 		 -P figure.caution="images/caution" \
 		 -P latex.output.revhistory=0 \
-		 -s "$(abs_srcdir)/texstyle.sty" \
+		 --texinputs "$(srcdir):$(abs_srcdir)" \
+		 -s "texstyle" \
 		 $(DBLATEX_EXTRA_OPTIONS) \
 		 -o postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).pdf $<
 endif
@@ -441,7 +442,7 @@ cheatsheet-install: $(GENERATED_CHEATSHEET_FILES)
 cheatsheet-clean:
 	rm -f $(GENERATED_CHEATSHEET_FILES)
 
-clean: images-clean html-clean html-clean-localized pdf-clean pdf-clean-localized epub-clean epub-clean-localized cheatsheet-clean cheatsheet-clean-localized
+clean: images-clean html-clean pdf-clean epub-clean cheatsheet-clean
 	rm -f images # work around https://trac.osgeo.org/postgis/ticket/5422
 	rm -f $(XML_GENERATED_SOURCES)
 	rm -f $(TAG_GENERATED_SOURCES)
