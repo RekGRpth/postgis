@@ -1,24 +1,22 @@
-# This file should be installed in each
-# language directory
+# This file should be included by the Makefile
+# of each language directory
 
 local-all: local-html comments
 
-# We do not want to recurse in parent dir here
+# We do not want to recurse in parent dir for the "clean" rule
 local-clean: local-html-clean local-pdf-clean local-epub-clean local-cheatsheet-clean
 	rm -f images # work around https://trac.osgeo.org/postgis/ticket/5422
 	rm -f $(XML_INPUTS)
-	rm -f html
-	rm -f xsl
+	rm -rf xsl
 
 # We do not want to recurse in parent dir here
 local-distclean:
 	rm -f Makefile
 
-local-%: symlinks
+local-%: xsl
 	$(MAKE) $(patsubst local-%,%,$@) DOCSUFFIX=$(DOCSUFFIX)
 
-symlinks:
-	ln -sf ../../html .
+xsl:
 	ln -sf $(srcdir)/../../xsl .
 
 # for XML_SOURCES
