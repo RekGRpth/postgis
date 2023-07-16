@@ -258,8 +258,7 @@ $(GENERATED_IMAGES): %.png: wkt/%.wkt generator wkt/styles.conf
 
 # Command to resize each of the images
 $(GENERATED_IMAGES_RESIZED): %.png: wkt/%.wkt generator wkt/styles.conf
-	@./generator $< $@
-	convert $@ -resize 100x100 $@
+	./generator -s 100x100 $< $@
 
 # Build the main executable
 generator: $(OBJS) ../../../liblwgeom/.libs/liblwgeom.a
@@ -274,7 +273,7 @@ generator: $(OBJS) ../../../liblwgeom/.libs/liblwgeom.a
 clean:
 	rm -f $(OBJS)
 	rm -f generator
-	rm -f tmp[0-9].png
+	rm -rf generator-temp-*
 
 distclean: clean
 	rm -f Makefile
