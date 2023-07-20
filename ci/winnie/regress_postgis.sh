@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-set -e
+
+. $(dirname $0)/winnie_common.h
+
+echo "MSYS2_ARG_CONV_EXCL=$MSYS2_ARG_CONV_EXCL"
+
 if  [[ "${OVERRIDE}" == '' ]] ; then
 	export GEOS_VER=3.11.0
 	export GDAL_VER=3.4.2
@@ -18,10 +22,6 @@ export PROTOBUF_VER=3.2.0
 export PROTOBUFC_VER=1.2.1
 export JSON_VER=0.12
 export PCRE_VER=8.33
-
-# Don't convert paths
-# See https://trac.osgeo.org/postgis/ticket/5436#comment:5
-export MSYS2_ARG_CONV_EXCL=/config/tags
 
 
 if  [[ "${ICON_VER}" == '' ]] ; then

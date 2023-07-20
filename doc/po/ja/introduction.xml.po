@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-15 01:07+0000\n"
-"PO-Revision-Date: 2023-04-12 10:08+0000\n"
+"PO-Revision-Date: 2023-07-20 04:36+0000\n"
 "Last-Translator: Teramoto Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "introductionxml/ja/>\n"
@@ -648,7 +648,7 @@ msgstr "Eduin Carrillo"
 #: introduction.xml:248
 #, no-c-format
 msgid "Esteban Zimanyi"
-msgstr ""
+msgstr "Esteban Zimanyi"
 
 #. Tag: member
 #: introduction.xml:249
@@ -1086,7 +1086,7 @@ msgstr "Talha Rizwan"
 #: introduction.xml:321
 #, no-c-format
 msgid "Teramoto Ikuhiro"
-msgstr ""
+msgstr "Teramoto Ikuhiro"
 
 #. Tag: member
 #: introduction.xml:322
@@ -1110,7 +1110,7 @@ msgstr "Victor Collod"
 #: introduction.xml:325
 #, no-c-format
 msgid "Vincent Bre"
-msgstr ""
+msgstr "Vincent Bre"
 
 #. Tag: member
 #: introduction.xml:326
@@ -1521,30 +1521,3 @@ msgstr ""
 "org\">PostgreSQL</ulink>です。PostGISはこの巨人に立っています。PostGISの速度"
 "と柔軟性は、PostgreSQLが提供する拡張性、優れたクエリプランナ、GiSTインデック"
 "ス、多数のSQL機能があって初めて成り立ちます。"
-
-#~ msgid ""
-#~ "Raster development, integration with GDAL, raster loader, user support, "
-#~ "general bug fixing, testing on various OS (Slackware, Mac, Windows, and "
-#~ "more)"
-#~ msgstr ""
-#~ "ラスタ開発、GDALとの統合、ラスタローダ、ユーザサポート、一般的なバグフィク"
-#~ "ス、様々なOS (Slackware, Mac, Windows他)での試験。"
-
-#~ msgid "Raster overall architecture, prototyping, programming support"
-#~ msgstr "ラスタ全体のアーキテクチャ、プロトタイピング、プログラミング支援。"
-
-#~ msgid ""
-#~ "The <ulink url=\"https://geos.osgeo.org\">GEOS</ulink> geometry "
-#~ "operations library"
-#~ msgstr ""
-#~ "ジオメトリ演算ライブラリ<ulink url=\"https://geos.osgeo.org\">GEOS</ulink>"
-
-#~ msgid ""
-#~ "The <ulink url=\"https://www.gdal.org\">GDAL</ulink> Geospatial Data "
-#~ "Abstraction Library used to power much of the raster functionality "
-#~ "introduced in PostGIS 2. In kind, improvements needed in GDAL to support "
-#~ "PostGIS are contributed back to the GDAL project."
-#~ msgstr ""
-#~ "地理空間データ抽象化ライブラリ<ulink url=\"https://www.gdal.org\">GDAL</"
-#~ "ulink>は、PostGIS 2で導入されたラスタ機能の多くに使われています。また、"
-#~ "GDALのPostGIS対応に必要な改善はGDALプロジェクトに貢献しています。"
