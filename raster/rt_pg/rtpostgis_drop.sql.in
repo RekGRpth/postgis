@@ -48,12 +48,31 @@ DROP AGGREGATE IF EXISTS ST_Union(raster, text, text);
 DROP AGGREGATE IF EXISTS ST_Union(raster, text, text, text, double precision);
 DROP AGGREGATE IF EXISTS ST_Union(raster, record[]);
 
+-- Removed in 2.0.0 ? see ticket #5489
 DROP FUNCTION IF EXISTS ST_Intersects(raster,boolean,geometry);
+-- Removed in 2.0.0 ? see ticket #5489
 DROP FUNCTION IF EXISTS ST_Intersects(geometry,raster,boolean);
+-- Removed in 2.0.0 ? see ticket #5489
 DROP FUNCTION IF EXISTS ST_Intersects(raster,geometry);
+-- Removed in 2.0.0 ? see ticket #5489
 DROP FUNCTION IF EXISTS ST_Intersects(geometry,raster);
+-- Removed in 2.0.0 ? see ticket #5489
 DROP FUNCTION IF EXISTS ST_Intersects(raster, integer, boolean, geometry);
+-- Removed in 2.0.0 ? see ticket #5489
 DROP FUNCTION IF EXISTS ST_Intersects(geometry, raster, integer, boolean);
+-- Removed in 2.1.0, see ticket #5489
+DROP FUNCTION IF EXISTS _st_intersects(raster, geometry, integer);
+
+-- Removed in 2.1.0, see ticket #5490
+DROP FUNCTION IF EXISTS _st_slope4ma(float8[], text, text[]);
+-- Removed in 2.0.0 ? see ticket #5490
+DROP FUNCTION IF EXISTS st_slope(raster, integer, text, boolean);
+
+-- Removed in 2.1.0, see ticket #5491
+DROP FUNCTION IF EXISTS _st_aspect4ma(float8[], text, text[]);
+-- Removed before 2.0.0 ? see ticket #5491
+DROP FUNCTION IF EXISTS st_aspect(raster, integer, text, boolean);
+
 DROP FUNCTION IF EXISTS ST_Intersection(raster,raster, integer, integer);
 DROP FUNCTION IF EXISTS ST_Intersection(geometry,raster);
 
@@ -69,6 +88,8 @@ DROP FUNCTION IF EXISTS _st_mapalgebra4unionstate(raster, raster, text);
 DROP FUNCTION IF EXISTS _st_mapalgebra4unionstate(raster, raster, int4, text);
 -- Removed in 2.1.0
 DROP FUNCTION IF EXISTS _st_mapalgebra4unionstate(raster, raster, text, text, text, float8, text, text, text, float8);
+-- Removed in 2.1.0
+DROP FUNCTION IF EXISTS st_clip(raster, int, geometry, float8[], boolean);
 -- Removed in 2.2.0
 DROP FUNCTION IF EXISTS _st_mapalgebra(rastbandarg[],regprocedure,text,integer,integer,text,raster,text[]);
 
