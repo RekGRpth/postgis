@@ -184,7 +184,7 @@ sub postgis_restore
 
 if ( $OPT_UPGRADE_PATH )
 {
-  $OPT_UPGRADE = 1; # implied
+  $OPT_UPGRADE = 1 if not $OPT_UPGRADE; # implied
   my @path = split ('--', $OPT_UPGRADE_PATH);
   $OPT_UPGRADE_FROM = $path[0]
     || die "Malformed upgrade path, <from>--<to> expected, $OPT_UPGRADE_PATH given";
@@ -1736,9 +1736,9 @@ sub package_extension_sql
 	my $sql;
 
 	if ( $pgvernum lt 130000 ) {
-		$sql = "CREATE EXTENSION ${extname} VERSION '${extver}' FROM unpackaged;";
+		$sql = "CREATE EXTENSION IF NOT EXISTS ${extname} VERSION '${extver}' FROM unpackaged;";
 	} else {
-		$sql = "CREATE EXTENSION ${extname} VERSION unpackaged;";
+		$sql = "CREATE EXTENSION IF NOT EXISTS ${extname} VERSION unpackaged;";
 		$sql .= "ALTER EXTENSION ${extname} UPDATE TO '${extver}'";
 	}
 	return $sql;
@@ -1858,15 +1858,8 @@ sub upgrade_spatial_extensions
 
       if ( ! $OPT_WITH_RASTER )
       {
-        print "Dropping PostGIS Raster in '${DB}' using: ${sql}\n" ;
-
-        $sql = "DROP EXTENSION postgis_raster";
-        $cmd = "psql $psql_opts -c \"" . $sql . "\" $DB >> $REGRESS_LOG 2>&1";
-        $rv = system($cmd);
-        if ( $rv ) {
-          fail "Error encountered dropping EXTENSION POSTGIS_RASTER on upgrade", $REGRESS_LOG;
-          return 0;
-        }
+        print "Marking PostGIS Raster as present for later drop\n";
+        $OPT_WITH_RASTER=1
       }
     }
 
@@ -2061,6 +2054,29 @@ sub uninstall_spatial
 	if ( $OBJ_COUNT_POST != $OBJ_COUNT_PRE )
 	{
 		fail("Object count pre-install ($OBJ_COUNT_PRE) != post-uninstall ($OBJ_COUNT_POST)");
+
+        if ( $OPT_UPGRADE_FROM )
+        {
+            my $fromversion = $OPT_UPGRADE_FROM;
+            $fromversion =~ s/unpackaged//;
+            print
+                "\n-------------------------------------------------\n",
+                "Need to add these to an after_upgrade.sql script?",
+                "\n-------------------------------------------------\n",
+                sql("
+SELECT format(
+    'SELECT _postgis_drop_function_by_identity(%L, %L, %L);',
+    proname,
+    pg_catalog.pg_get_function_identity_arguments(oid),
+    '$fromversion'
+)
+FROM pg_proc
+WHERE pronamespace = '${OPT_SCHEMA}'::regnamespace
+ORDER BY 1;
+                "),
+                "\n-------------------------------------------------\n",
+        }
+
 		return 0;
 	}
 

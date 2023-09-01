@@ -6,13 +6,16 @@ msgstr ""
 "Project-Id-Version: build-pg 13\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-18 20:22+0000\n"
-"PO-Revision-Date: 2023-07-18 20:22+0000\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-09-01 15:00+0000\n"
+"Last-Translator: Zuochenwei <zuochenwei5@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <https://weblate.osgeo.org/projects/"
+"postgis/reference_relationshipxml/zh_Hans/>\n"
+"Language: zh_Hans\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_Hans\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.16.4\n"
 
 #. Tag: para
 #: reference_relationship.xml:5
@@ -63,7 +66,7 @@ msgstr ""
 #: reference_relationship.xml:1882
 #, no-c-format
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #. Tag: para
 #: reference_relationship.xml:38
@@ -93,7 +96,7 @@ msgstr ""
 #: reference_relationship.xml:1651 reference_relationship.xml:1706
 #, no-c-format
 msgid "Availability: 2.0.0"
-msgstr ""
+msgstr "有效性：2.0.0"
 
 #. Tag: para
 #: reference_relationship.xml:47 reference_relationship.xml:1646
@@ -146,7 +149,7 @@ msgstr ""
 #: reference_relationship.xml:1856 reference_relationship.xml:1903
 #, no-c-format
 msgid "See Also"
-msgstr ""
+msgstr "相关信息"
 
 #. Tag: refpurpose
 #: reference_relationship.xml:71
@@ -300,7 +303,7 @@ msgstr ""
 #: reference_relationship.xml:1896
 #, no-c-format
 msgid "Examples"
-msgstr ""
+msgstr "示例"
 
 #. Tag: para
 #: reference_relationship.xml:142
@@ -451,7 +454,7 @@ msgstr ""
 #: reference_relationship.xml:310
 #, no-c-format
 msgid "Performed by the GEOS module."
-msgstr ""
+msgstr "它是通过GEOS模块实现的。"
 
 #. Tag: para
 #: reference_relationship.xml:311
@@ -1114,7 +1117,7 @@ msgstr ""
 #: reference_relationship.xml:929
 #, no-c-format
 msgid "Availability: 1.4"
-msgstr ""
+msgstr "有效性：1.4"
 
 #. Tag: para
 #: reference_relationship.xml:935
@@ -1928,7 +1931,7 @@ msgstr ""
 #: reference_relationship.xml:1839
 #, no-c-format
 msgid "&sfs_compliant;"
-msgstr ""
+msgstr "&sfs_compliant;"
 
 #. Tag: para
 #: reference_relationship.xml:1840

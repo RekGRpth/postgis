@@ -20,19 +20,19 @@
 
 --
 -- Helper function to drop functions when they match the full signature
--- Requires schema, name and __exact arguments__ as extracted from pg_catalog.pg_get_function_arguments
+--
+-- Requires name and __exact arguments__ as extracted from pg_catalog.pg_get_function_arguments
 -- You can extract the old function arguments using a query like:
--- SELECT  p.oid as oid,
---                 n.nspname as schema,
---                 p.proname as name,
---                 pg_catalog.pg_get_function_arguments(p.oid) as arguments
---         FROM pg_catalog.pg_proc p
---         LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
---         WHERE
---                 pg_catalog.LOWER(n.nspname) = pg_catalog.LOWER('public') AND
---                 pg_catalog.LOWER(p.proname) = pg_catalog.LOWER('ST_AsGeoJson')
---         ORDER BY 1, 2, 3, 4;
-CREATE OR REPLACE FUNCTION _postgis_drop_function_if_needed(
+--
+--  SELECT pg_get_function_arguments('st_intersection(geometry,geometry,float8)'::regprocedure);
+--
+-- Or:
+--
+--  SELECT pg_get_function_arguments(oid) as args
+--  FROM pg_catalog.pg_proc
+--  WHERE proname = 'st_asgeojson'
+--
+CREATE OR REPLACE FUNCTION _postgis_drop_function_by_identity(
 	function_name text,
 	function_arguments text,
 	deprecated_in_version text DEFAULT 'xxx'
@@ -58,7 +58,7 @@ BEGIN
 	WHERE pronamespace = postgis_namespace
 	AND pg_catalog.LOWER(p.proname) = pg_catalog.LOWER(function_name)
 	AND pg_catalog.pg_function_is_visible(p.oid)
-	AND pg_catalog.LOWER(pg_catalog.pg_get_function_identity_arguments(p.oid)) ~ pg_catalog.LOWER(function_arguments)
+	AND pg_catalog.LOWER(pg_catalog.pg_get_function_identity_arguments(p.oid)) = pg_catalog.LOWER(function_arguments)
 	INTO matching_function;
 
 	IF matching_function.oid IS NOT NULL THEN
@@ -66,7 +66,7 @@ BEGIN
 			matching_function.oid::regprocedure,
 			matching_function.proname || deprecated_suffix
 		);
-		RAISE WARNING 'SQL query: %', sql;
+		RAISE DEBUG 'SQL query: %', sql;
 		BEGIN
 			EXECUTE sql;
 		EXCEPTION
@@ -77,6 +77,42 @@ BEGIN
 				USING DETAIL = detail;
 		END;
 	END IF;
+
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION _postgis_drop_function_by_signature(
+  function_signature text,
+  deprecated_in_version text DEFAULT 'xxx'
+) RETURNS void AS $$
+DECLARE
+	sql text;
+	detail TEXT;
+	newname TEXT;
+	proc RECORD;
+	deprecated_suffix TEXT := '_deprecated_by_postgis_' || deprecated_in_version;
+BEGIN
+
+	-- Check if the deprecated function exists
+	BEGIN
+
+		SELECT *
+		FROM pg_catalog.pg_proc
+		WHERE oid = function_signature::regprocedure
+		INTO proc;
+
+	EXCEPTION
+	WHEN undefined_function THEN
+		RAISE DEBUG 'Deprecated function % does not exist', function_signature;
+		RETURN;
+	END;
+
+	sql := pg_catalog.format(
+		'ALTER FUNCTION %s RENAME TO %I',
+		proc.oid::regprocedure,
+		proc.proname || deprecated_suffix
+	);
+	EXECUTE sql;
 
 END;
 $$ LANGUAGE plpgsql;
