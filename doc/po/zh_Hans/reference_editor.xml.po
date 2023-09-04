@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: build-pg 13\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-18 20:22+0000\n"
-"PO-Revision-Date: 2023-09-01 15:00+0000\n"
+"PO-Revision-Date: 2023-09-04 12:58+0000\n"
 "Last-Translator: Zuochenwei <zuochenwei5@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://weblate.osgeo.org/projects/"
 "postgis/reference_editorxml/zh_Hans/>\n"
@@ -90,7 +90,7 @@ msgstr ""
 #: reference_editor.xml:42 reference_editor.xml:1310 reference_editor.xml:1532
 #, no-c-format
 msgid "Availability: 1.1.0"
-msgstr ""
+msgstr "可用性：1.1.0"
 
 #. Tag: para
 #: reference_editor.xml:43 reference_editor.xml:279 reference_editor.xml:321
@@ -104,7 +104,7 @@ msgstr ""
 #: reference_editor.xml:1732 reference_editor.xml:1927
 #, no-c-format
 msgid "&Z_support;"
-msgstr ""
+msgstr "&Z_support;"
 
 #. Tag: title
 #: reference_editor.xml:47 reference_editor.xml:131 reference_editor.xml:192
@@ -514,7 +514,7 @@ msgstr ""
 #: reference_editor.xml:866 reference_editor.xml:905 reference_editor.xml:1926
 #, no-c-format
 msgid "&curve_support;"
-msgstr ""
+msgstr "&curve_support;"
 
 #. Tag: refpurpose
 #: reference_editor.xml:301
@@ -588,14 +588,14 @@ msgstr ""
 #: reference_editor.xml:1580 reference_editor.xml:1929
 #, no-c-format
 msgid "&P_support;"
-msgstr ""
+msgstr "&P_support;"
 
 #. Tag: para
 #: reference_editor.xml:362 reference_editor.xml:772 reference_editor.xml:1581
 #: reference_editor.xml:1930
 #, no-c-format
 msgid "&T_support;"
-msgstr ""
+msgstr "&T_support;"
 
 #. Tag: title
 #: reference_editor.xml:366 reference_editor.xml:1934
@@ -631,7 +631,7 @@ msgstr ""
 #: reference_editor.xml:672 reference_editor.xml:812
 #, no-c-format
 msgid "Enhanced: 2.0.0 support for Polyhedral surfaces was introduced."
-msgstr ""
+msgstr "增强：引入了 2.0.0 多面体曲面支持。"
 
 #. Tag: para
 #: reference_editor.xml:403
@@ -1068,7 +1068,7 @@ msgstr ""
 #: reference_editor.xml:985
 #, no-c-format
 msgid "Availability: 3.4.0"
-msgstr ""
+msgstr "可用性：3.4.0"
 
 #. Tag: title
 #: reference_editor.xml:990 reference_editor.xml:1145
@@ -1646,7 +1646,7 @@ msgstr ""
 #: reference_editor.xml:1578
 #, no-c-format
 msgid "Enhanced: 2.0.0 support for Polyhedral surfaces and TIN was introduced."
-msgstr ""
+msgstr "增强：2.0.0 引入了多面体曲面支持和 TIN 支持。"
 
 #. Tag: para
 #: reference_editor.xml:1579
