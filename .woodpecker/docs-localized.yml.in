@@ -6,7 +6,4 @@
     when:
       path:
         include:
-          # Localized assets
-          - "doc/po/@LANG@/Makefile.in"
           - "doc/po/@LANG@/*.po"
-          - "utils/check_localized_cheatsheets.sh"
