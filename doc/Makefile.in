@@ -226,11 +226,11 @@ TAG_GENERATED_SOURCES = \
 	Z_support.tag
 
 XML_GENERATED_SOURCES = \
-	$(XSL_GENERATED_SOURCES) \
-	postgis-out.xml \
+	$(XSL_GENERATED_SOURCES)
 
 XML_INPUTS = $(XML_SOURCES) $(XML_GENERATED_SOURCES) $(TAG_GENERATED_SOURCES)
 
+# TODO: should these be XML_SOURCES ?
 XML_INPUTS_POT = $(XML_SOURCES:%.xml=$(srcdir)/po/templates/%.xml.pot)
 
 GENERATED_COMMENT_FILES = $(patsubst \
@@ -292,9 +292,6 @@ update-po: $(XML_INPUTS_POT)
   done
 endif
 
-postgis-nospecial.xml: postgis-out.xml
-	grep -v '\&postgis_special;' $< > $@
-
 ifeq ($(XSLTPROC),)
 $(XSL_GENERATED_SOURCES): requirements_not_met_xsltproc
 else
@@ -307,22 +304,27 @@ $(TAG_GENERATED_SOURCES): requirements_not_met_xsltproc
 else
 $(TAG_GENERATED_SOURCES): xsl/node_by_xpath.xsl xsl-config.xml | Makefile
 	tag=tag_$(basename $(notdir $@)); \
-	$(XSLTPROC) --stringparam xpath "/config/tags/para[@role='$$tag']" -o $@ $^
+	$(XSLTPROC) --stringparam xpath "/config/tags/para[@role='$$tag']/node()" -o $@ $^
 	test -s $@ # ensure something was extracted
 endif
 
-$(GENERATED_COMMENT_FILES): %.sql: xsl/%.sql.xsl $(XML_INPUTS) postgis-out.xml
+$(GENERATED_COMMENT_FILES): %.sql: xsl/%.sql.xsl postgis-out.xml
 	$(XSLTPROC) --novalid $(XSLTPROC_PATH_OPT) -o $@ $< postgis-out.xml
 
-$(GENERATED_CHEATSHEET_FILES): $(html_builddir)/%$(DOCSUFFIX).html: xsl/%.html.xsl $(XML_INPUTS) postgis-out.xml xsl/common_cheatsheet.xsl xsl/common_utils.xsl
+$(GENERATED_CHEATSHEET_FILES): $(html_builddir)/%$(DOCSUFFIX).html: xsl/%.html.xsl postgis-out.xml xsl/common_cheatsheet.xsl xsl/common_utils.xsl
 	$(XSLTPROC) --novalid $(XSLTPROC_PATH_OPT) $(XSLTPROC_CUSTOM_VARS) -o $@ $< postgis-out.xml
 
+postgis-nospecial.xml: postgis.xml $(XML_SOURCES) $(TAG_GENERATED_SOURCES) Makefile
+	grep -v '\&postgis_special;' $< > $@.in
+	$(XMLLINT) $(XSLTPROC_PATH_OPT) --noent -o $@ $@.in
+
 # TODO: use a postgis_release_version variable passed via --stringparam
-postgis-out.xml: postgis.xml Makefile
-	$(PERL) -lpe "s'@@LAST_RELEASE_VERSION@@'${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}'g;s'@@POSTGIS_DOWNLOAD_URL@@'${POSTGIS_DOWNLOAD_URL}'g;" $< > $@
+postgis-out.xml: postgis.xml Makefile $(XML_INPUTS) Makefile
+	$(PERL) -lpe "s'@@LAST_RELEASE_VERSION@@'${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}'g;s'@@POSTGIS_DOWNLOAD_URL@@'${POSTGIS_DOWNLOAD_URL}'g;" $< > $@.in
+	$(XMLLINT) $(XSLTPROC_PATH_OPT) --noent -o $@ $@.in
 
 chunked-html: $(html_builddir)/postgis$(DOCSUFFIX)/docbook.css
-$(html_builddir)/postgis$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile $(XML_INPUTS)
+$(html_builddir)/postgis$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile
 	$(XSLTPROC) $(XSLTPROC_COMMONOPTS) \
 		$(XSLTPROC_CHUNKED_HTML_OPTS) \
 		--output $(dir $@) \
@@ -330,7 +332,7 @@ $(html_builddir)/postgis$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile $(XML
 		$<
 
 chunked-html-web: $(html_builddir)/postgis-web$(DOCSUFFIX)/docbook.css
-$(html_builddir)/postgis-web$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile $(XML_INPUTS)
+$(html_builddir)/postgis-web$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile
 	$(XSLTPROC) $(XSLTPROC_COMMONOPTS) \
 		$(XSLTPROC_CHUNKED_HTML_OPTS) \
 		--output $(dir $@) \
@@ -340,7 +342,7 @@ $(html_builddir)/postgis-web$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile $
 
 HTML_BITS = $(wildcard html/*.html)
 chunked-html-web-mobile: $(html_builddir)/postgis-web-mobile$(DOCSUFFIX)/docbook.css
-$(html_builddir)/postgis-web-mobile$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile $(XML_INPUTS)
+$(html_builddir)/postgis-web-mobile$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile
 	$(XSLTPROC) $(XSLTPROC_COMMONOPTS) \
 		$(XSLTPROC_CHUNKED_HTML_OPTS) \
 		--output $(dir $@) \
@@ -358,7 +360,7 @@ html: $(html_builddir)/postgis$(DOCSUFFIX).html
     $(MAKE) -C po/$$lang local-$$rule || exit 1; \
   done
 
-$(html_builddir)/postgis$(DOCSUFFIX).html: postgis-out.xml Makefile $(XML_INPUTS)
+$(html_builddir)/postgis$(DOCSUFFIX).html: postgis-out.xml Makefile
 	$(XSLTPROC) $(XSLTPROC_COMMONOPTS) \
 		--stringparam html.stylesheet style.css \
 		--output $(html_builddir)/postgis$(DOCSUFFIX).html \
@@ -366,7 +368,7 @@ $(html_builddir)/postgis$(DOCSUFFIX).html: postgis-out.xml Makefile $(XML_INPUTS
 		$<
 
 
-postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).pdf: postgis-out.xml $(abs_srcdir)/texstyle-common.sty $(abs_srcdir)/texstyle.sty $(XML_INPUTS) | images
+postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).pdf: postgis-out.xml $(abs_srcdir)/texstyle-common.sty $(abs_srcdir)/texstyle.sty | images
 ifeq ($(DBLATEX),)
 	@echo
 	@echo "configure was unable to find the 'dblatex' utility program."
@@ -397,7 +399,7 @@ pdf-install: postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS
 pdf-uninstall:
 	rm -f $(DESTDIR)$(docdir)/postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).pdf
 
-postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).epub: postgis-out.xml images $(XML_INPUTS)
+postgis-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}$(DOCSUFFIX).epub: postgis-out.xml images
 ifeq ($(DBTOEPUB),)
 	@echo
 	@echo "configure was unable to find the 'dbtoepub' utility program."
@@ -454,7 +456,8 @@ cheatsheet-clean:
 clean: images-clean html-clean pdf-clean epub-clean cheatsheet-clean
 	rm -f images # work around https://trac.osgeo.org/postgis/ticket/5422
 	rm -f $(XML_GENERATED_SOURCES)
-	rm -f postgis-nospecial.xml
+	rm -f postgis-nospecial.xml postgis-nospecial.xml.in
+	rm -f postgis-out.xml postgis-out.xml.in
 	rm -f $(TAG_GENERATED_SOURCES)
 	$(MAKE) -C $(images_builddir) clean
 	rm -f postgis_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql
@@ -572,7 +575,7 @@ ifeq ($(XMLLINT),)
 check-xml: requirements_not_met_xmllint
 check-cheatsheets: requirements_not_met_xmllint
 else
-check-xml: $(XML_INPUTS)
+check-xml: postgis-out.xml
 	$(XMLLINT) --loaddtd $(XSLTPROC_PATH_OPT) --xinclude --valid postgis-out.xml --noout
 
 check-cheatsheets: cheatsheets
