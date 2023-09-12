@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: build-pg 13\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-07 10:12+0000\n"
+"POT-Creation-Date: 2023-09-11 19:20+0000\n"
 "PO-Revision-Date: 2023-09-06 05:32+0000\n"
 "Last-Translator: Zuochenwei <zuochenwei5@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://weblate.osgeo.org/projects/"
@@ -394,7 +394,7 @@ msgstr ""
 #: reference_raster.xml:181
 #, no-c-format
 msgid "Casting Behavior"
-msgstr ""
+msgstr "强制转换行为"
 
 #. Tag: para
 #: reference_raster.xml:182
@@ -402,7 +402,7 @@ msgstr ""
 msgid ""
 "This section lists the automatic as well as explicit casts allowed for this "
 "data type"
-msgstr ""
+msgstr "本节列出了此数据类型允许的显式和自动强制转换"
 
 #. Tag: entry
 #: reference_raster.xml:187
@@ -414,19 +414,19 @@ msgstr "转换到"
 #: reference_raster.xml:188
 #, no-c-format
 msgid "Behavior"
-msgstr ""
+msgstr "行为"
 
 #. Tag: entry
 #: reference_raster.xml:191
 #, no-c-format
 msgid "geometry"
-msgstr ""
+msgstr "几何"
 
 #. Tag: entry
 #: reference_raster.xml:192
 #, no-c-format
 msgid "automatic"
-msgstr ""
+msgstr "自动"
 
 #. Tag: refpurpose
 #: reference_raster.xml:208
