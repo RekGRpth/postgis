@@ -60,7 +60,6 @@ INSTALL=@INSTALL@
 INSTALL_DATA=@INSTALL_DATA@
 
 XSLTPROC=@XSLTPROC@
-XSLBASE=@XSLBASE@
 CAN_UPDATE_TRANSLATIONS=@CAN_UPDATE_TRANSLATIONS@
 XMLLINT=@XMLLINT@
 CAN_BUILD_COMMENTS=@CAN_BUILD_COMMENTS@
@@ -112,8 +111,9 @@ XSLTPROC_CHUNKED_HTML_OPTS = \
 	--stringparam img.src.path ../ \
 	--stringparam html.stylesheet ../style.css
 
-HTML_DOCBOOK_XSL=$(XSLBASE)/html/docbook.xsl
-CHUNK_HTML_DOCBOOK_XSL=$(XSLBASE)/html/chunk.xsl
+DOCBOOK_XSLBASE=http://cdn.docbook.org/release/xsl/current
+HTML_DOCBOOK_XSL=$(DOCBOOK_XSLBASE)/html/docbook.xsl
+CHUNK_HTML_DOCBOOK_XSL=$(DOCBOOK_XSLBASE)/html/chunk.xsl
 
 # DBLatex's dblatex script for PDF generation from DocBook
 DBLATEX=@DBLATEX@
@@ -308,7 +308,7 @@ $(TAG_GENERATED_SOURCES): xsl/node_by_xpath.xsl xsl-config.xml | Makefile
 	test -s $@ # ensure something was extracted
 endif
 
-$(GENERATED_COMMENT_FILES): %.sql: xsl/%.sql.xsl postgis-out.xml
+$(GENERATED_COMMENT_FILES): %.sql: xsl/%.sql.xsl postgis-out.xml xsl/common_utils.xsl xsl/common_comments.xsl
 	$(XSLTPROC) --novalid $(XSLTPROCFLAGS) $(XSLTPROC_PATH_OPT) -o $@ $< postgis-out.xml
 
 $(GENERATED_CHEATSHEET_FILES): $(html_builddir)/%$(DOCSUFFIX).html: xsl/%.html.xsl postgis-out.xml xsl/common_cheatsheet.xsl xsl/common_utils.xsl
@@ -576,7 +576,17 @@ check-xml: requirements_not_met_xmllint
 check-cheatsheets: requirements_not_met_xmllint
 else
 check-xml: postgis-out.xml
-	$(XMLLINT) --loaddtd $(XSLTPROC_PATH_OPT) --xinclude --valid postgis-out.xml --noout --nonet
+	# Fail early if cannot find required RelaxNG
+	xmlcatalog "" "http://docbook.org/xml/5.0/rng/docbook.rng"
+	# Fail early if cannot find required DTD
+	xmlcatalog "" "http://docbook.org/xml/5.0/dtd/docbook.dtd"
+	# TODO: --schematron http://docbook.org/xml/5.0/sch/docbook.sch
+	# See https://trac.osgeo.org/postgis/ticket/5532
+	$(XMLLINT) --noout --nonet \
+		--valid --loaddtd \
+		--relaxng http://docbook.org/xml/5.0/rng/docbook.rng \
+		$<
+
 
 check-cheatsheets: cheatsheets
 	for f in $(html_builddir)/*_cheatsheet-en.html; do \
