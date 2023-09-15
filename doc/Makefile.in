@@ -7,7 +7,7 @@
 #
 # PostGIS documentation build Makefile
 #
-# Copyright 2003-2022 Sandro Santilli <strk@kbt.io>
+# Copyright 2003-2023 Sandro Santilli <strk@kbt.io>
 # Copyright 2004-2012 Paul Ramsey <pramsey@cleverelephant.ca>
 # Copyright 2009-2022 Regina Obe <lr@pcorp.us>
 # Copyright 2008-2010 Mark Cave-Ayland
@@ -59,7 +59,9 @@ endif
 INSTALL=@INSTALL@
 INSTALL_DATA=@INSTALL_DATA@
 
+XMLCATALOG=@XMLCATALOG@
 XSLTPROC=@XSLTPROC@
+XSLBASE=@XSLBASE@
 CAN_UPDATE_TRANSLATIONS=@CAN_UPDATE_TRANSLATIONS@
 XMLLINT=@XMLLINT@
 CAN_BUILD_COMMENTS=@CAN_BUILD_COMMENTS@
@@ -111,15 +113,15 @@ XSLTPROC_CHUNKED_HTML_OPTS = \
 	--stringparam img.src.path ../ \
 	--stringparam html.stylesheet ../style.css
 
-DOCBOOK_XSLBASE=http://cdn.docbook.org/release/xsl/current
-HTML_DOCBOOK_XSL=$(DOCBOOK_XSLBASE)/html/docbook.xsl
-CHUNK_HTML_DOCBOOK_XSL=$(DOCBOOK_XSLBASE)/html/chunk.xsl
+HTML_DOCBOOK_XSL=$(XSLBASE)/html/docbook.xsl
+CHUNK_HTML_DOCBOOK_XSL=$(XSLBASE)/html/chunk.xsl
 
 # DBLatex's dblatex script for PDF generation from DocBook
 DBLATEX=@DBLATEX@
 
 # Gettext for translated documentation
 MSGCAT=@MSGCAT@
+MSGCOMM=@MSGCOMM@
 MSGMERGE=@MSGMERGE@
 MSGINIT=@MSGINIT@
 MSGATTRIB=@MSGATTRIB@
@@ -235,6 +237,12 @@ XML_SOURCE_POTS = $(XML_SOURCES:%.xml=%.xml.pot)
 
 XML_UNIFIED_POT = $(srcdir)/po/templates/postgis-manual.pot
 
+PO_FILES = $(patsubst \
+	%, \
+	$(srcdir)/po/%/postgis-manual.po, \
+	$(translations) \
+)
+
 GENERATED_COMMENT_FILES = $(patsubst \
 	$(srcdir)/xsl/%.xsl, \
 	%, \
@@ -249,25 +257,42 @@ GENERATED_CHEATSHEET_FILES = $(patsubst \
 
 VPATH = $(srcdir)
 
+ifeq ($(MSGMERGE),)
+$(PO_FILES): requirements_not_met_msgmerge
+endif
+
+ifeq ($(MSGATTRIB),)
+$(PO_FILES): requirements_not_met_msgattrib
+endif
+
+ifeq ($(MSGCOMM),)
+$(PO_FILES): requirements_not_met_msgcomm
+$(XML_UNIFIED_POT): requirements_not_met_msgcomm
+endif
+
+ifeq ($(MSGCAT),)
+$(XML_UNIFIED_POT): requirements_not_met_msgcat
+endif
+
+ifeq ($(MSGINIT),)
+$(PO_FILES): requirements_not_met_msginit
+endif
+
 ifeq ($(XML2POT),)
 $(XML_SOURCE_POTS): requirements_not_met_xml2pot
-else
+endif
+
 $(XML_SOURCE_POTS): %.xml.pot: %.xml
 	$(XML2POT) $< > $@
 	$(abs_srcdir)/po/strip_untranslatable.sh $@
-endif
 
 # Update translation template
 update-pot: $(XML_UNIFIED_POT)
 
 $(XML_UNIFIED_POT): $(XML_SOURCE_POTS)
-	$(MSGCAT) --use-first --no-location -o $@.tmp $(XML_SOURCE_POTS)
+	@$(MSGCAT) --use-first --no-location -o $@.tmp $(XML_SOURCE_POTS)
 	@if test -f $@; then \
-    changed=`diff $@.tmp $@ \
-			| grep -v '^[<>] "POT-Creation-Date:' \
-			| grep -v '^[<>] "Report-Msgid-Bugs-To:' \
-			| wc -l`; \
-    if expr $${changed} \> 3 >/dev/null; then \
+    if test -n "$$($(MSGCOMM) --unique $@.tmp $@ | tail -1)"; then \
       echo "$@ updated"; \
     else \
       echo "$@ unchanged"; \
@@ -277,23 +302,26 @@ $(XML_UNIFIED_POT): $(XML_SOURCE_POTS)
 	@if test -e $@.tmp; then mv $@.tmp $@; fi
 
 # Creates or updates translation files
-ifeq ($(MSGMERGE),)
-update-po: requirements_not_met_msgmerge
-else
-update-po: $(XML_UNIFIED_POT)
-	@for lang in $(translations); do \
-    mkdir -p $(srcdir)/po/$$lang; \
-		po=$(srcdir)/po/$$lang/`basename $(XML_UNIFIED_POT) .pot`.po; \
-		if test -f $$po; then \
-			echo "Updating po file for language $$lang..." ; \
-			$(MSGMERGE) --no-fuzzy-matching --update $$po $(XML_UNIFIED_POT) && \
-			$(MSGATTRIB) --no-obsolete -o $$po $$po || exit 1; \
+update-po: $(PO_FILES)
+
+$(PO_FILES): $(XML_UNIFIED_POT)
+	@mkdir -p `dirname $@`
+	@lang=`basename $$(dirname $@)`; \
+	if test -f $@; then \
+		$(MSGMERGE) --no-fuzzy-matching -q -o $@.tmp $@ $(XML_UNIFIED_POT) || exit 1; \
+		$(MSGATTRIB) --no-obsolete -o $@.tmp $@.tmp || exit 1; \
+		if test -n "$$($(MSGCOMM) --unique $@.tmp $@ | tail -1)"; then \
+			mv $@.tmp $@; \
+			echo "$@ updated"; \
 		else \
-			echo "Creating po file for language $$lang..." ; \
-			$(MSGINIT) -i $(XML_UNIFIED_POT) -o $$po -l $$lang --no-translator || exit 1; \
+			echo "$@ unchanged"; \
+			touch $@; \
+			rm -f $@.tmp; \
 		fi; \
-  done
-endif
+	else \
+		$(MSGINIT) -i $(XML_UNIFIED_POT) -o $@ -l $$lang --no-translator || exit 1; \
+		echo "$@ created"; \
+	fi;
 
 ifeq ($(XSLTPROC),)
 $(XSL_GENERATED_SOURCES): requirements_not_met_xsltproc
@@ -329,6 +357,8 @@ postgis-out.xml: postgis.xml Makefile $(XML_INPUTS) Makefile
 ifeq ($(XMLLINT),)
 postgis-nospecial.xml: requirements_not_met_xmllint
 postgis-out.xml: requirements_not_met_xmllint
+check-xml: requirements_not_met_xmllint
+check-cheatsheets: requirements_not_met_xmllint
 endif
 
 chunked-html: $(html_builddir)/postgis$(DOCSUFFIX)/docbook.css
@@ -582,15 +612,15 @@ check-regress:
 
 check-unit: check-xml
 
-ifeq ($(XMLLINT),)
-check-xml: requirements_not_met_xmllint
-check-cheatsheets: requirements_not_met_xmllint
-else
+ifeq ($(XMLCATALOG),)
+check-xml: requirements_not_met_xmlcatalog
+endif
+
 check-xml: postgis-out.xml
 	# Fail early if cannot find required RelaxNG
-	xmlcatalog "" "http://docbook.org/xml/5.0/rng/docbook.rng"
+	$(XMLCATALOG) "" "http://docbook.org/xml/5.0/rng/docbook.rng"
 	# Fail early if cannot find required DTD
-	xmlcatalog "" "http://docbook.org/xml/5.0/dtd/docbook.dtd"
+	$(XMLCATALOG) "" "http://docbook.org/xml/5.0/dtd/docbook.dtd"
 	# TODO: --schematron http://docbook.org/xml/5.0/sch/docbook.sch
 	# See https://trac.osgeo.org/postgis/ticket/5532
 	$(XMLLINT) --noout --nonet \
@@ -598,14 +628,10 @@ check-xml: postgis-out.xml
 		--relaxng http://docbook.org/xml/5.0/rng/docbook.rng \
 		$<
 
-
 check-cheatsheets: cheatsheets
 	for f in $(html_builddir)/*_cheatsheet-en.html; do \
 		$(abs_top_srcdir)/utils/check_localized_cheatsheets.sh $${f} en $(patsubst -%,%,$(DOCSUFFIX)) || exit 1; \
 	done
-
-endif
-
 
 requirements_not_met_xsltproc:
 	@echo
@@ -626,6 +652,15 @@ requirements_not_met_xmllint:
 	@echo
 	@false
 
+requirements_not_met_xmlcatalog:
+	@echo
+	@echo "configure was unable to find 'xmlcatalog' which is required"
+	@echo "to check the postgis documentation."
+	@echo "Install xmlcatalog and then re-run configure."
+	@echo
+	@false
+
+
 requirements_not_met_xslbase:
 	@echo
 	@echo "configure was unable to find the Docbook XSL stylesheet directory"
@@ -637,11 +672,17 @@ requirements_not_met_xslbase:
 	@echo "  http://postgis.net/documentation"
 	@echo
 
+requirements_not_met_msginit: requirements_not_met_gettext
+requirements_not_met_msgattrib: requirements_not_met_gettext
+requirements_not_met_msgcat: requirements_not_met_gettext
+requirements_not_met_msgcomm: requirements_not_met_gettext
+requirements_not_met_msgmerge: requirements_not_met_gettext
 requirements_not_met_gettext:
 	@echo
-	@echo "configure was unable to find both gettext's 'msgmerge' utility program."
+	@echo "configure was unable to find gettext utility programs."
 	@echo "To update the translation templates, install gettext and then re-run configure."
 	@echo
+	@false
 
 requirements_not_met_xml2pot:
 	@echo
