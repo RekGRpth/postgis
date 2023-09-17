@@ -62,6 +62,8 @@ INSTALL_DATA=@INSTALL_DATA@
 XMLCATALOG=@XMLCATALOG@
 XSLTPROC=@XSLTPROC@
 XSLBASE=@XSLBASE@
+DOCBOOK5_RNG=@DOCBOOK5_RNG@
+DOCBOOK5_DTD=@DOCBOOK5_DTD@
 CAN_UPDATE_TRANSLATIONS=@CAN_UPDATE_TRANSLATIONS@
 XMLLINT=@XMLLINT@
 CAN_BUILD_COMMENTS=@CAN_BUILD_COMMENTS@
@@ -148,6 +150,7 @@ endif
 ifeq ($(CAN_BUILD_EPUB),yes)
 BUILD_TARGET += epub
 endif
+
 
 # TODO: add "html" to the BUILD_TARGET if it can be built
 
@@ -257,6 +260,30 @@ GENERATED_CHEATSHEET_FILES = $(patsubst \
 
 VPATH = $(srcdir)
 
+
+CAN_CHECK_XML = yes
+
+ifeq ($(XMLLINT),)
+postgis-nospecial.xml: requirements_not_met_xmllint
+postgis-out.xml: requirements_not_met_xmllint
+check-cheatsheets: requirements_not_met_xmllint
+check-xml: requirements_not_met_xmllint
+CAN_CHECK_XML = no
+endif
+
+ifeq ($(XMLCATALOG),)
+check-xml: requirements_not_met_xmlcatalog
+CAN_CHECK_XML = no
+endif
+
+ifeq ($(DOCBOOK5_RNG),)
+CAN_CHECK_XML = no
+endif
+
+ifeq ($(DOCBOOK5_DTD),)
+CAN_CHECK_XML = no
+endif
+
 ifeq ($(MSGMERGE),)
 $(PO_FILES): requirements_not_met_msgmerge
 endif
@@ -281,6 +308,13 @@ endif
 ifeq ($(XML2POT),)
 $(XML_SOURCE_POTS): requirements_not_met_xml2pot
 endif
+
+CHECK_UNIT_TARGET =
+
+ifeq ($(CAN_CHECK_XML),yes)
+CHECK_UNIT_TARGET = check-xml
+endif
+
 
 $(XML_SOURCE_POTS): %.xml.pot: %.xml
 	$(XML2POT) $< > $@
@@ -353,13 +387,6 @@ postgis-nospecial.xml: postgis.xml $(XML_SOURCES) $(TAG_GENERATED_SOURCES) Makef
 postgis-out.xml: postgis.xml Makefile $(XML_INPUTS) Makefile
 	$(PERL) -lpe "s'@@LAST_RELEASE_VERSION@@'${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}'g;s'@@POSTGIS_DOWNLOAD_URL@@'${POSTGIS_DOWNLOAD_URL}'g;" $< > $@.in
 	$(XMLLINT) $(XSLTPROC_PATH_OPT) --noent -o $@ $@.in
-
-ifeq ($(XMLLINT),)
-postgis-nospecial.xml: requirements_not_met_xmllint
-postgis-out.xml: requirements_not_met_xmllint
-check-xml: requirements_not_met_xmllint
-check-cheatsheets: requirements_not_met_xmllint
-endif
 
 chunked-html: $(html_builddir)/postgis$(DOCSUFFIX)/docbook.css
 $(html_builddir)/postgis$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile
@@ -610,22 +637,14 @@ endif
 check: check-unit
 check-regress:
 
-check-unit: check-xml
-
-ifeq ($(XMLCATALOG),)
-check-xml: requirements_not_met_xmlcatalog
-endif
+check-unit: $(CHECK_UNIT_TARGET)
 
 check-xml: postgis-out.xml
-	# Fail early if cannot find required RelaxNG
-	$(XMLCATALOG) "" "http://docbook.org/xml/5.0/rng/docbook.rng"
-	# Fail early if cannot find required DTD
-	$(XMLCATALOG) "" "http://docbook.org/xml/5.0/dtd/docbook.dtd"
 	# TODO: --schematron http://docbook.org/xml/5.0/sch/docbook.sch
 	# See https://trac.osgeo.org/postgis/ticket/5532
 	$(XMLLINT) --noout --nonet \
 		--valid --loaddtd \
-		--relaxng http://docbook.org/xml/5.0/rng/docbook.rng \
+		--relaxng $(DOCBOOK5_RNG) \
 		$<
 
 check-cheatsheets: cheatsheets

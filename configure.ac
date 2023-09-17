@@ -211,6 +211,15 @@ if test "x$XMLCATALOG" = "x"; then
 	CAN_BUILD_COMMENTS=no
 fi
 
+AC_PATH_PROG([XMLLINT], [xmllint], [])
+if test "x$XMLLINT" = "x"; then
+	dnl AC_MSG_WARN([xmllint is not installed so documentation cannot be checked])
+	AC_MSG_WARN([xmlcatalog is not installed so documentation cannot be built])
+	CAN_BUILD_COMMENTS=no
+fi
+
+
+
 AC_PATH_PROG([XML2POT], [xml2pot], [])
 if test "x$XML2POT" = "x"; then
 	AC_MSG_WARN([xml2pot is not installed so translations cannot be updated])
@@ -265,12 +274,6 @@ if test "x$DBTOEPUB" = "x"; then
   CAN_BUILD_EPUB=no
 fi
 AC_SUBST(CAN_BUILD_EPUB)
-
-AC_PATH_PROG([XMLLINT], [xmllint], [])
-if test "x$XMLLINT" = "x"; then
-	AC_MSG_WARN([xmllint is not installed so documentation cannot be checked])
-fi
-
 
 dnl
 dnl Allow the user to specify the location of the html/docbook.xsl stylesheet
@@ -357,6 +360,32 @@ if test "x$XSLBASE" = "x"; then
 fi
 
 AC_SUBST([XSLBASE])
+
+dnl
+dnl Ensure DocBook RelaxNG can be found
+dnl
+DOCBOOK5_RNG=http://docbook.org/xml/5.0/rng/docbook.rng
+if test "x$XMLCATALOG" = "x"; then
+  DOCBOOK5_RNG=
+else
+  if $XMLCATALOG '' "${DOCBOOK5_RNG}" > /dev/null; then :
+  else DOCBOOK5_RNG=
+  fi
+fi
+AC_SUBST([DOCBOOK5_RNG])
+
+dnl
+dnl Ensure DocBook DTD can be found
+dnl
+DOCBOOK5_DTD=http://docbook.org/xml/5.0/rng/docbook.dtd
+if test "x$XMLCATALOG" = "x"; then
+  DOCBOOK5_DTD=
+else
+  if $XMLCATALOG '' "${DOCBOOK5_DTD}" > /dev/null; then :
+  else DOCBOOK5_DTD=
+  fi
+fi
+AC_SUBST([DOCBOOK5_DTD])
 
 dnl ===========================================================================
 dnl Detect if pkg-config installed
@@ -1749,9 +1778,9 @@ dnl ===========================================================================
 EXTENSIONS=""
 if test "x$PG_CONFIG" != "xno"; then
   if test \
-          "x$XSLTPROC" != "x" -o \
           -e doc/postgis_comments.sql -a \
-          -e doc/raster_comments.sql;
+          -e doc/raster_comments.sql -o \
+          "$CAN_BUILD_COMMENTS" = "yes"
   then
       AC_MSG_RESULT([enabling PostgreSQL extension support...])
       EXTENSIONS=extensions
