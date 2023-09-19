@@ -5,15 +5,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-14 17:40+0000\n"
-"PO-Revision-Date: 2023-09-14 17:40+0000\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"POT-Creation-Date: 2023-09-18 22:57+0000\n"
+"PO-Revision-Date: 2023-09-19 03:23+0000\n"
+"Last-Translator: Teramoto Ikuhiro <yellow@affrc.go.jp>\n"
+"Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
+"postgis-manual/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.0\n"
 
 #. Tag: title
 #, no-c-format
@@ -201,11 +203,6 @@ msgstr ""
 msgid "&address_standardizer_required;"
 msgstr "&address_standardizer_required;"
 
-#. Tag: term
-#, no-c-format
-msgid "building"
-msgstr "building"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -214,11 +211,6 @@ msgid ""
 msgstr ""
 "文字列 (トークン番号<code>0</code>): 建物番号や建物名を参照します。解析されて"
 "いない建物識別子と型です。一般的に、ほとんどの住所では空白です。"
-
-#. Tag: term
-#, no-c-format
-msgid "house_num"
-msgstr "house_num"
 
 #. Tag: para
 #, no-c-format
@@ -229,11 +221,6 @@ msgstr ""
 "文字列 (トークン番号<code>1</code>): ストリートの番号です。<code>75 State "
 "Street</code>では <emphasis>75</emphasis>にあたります。"
 
-#. Tag: term
-#, no-c-format
-msgid "predir"
-msgstr "predir"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -242,11 +229,6 @@ msgid ""
 msgstr ""
 "文字列 (トークン番号<code>2</code>): North, South, East, Westといった、スト"
 "リート名の方角前置語です。"
-
-#. Tag: term
-#, no-c-format
-msgid "qual"
-msgstr "qual"
 
 #. Tag: para
 #, no-c-format
@@ -257,11 +239,6 @@ msgstr ""
 "文字列 (トークン番号 <code>3</code>): ストリート名の修飾前置語です。"
 "<code>3715 OLD HIGHWAY 99</code>では<emphasis>OLD</emphasis>にあたります。"
 
-#. Tag: term
-#, no-c-format
-msgid "pretype"
-msgstr "pretype"
-
 #. Tag: para
 #, no-c-format
 msgid "is text (token number <code>4</code>): STREET PREFIX TYPE"
@@ -269,20 +246,10 @@ msgstr ""
 "文字列 (トークン番号 <code>4</code>): STREET PREFIX TYPE (ストリート名の前置"
 "詞の種別)"
 
-#. Tag: term
-#, no-c-format
-msgid "name"
-msgstr "name"
-
 #. Tag: para
 #, no-c-format
 msgid "is text (token number <code>5</code>): STREET NAME"
 msgstr "文字列 (トークン番号 <code>5</code>): ストリート名"
-
-#. Tag: term
-#, no-c-format
-msgid "suftype"
-msgstr "suftype"
 
 #. Tag: para
 #, no-c-format
@@ -295,11 +262,6 @@ msgstr ""
 "リート名に続いて記述されるものです。<code>75 State Street</code>では"
 "<emphasis>STREET</emphasis>が該当します。"
 
-#. Tag: term
-#, no-c-format
-msgid "sufdir"
-msgstr "sufdir"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -311,11 +273,6 @@ msgstr ""
 "Westといった、ストリート名の方角前置語です。<code>3715 TENTH AVENUE WEST</"
 "code>では<emphasis>WEST</emphasis>が該当します。"
 
-#. Tag: term
-#, no-c-format
-msgid "ruralroute"
-msgstr "ruralroute"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -325,31 +282,16 @@ msgstr ""
 "文字列 (トークン番号 <code>8</code>): RURAL ROUTE (地方集配路線)。"
 "<emphasis>8</emphasis>が<code>RR 7</code>では該当します。"
 
-#. Tag: term
-#, no-c-format
-msgid "extra"
-msgstr "extra"
-
 #. Tag: para
 #, no-c-format
 msgid "is text: Extra information like Floor number."
 msgstr "文字列: 階番号のような追加的情報です。"
-
-#. Tag: term
-#, no-c-format
-msgid "city"
-msgstr "city"
 
 #. Tag: para
 #, no-c-format
 msgid "is text (token number <code>10</code>): Example Boston."
 msgstr ""
 "文字列 (トークン番号 <code>10</code>): 市名です。Boston等が該当します。"
-
-#. Tag: term
-#, no-c-format
-msgid "state"
-msgstr "state"
 
 #. Tag: para
 #, no-c-format
@@ -359,22 +301,12 @@ msgstr ""
 "文字列 (トークン番号 <code>11</code>): 州名です。<code>MASSACHUSETTS</code>が"
 "該当します。"
 
-#. Tag: term
-#, no-c-format
-msgid "country"
-msgstr "country"
-
 #. Tag: para
 #, no-c-format
 msgid "is text (token number <code>12</code>): Example <code>USA</code>"
 msgstr ""
 "文字列 (トークン番号 <code>12</code>): 国名です。<code>USA</code>が該当しま"
 "す。"
-
-#. Tag: term
-#, no-c-format
-msgid "postcode"
-msgstr "postcode"
 
 #. Tag: para
 #, no-c-format
@@ -385,11 +317,6 @@ msgstr ""
 "文字列 (トークン番号 <code>13</code>): 郵便番号 (POSTAL CODE, ZIP CODE)です。"
 "<code>02109</code>等です。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>box</term>"
-msgstr "<term>box</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -398,11 +325,6 @@ msgid ""
 msgstr ""
 "文字列 (トークン番号 <code>14</code>と<code>15</code>): 私書箱番号です。"
 "<code>02109</code>等です。"
-
-#. Tag: term
-#, no-c-format
-msgid "unit"
-msgstr "unit"
 
 #. Tag: para
 #, no-c-format
@@ -464,20 +386,10 @@ msgstr ""
 "規則テーブルには、少なくとも次に示すカラムが必要です。それ以外にカラムを追加"
 "してもかまいません。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>id</term>"
-msgstr "<term>id</term>"
-
 #. Tag: para
 #, no-c-format
 msgid "Primary key of table"
 msgstr "テーブルの主キー"
-
-#. Tag: term
-#, no-c-format
-msgid "rule"
-msgstr "rule"
 
 #. Tag: para
 #, no-c-format
@@ -545,11 +457,6 @@ msgstr ""
 msgid "Form-Based Input Tokens"
 msgstr "書式ベースの入力トークン"
 
-#. Tag: term
-#, no-c-format
-msgid "AMPERS"
-msgstr "AMPERS"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -559,30 +466,15 @@ msgstr ""
 "(13) アンパサンド (&amp;)は、\"and\"という語を短縮するために、よく使われま"
 "す。"
 
-#. Tag: term
-#, no-c-format
-msgid "DASH"
-msgstr "DASH"
-
 #. Tag: para
 #, no-c-format
 msgid "(9). A punctuation character."
 msgstr "(9) 区切り記号。"
 
-#. Tag: term
-#, no-c-format
-msgid "DOUBLE"
-msgstr "DOUBLE"
-
 #. Tag: para
 #, no-c-format
 msgid "(21). A sequence of two letters. Often used as identifiers."
 msgstr "(21) 二つの文字の順列。しばしば識別子に用いられます。"
-
-#. Tag: term
-#, no-c-format
-msgid "FRACT"
-msgstr "FRACT"
 
 #. Tag: para
 #, no-c-format
@@ -591,11 +483,6 @@ msgstr ""
 "(25) ときどき\"civic nunber\"または\"unit number\" (訳注: 各戸に付けられる番"
 "号)で使われます。"
 
-#. Tag: term
-#, no-c-format
-msgid "MIXED"
-msgstr "MIXED"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -603,20 +490,10 @@ msgid ""
 "identifiers."
 msgstr "(23) 英数文字列。識別子に用います。"
 
-#. Tag: term
-#, no-c-format
-msgid "NUMBER"
-msgstr "NUMBER"
-
 #. Tag: para
 #, no-c-format
 msgid "(0). A string of digits."
 msgstr "(0) 数字からなる文字列。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>ORD</term>"
-msgstr "<term>ORD</term>"
 
 #. Tag: para
 #, no-c-format
@@ -629,11 +506,6 @@ msgstr ""
 #, no-c-format
 msgid "(18). A single letter."
 msgstr "(18) 一つの文字。"
-
-#. Tag: term
-#, no-c-format
-msgid "WORD"
-msgstr "WORD"
 
 #. Tag: para
 #, no-c-format
@@ -648,11 +520,6 @@ msgstr ""
 msgid "Function-based Input Tokens"
 msgstr "機能ベースの入力トークン"
 
-#. Tag: term
-#, no-c-format
-msgid "BOXH"
-msgstr "BOXH"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -661,11 +528,6 @@ msgid ""
 msgstr ""
 "(14) 私書箱を示すために使われる語です。たとえば <emphasis>Box</emphasis>また"
 "は<emphasis>PO Box</emphasis>です。"
-
-#. Tag: term
-#, no-c-format
-msgid "BUILDH"
-msgstr "BUILDH"
 
 #. Tag: para
 #, no-c-format
@@ -677,11 +539,6 @@ msgstr ""
 "(19) 建物またはその複合体を示すための語で、通常は前置語になります。たとえば"
 "<emphasis>Tower 7A</emphasis>では<emphasis>Tower</emphasis>が該当します。"
 
-#. Tag: term
-#, no-c-format
-msgid "BUILDT"
-msgstr "BUILDT"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -692,11 +549,6 @@ msgstr ""
 "(24) 建物またはその複合体を示すために使われる語または略語で、通常は後置語にな"
 "ります。たとえば<emphasis>Shopping Centre</emphasis>です。"
 
-#. Tag: term
-#, no-c-format
-msgid "DIRECT"
-msgstr "DIRECT"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -704,20 +556,10 @@ msgid ""
 "emphasis>."
 msgstr "(22) 方位を示す語です。たとえば <emphasis>North</emphasis>です。"
 
-#. Tag: term
-#, no-c-format
-msgid "MILE"
-msgstr "MILE"
-
 #. Tag: para
 #, no-c-format
 msgid "(20). Words used to denote milepost addresses."
 msgstr "(20) 距離標の住所を示す語です。"
-
-#. Tag: term
-#, no-c-format
-msgid "ROAD"
-msgstr "ROAD"
 
 #. Tag: para
 #, no-c-format
@@ -728,11 +570,6 @@ msgstr ""
 "(6) 高速道路と道路を示す語または略語です。たとえば<emphasis>Interstate 5</"
 "emphasis>の<emphasis>Interstate</emphasis>です。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>RR</term>"
-msgstr "<term>RR</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -740,11 +577,6 @@ msgid ""
 "emphasis>."
 msgstr ""
 "(8) 地方集配路線を示す語または略語です。たとえば<emphasis>RR</emphasis>です。"
-
-#. Tag: term
-#, no-c-format
-msgid "TYPE"
-msgstr "TYPE"
 
 #. Tag: para
 #, no-c-format
@@ -754,11 +586,6 @@ msgid ""
 msgstr ""
 "(2) ストリート種別を示す語または略語です。たとえば<emphasis>ST</emphasis>や"
 "<emphasis>AVE</emphasis>です。"
-
-#. Tag: term
-#, no-c-format
-msgid "UNITH"
-msgstr "UNITH"
 
 #. Tag: para
 #, no-c-format
@@ -774,30 +601,15 @@ msgstr ""
 msgid "Postal Type Input Tokens"
 msgstr "郵便型入力トークン"
 
-#. Tag: term
-#, no-c-format
-msgid "QUINT"
-msgstr "QUINT"
-
 #. Tag: para
 #, no-c-format
 msgid "(28). A 5 digit number. Identifies a Zip Code"
 msgstr "(28) 5桁の番号。ZIPコードです。"
 
-#. Tag: term
-#, no-c-format
-msgid "QUAD"
-msgstr "QUAD"
-
 #. Tag: para
 #, no-c-format
 msgid "(29). A 4 digit number. Identifies ZIP4."
 msgstr "(29) 4桁の番号。ZIP4です。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>PCH</term>"
-msgstr "<term>PCH</term>"
 
 #. Tag: para
 #, no-c-format
@@ -806,11 +618,6 @@ msgid ""
 "first 3 characters of a Canadian postal code."
 msgstr ""
 "(27) 英数3文字の順列です。カナダの郵便番号の先頭3文字であるFSAを示します。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>PCT</term>"
-msgstr "<term>PCT</term>"
 
 #. Tag: para
 #, no-c-format
@@ -832,11 +639,6 @@ msgid ""
 msgstr ""
 "STOPWORD (訳注: 処理対象外とする語)はWORDと結合します。規則で、複数のWORDと"
 "STOPWORDの列は、単一のWORDトークンで表現されます。"
-
-#. Tag: term
-#, no-c-format
-msgid "STOPWORD"
-msgstr "STOPWORD"
 
 #. Tag: para
 #, no-c-format
@@ -906,31 +708,16 @@ msgstr ""
 "\"http://www.pagcgeo.org/docs/html/pagc-12.html#--r-typ--\">http://www."
 "pagcgeo.org/docs/html/pagc-12.html#--r-typ--</link>からの引用)"
 
-#. Tag: term
-#, no-c-format
-msgid "CITY"
-msgstr "CITY"
-
 #. Tag: para
 #, no-c-format
 msgid "(token number \"10\"). Example \"Albany\""
 msgstr ""
 "(トークン番号 \"10\") たとえば\"Albany\" (訳注: ニューヨーク州の州都)等。"
 
-#. Tag: term
-#, no-c-format
-msgid "STATE"
-msgstr "STATE"
-
 #. Tag: para
 #, no-c-format
 msgid "(token number \"11\"). Example \"NY\""
 msgstr "(トークン番号 \"11\") たとえば\"NY\" (訳注: ニューヨーク州)等。"
-
-#. Tag: term
-#, no-c-format
-msgid "NATION"
-msgstr "NATION"
 
 #. Tag: para
 #, no-c-format
@@ -940,11 +727,6 @@ msgid ""
 msgstr ""
 "(トークン番号 \"12\") ほとんどの参照ファイル内で使われない属性です。たとえば"
 "\"USA\"等。"
-
-#. Tag: term
-#, no-c-format
-msgid "POSTAL"
-msgstr "POSTAL"
 
 #. Tag: para
 #, no-c-format
@@ -982,16 +764,6 @@ msgstr ""
 "<emphasis role=\"bold\">MICRO_C 出力トークン</emphasis> (<link xlink:href="
 "\"http://www.pagcgeo.org/docs/html/pagc-12.html#--r-typ--\">http://www."
 "pagcgeo.org/docs/html/pagc-12.html#--r-typ--</link>からの引用)"
-
-#. Tag: term
-#, no-c-format
-msgid "HOUSE"
-msgstr "HOUSE"
-
-#. Tag: term
-#, no-c-format
-msgid "street"
-msgstr "street"
 
 #. Tag: emphasis
 #, no-c-format
@@ -1049,11 +821,6 @@ msgstr ""
 "\"http://www.pagcgeo.org/docs/html/pagc-12.html#--r-typ--\">http://www."
 "pagcgeo.org/docs/html/pagc-12.html#--r-typ--</link>からの引用)"
 
-#. Tag: term
-#, no-c-format
-msgid "BLDNG"
-msgstr "BLDNG"
-
 #. Tag: para
 #, no-c-format
 msgid "(token number <code>0</code>): Unparsed building identifiers and types."
@@ -1067,11 +834,6 @@ msgid ""
 msgstr ""
 "(トークン番号 <code>14</code>): <code>BOX 3B</code>内の <emphasis role=\"bold"
 "\">BOX</emphasis>にあたります。"
-
-#. Tag: term
-#, no-c-format
-msgid "BOXT"
-msgstr "BOXT"
 
 #. Tag: para
 #, no-c-format
@@ -1100,11 +862,6 @@ msgstr ""
 "(トークン番号 <code>16</code>): <code>APT 3B</code>内の<emphasis role=\"bold"
 "\">APT</emphasis>にあたります。"
 
-#. Tag: term
-#, no-c-format
-msgid "UNITT"
-msgstr "UNITT"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -1113,11 +870,6 @@ msgid ""
 msgstr ""
 "(トークン番号<code>17</code>): <code>APT 3B</code>内の<emphasis role=\"bold"
 "\">3B</emphasis>にあたります。"
-
-#. Tag: term
-#, no-c-format
-msgid "UNKNWN"
-msgstr "UNKNWN"
 
 #. Tag: para
 #, no-c-format
@@ -1152,40 +904,20 @@ msgstr ""
 msgid "A lex has at least the following columns in the table. You may add"
 msgstr "lexは少なくとも次のカラムを持ちます。追加できます。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>seq</term>"
-msgstr "<term>seq</term>"
-
 #. Tag: para
 #, no-c-format
 msgid "integer: definition number?"
 msgstr "整数: 定義番号？"
-
-#. Tag: term
-#, no-c-format
-msgid "word"
-msgstr "word"
 
 #. Tag: para
 #, no-c-format
 msgid "text: the input word"
 msgstr "文字列: 入力単語"
 
-#. Tag: term
-#, no-c-format
-msgid "stdword"
-msgstr "stdword"
-
 #. Tag: para
 #, no-c-format
 msgid "text: the standardized replacement word"
 msgstr "文字列: 正規化した置き換え語"
-
-#. Tag: term
-#, no-c-format
-msgid "token"
-msgstr "token"
 
 #. Tag: para
 #, no-c-format
@@ -1285,11 +1017,6 @@ msgstr ""
 msgid "Elements returned in the json document are"
 msgstr "JSON文書で返される要素は次の通りです"
 
-#. Tag: term
-#, no-c-format
-msgid "input_tokens"
-msgstr "input_tokens"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -1302,11 +1029,6 @@ msgstr ""
 "返されます。入力単語のうち、入力が1回より多く分類されると、複数レコードが返さ"
 "れることがあります。"
 
-#. Tag: term
-#, no-c-format
-msgid "rules"
-msgstr "rules"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -1315,11 +1037,6 @@ msgid ""
 msgstr ""
 "入力に合致した規則と対応する個々のスコアの集合です。最初の規則 (最高スコア)が"
 "標準化に使われます"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>stdaddr</term>"
-msgstr "<term>stdaddr</term>"
 
 #. Tag: para
 #, no-c-format
@@ -19275,7 +18992,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 0.8.2, Z and M supported added in 1.1.1"
-msgstr "Availability: 0.8.2 Z軸とM軸のサポートが1.1.1で追加されました。"
+msgstr "Availability: 0.8.2 Z軸とM軸のサポートが1.1.1で追加されました"
 
 #. Tag: para
 #, no-c-format
@@ -19495,7 +19212,7 @@ msgstr "Changed: 2.1.0 2.0.xではST_Line_Substringと呼ばれていました�
 #. Tag: para
 #, no-c-format
 msgid "Availability: 1.1.0, Z and M supported added in 1.1.1"
-msgstr "Availability: 1.1.0 Z軸とM軸のサポートが1.1.1で追加されました。"
+msgstr "Availability: 1.1.0 Z軸とM軸のサポートが1.1.1で追加されました"
 
 #. Tag: para
 #, no-c-format
@@ -19951,7 +19668,7 @@ msgstr ""
 "引数で<varname>use_typmod=false</varname>を渡す必要があります。これが実行され"
 "ると、型修飾子なしのジオメトリカラムが生成され、三つの制約が定義されます。特"
 "に、これは、テーブルに属するすべてのジオメトリカラムが少なくとも三つの制約を"
-"持つことを意味します。"
+"持つことを意味します:"
 
 #. Tag: para
 #, no-c-format
@@ -20077,24 +19794,23 @@ msgid ""
 "Insert geometries into roads table with a SRID set already using <link "
 "linkend=\"ST_GeomFromEWKT\">EWKT format</link>:"
 msgstr ""
-"ジオメトリを、<link linkend=\"ST_GeomFromEWKT\">EWKT書式</link>を使って、SRID"
-"を持つ道路テーブルに挿入します。"
+"ジオメトリを、<link linkend=\"ST_GeomFromEWKT\""
+">EWKT書式</link>を使って、SRIDを持つ道路テーブルに挿入します:"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "This will change the srid of the roads table to 4326 from whatever it was "
 "before:"
-msgstr ""
-"これにより道路テーブルが、以前がどんなSRIDであっても、4326に変更されます。"
+msgstr "これにより道路テーブルが、以前がどんなSRIDであっても、4326に変更されます:"
 
 #. Tag: para
 #, no-c-format
 msgid "The prior example is equivalent to this DDL statement:"
 msgstr ""
-"上述の例と、次のDDL手続き (訳注: DDLはData Definition Languageの略で、データ"
-"構造の操作を行う言語を指し、この場合は CREATE TABLEやALTER TABLE等が該当しま"
-"す)とは同じです。"
+"上述の例と、次のDDL手続き (訳注: DDLはData Definition "
+"Languageの略で、データ構造の操作を行う言語を指し、この場合は CREATE "
+"TABLEやALTER TABLE等が該当します)とは同じです:"
 
 #. Tag: para
 #, no-c-format
@@ -20230,7 +19946,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "If your data is in geography already:"
-msgstr "ジオグラフィのデータが既にある場合。"
+msgstr "ジオグラフィのデータが既にある場合:"
 
 #. Tag: para
 #, no-c-format
@@ -20562,7 +20278,7 @@ msgid ""
 "improvements for planar to better handle large or many vertex geometries"
 msgstr ""
 "Availability: 1.5.0 1.5でジオグラフィ対応が導入されました。大きいジオメトリや"
-"頂点の多いジオメトリについての速度が改善しました。"
+"頂点の多いジオメトリについての速度が改善しました"
 
 #. Tag: para
 #, no-c-format
@@ -20740,8 +20456,7 @@ msgstr ""
 #, no-c-format
 msgid ""
 "Changed: 2.2.0 In prior versions this used to be called ST_Distance_Sphere"
-msgstr ""
-"Changed: 2.2.0 前の版ではこの関数はST_Distance_Sphereと呼ばれていました。"
+msgstr "Changed: 2.2.0 前の版ではこの関数はST_Distance_Sphereと呼ばれていました"
 
 #. Tag: para
 #, no-c-format
@@ -20780,8 +20495,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Changed: 2.2.0 In prior versions this was called ST_Distance_Spheroid"
-msgstr ""
-"Changed: 2.2.0 前の版ではこの関数はST_Distance_Sphereと呼ばれていました。"
+msgstr "Changed: 2.2.0 前の版ではこの関数はST_Distance_Sphereと呼ばれていました"
 
 #. Tag: para
 #, no-c-format
@@ -20852,7 +20566,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 2.4.0 - requires GEOS &gt;= 3.7.0"
-msgstr "Availability: 2.4.0 - GEOS 3.7.0以上が必要です。"
+msgstr "Availability: 2.4.0 - GEOS &gt;= 3.7.0が必要です"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -20984,8 +20698,8 @@ msgid ""
 msgstr ""
 "Changed: 2.0.0 大幅な変更 -- 以前の版ではジオグラフィのPOLYGONやMULTIPOLYGON"
 "への適用によってPOLYGONやMULTIPOLYGONの周囲長を返しました。2.0.0版ではジオメ"
-"トリの挙動に従うため0を返すように変更しました。ポリゴンの周囲長を求める場合"
-"は、ST_Perimeterを使います。"
+"トリの挙動に従うため0を返すように変更しました。ポリゴンの周囲長を求める場合は"
+"、ST_Perimeterを使います"
 
 #. Tag: para
 #, no-c-format
@@ -21081,7 +20795,7 @@ msgstr "&sqlmm_compliant; SQL-MM IEC 13249-3: 7.1, 10.3"
 #. Tag: para
 #, no-c-format
 msgid "Changed: 2.0.0 In prior versions this used to be called ST_Length3D"
-msgstr "Changed: 2.0.0 以前の版ではST_Length3Dと呼ばれていました。"
+msgstr "Changed: 2.0.0 以前の版ではST_Length3Dと呼ばれていました"
 
 #. Tag: para
 #, no-c-format
@@ -21113,7 +20827,8 @@ msgid ""
 "value as follows:"
 msgstr ""
 "回転楕円体面上のジオメトリの周長を返します。この関数は、ジオメトリの座標が経"
-"度/緯度で、投影変換なしで長さを求めたい場合に使います。"
+"度/緯度で、投影変換なしで長さを求めたい場合に使います。回転楕円体は次のように"
+"文字列値で指定します:"
 
 #. Tag: literallayout
 #, no-c-format
@@ -27004,16 +26719,6 @@ msgstr "マルチポイントの凹包"
 msgid "Concave Hull of a MultiPoint, allowing holes"
 msgstr "穴を作れるマルチポイントの凹包"
 
-#. Tag: varname
-#, no-c-format
-msgid "polygon_hull"
-msgstr "polygon_hull"
-
-#. Tag: varname
-#, no-c-format
-msgid "points_hull"
-msgstr "points_hull"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -28911,11 +28616,6 @@ msgstr ""
 "<para>ST_AddBandの入力に使われる複合型で、新しいバンドの属性と初期値からなり"
 "ます。</para>"
 
-#. Tag: term
-#, no-c-format
-msgid "index integer"
-msgstr "index integer"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -28926,11 +28626,6 @@ msgstr ""
 "ラスタのバンド群のうち新しいバンドが追加される位置を示す1始まりの値。NULLの場"
 "合には、新しいバンドはラスタバンド群の末尾に追加されます。"
 
-#. Tag: term
-#, no-c-format
-msgid "pixeltype text"
-msgstr "pixeltype text"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -28940,20 +28635,10 @@ msgstr ""
 "新しいバンドのピクセルタイプ。定義されたピクセルタイプは<xref linkend="
 "\"RT_ST_BandPixelType\"/>に記述されています。"
 
-#. Tag: term
-#, no-c-format
-msgid "initialvalue double precision"
-msgstr "initialvalue double precision"
-
 #. Tag: para
 #, no-c-format
 msgid "Initial value that all pixels of new band will be set to."
 msgstr "新しいバンドに設定する初期値。"
-
-#. Tag: term
-#, no-c-format
-msgid "nodataval double precision"
-msgstr "nodataval double precision"
 
 #. Tag: para
 #, no-c-format
@@ -28982,20 +28667,10 @@ msgstr ""
 "<para>ラスタとそのバンドインデックスを表現する必要がある時に使われる複合型。"
 "</para>"
 
-#. Tag: term
-#, no-c-format
-msgid "rast raster"
-msgstr "rast raster"
-
 #. Tag: para
 #, no-c-format
 msgid "The raster in question/"
 msgstr "問題にするラスタ。"
-
-#. Tag: term
-#, no-c-format
-msgid "nband integer"
-msgstr "nband integer"
 
 #. Tag: para
 #, no-c-format
@@ -29054,11 +28729,6 @@ msgstr ""
 #, no-c-format
 msgid "The band number of band to reclassify."
 msgstr "再分類対象バンドの番号。"
-
-#. Tag: term
-#, no-c-format
-msgid "reclassexpr text"
-msgstr "reclassexpr text"
 
 #. Tag: para
 #, no-c-format
@@ -29207,11 +28877,6 @@ msgstr ""
 #, no-c-format
 msgid "1-based value indicating the band of each input raster to be processed."
 msgstr "処理する入力ラスタごとのバンドを示す1始まりの値です。"
-
-#. Tag: term
-#, no-c-format
-msgid "uniontype text"
-msgstr "uniontype text"
 
 #. Tag: para
 #, no-c-format
@@ -29676,11 +29341,6 @@ msgstr "等高線のジオメトリ。"
 msgid "A unique identifier given to the contour line by GDAL."
 msgstr "GDALが等高線に与える一意の識別子。"
 
-#. Tag: term
-#, no-c-format
-msgid "value"
-msgstr "value"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -29728,11 +29388,6 @@ msgstr ""
 msgid "Input parameters are:"
 msgstr "入力パラメータは次の通りです。"
 
-#. Tag: term
-#, no-c-format
-msgid "input_points"
-msgstr "input_points"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -29741,11 +29396,6 @@ msgid ""
 msgstr ""
 "補間を駆動するポイント。Z値を持つジオメトリなら全て受け付けられ、全ての入力ポ"
 "イントが使用されます。"
-
-#. Tag: term
-#, no-c-format
-msgid "algorithm_options"
-msgstr "algorithm_options"
 
 #. Tag: para
 #, no-c-format
@@ -29759,11 +29409,6 @@ msgstr ""
 "gdal.org/programs/gdal_grid.html#interpolation-algorithms\">gdal_grid</link>"
 "で使われる書式で記述します。たとえば、逆距離補間"
 
-#. Tag: term
-#, no-c-format
-msgid "template"
-msgstr "template"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -29773,11 +29418,6 @@ msgid ""
 msgstr ""
 "出力ラスタのジオメトリを駆動するためのラスタテンプレート。幅、高さ、ピクセル"
 "ｙサイズ、空間範囲、ピクセルタイプがこのテンプレートから読み込まれます。"
-
-#. Tag: term
-#, no-c-format
-msgid "template_band_num"
-msgstr "template_band_num"
 
 #. Tag: para
 #, no-c-format
@@ -33126,11 +32766,6 @@ msgstr ""
 "<varname>exclude_nodata_value</varname>をFALSEに設定すると全てのピクセルを数"
 "えます。"
 
-#. Tag: term
-#, no-c-format
-msgid "width double precision[]"
-msgstr "width double precision[]"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -33149,11 +32784,6 @@ msgstr ""
 "例: ビン9個、widthが[a, b, c]では、[a, b, c, a, b, c, a, b, c]が出力されま"
 "す。"
 
-#. Tag: term
-#, no-c-format
-msgid "bins integer"
-msgstr "bins integer"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -33163,11 +32793,6 @@ msgid ""
 msgstr ""
 "取り出し数 -- 関数から戻そうとするレコード数です。指定しない場合には、自動計"
 "算されます。"
-
-#. Tag: term
-#, no-c-format
-msgid "right boolean"
-msgstr "right boolean"
 
 #. Tag: para
 #, no-c-format
@@ -34481,11 +34106,6 @@ msgstr ""
 "一つ以上の入力ラスタ、バンドインデックスと一つのユーザ定義コールバック関数か"
 "ら、一つのバンドからなるラスタを返します。"
 
-#. Tag: term
-#, no-c-format
-msgid "rast,rast1,rast2, rastbandargset"
-msgstr "rast,rast1,rast2, rastbandargset"
-
 #. Tag: para
 #, no-c-format
 msgid "Rasters on which the map algebra process is evaluated."
@@ -34500,11 +34120,6 @@ msgstr ""
 "<varname>rastbandargset</varname>によって、多数のラスタと多数のバンドにおいて"
 "地図代数処理が使用できます。一つ目の形式の例を見て下さい。"
 
-#. Tag: term
-#, no-c-format
-msgid "nband, nband1, nband2"
-msgstr "nband, nband1, nband2"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -34515,11 +34130,6 @@ msgstr ""
 "処理を行うラスタのバンド番号です。nbandはバンドを示す整数スカラまたは整数配列"
 "です。2ラスタ/2バンドの場合では、nband1はrast1のバンド、nband2はrast2のバンド"
 "です。"
-
-#. Tag: term
-#, no-c-format
-msgid "callbackfunc"
-msgstr "callbackfunc"
 
 #. Tag: para
 #, no-c-format
@@ -34580,11 +34190,6 @@ msgstr ""
 "引数には関数名が含まれ、関数引数の型、関数名と引数型を引用符で括ったもの、"
 "<type>regprocedure</type>へのキャストが存在することに注意して下さい。"
 
-#. Tag: term
-#, no-c-format
-msgid "mask"
-msgstr "mask"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -34600,11 +34205,6 @@ msgstr ""
 "いる場合には、この配列の値は、近隣セルのピクセル値に対して掛け算を行うための"
 "数になります。"
 
-#. Tag: term
-#, no-c-format
-msgid "weighted"
-msgstr "weighted"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -34614,11 +34214,6 @@ msgid ""
 msgstr ""
 "マスク値に重みづけを施す (元の値に対して乗算を行う)か、施さない (マスク処理だ"
 "けを行う)かを示す真偽値です。"
-
-#. Tag: term
-#, no-c-format
-msgid "pixeltype"
-msgstr "pixeltype"
 
 #. Tag: para
 #, no-c-format
@@ -34646,11 +34241,6 @@ msgstr ""
 "出力ラスタのピクセルタイプは、必ず<xref linkend=\"RT_ST_BandPixelType\"/>に挙"
 "げられたものの一つになるか、省略されるか、NULLに設定されます。"
 
-#. Tag: term
-#, no-c-format
-msgid "extenttype"
-msgstr "extenttype"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -34659,11 +34249,6 @@ msgid ""
 msgstr ""
 "INTERSECTION (デフォルト), UNION, FIRST (一つのラスタを取る形式でのデフォル"
 "ト), SECOND, LAST, CUSTOMのいずれかになります。"
-
-#. Tag: term
-#, no-c-format
-msgid "customextent"
-msgstr "customextent"
 
 #. Tag: para
 #, no-c-format
@@ -34674,11 +34259,6 @@ msgstr ""
 "<varname>extentype</varname>がCUSTOMである場合には、ラスタは"
 "<varname>customextent</varname>で提供されます。一つ目の形式の例4をご覧下さ"
 "い。"
-
-#. Tag: term
-#, no-c-format
-msgid "distancex"
-msgstr "distancex"
 
 #. Tag: para
 #, no-c-format
@@ -34691,11 +34271,6 @@ msgstr ""
 "<code>2*distancex + 1</code>となります。指定しない場合には、参照セルだけが対"
 "象となります (0の距離の近隣ピクセル)。"
 
-#. Tag: term
-#, no-c-format
-msgid "distancey"
-msgstr "distancey"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -34706,11 +34281,6 @@ msgstr ""
 "参照セルからのピクセル単位の距離です。結果として得られる行列の高さは"
 "<code>2*distancey + 1</code>となります。指定しない場合には、参照セルが対象と"
 "なります (0の距離の近隣ピクセル)。"
-
-#. Tag: term
-#, no-c-format
-msgid "userargs"
-msgstr "userargs"
 
 #. Tag: para
 #, no-c-format
@@ -34972,11 +34542,6 @@ msgstr ""
 "を持ちます。新しいラスタは、<varname>extenttype</varname>引数で定義される範囲"
 "になります。"
 
-#. Tag: term
-#, no-c-format
-msgid "expression"
-msgstr "expression"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -35037,11 +34602,6 @@ msgid ""
 msgstr ""
 "<varname>SECOND</varname> - 新しいラスタの範囲は二つ目のラスタと同じです。"
 
-#. Tag: term
-#, no-c-format
-msgid "nodata1expr"
-msgstr "nodata1expr"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -35053,11 +34613,6 @@ msgstr ""
 "<varname>rast2</varname>だけを返すか返すべき値を定義する定数を含む代数式で"
 "す。"
 
-#. Tag: term
-#, no-c-format
-msgid "nodata2expr"
-msgstr "nodata2expr"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -35068,11 +34623,6 @@ msgstr ""
 "<varname>rast2</varname>がNODATA値で、特にrast2ピクセルに値がある時に、"
 "<varname>rast1</varname>だけを返すか返すべき値を定義する定数を含む代数式で"
 "す。"
-
-#. Tag: term
-#, no-c-format
-msgid "nodatanodataval"
-msgstr "nodatanodataval"
 
 #. Tag: para
 #, no-c-format
@@ -35641,20 +35191,10 @@ msgstr ""
 "り、ピクセル毎に、ユーザ定義関数からの結果を返し、現在の対象ピクセルのピクセ"
 "ル値を関数の返り値に置き換えます。"
 
-#. Tag: term
-#, no-c-format
-msgid "rast"
-msgstr "rast"
-
 #. Tag: para
 #, no-c-format
 msgid "Raster on which the user function is evaluated."
 msgstr "ユーザ定義関数が評価されるラスタです。"
-
-#. Tag: term
-#, no-c-format
-msgid "band"
-msgstr "band"
 
 #. Tag: para
 #, no-c-format
@@ -35675,30 +35215,15 @@ msgstr ""
 "には、<varname>rast</varname>のピクセルタイプがデフォルトになります。結果ピク"
 "セル値がピクセルタイプが許容する範囲を超える場合には、切り詰められます。"
 
-#. Tag: term
-#, no-c-format
-msgid "ngbwidth"
-msgstr "ngbwidth"
-
 #. Tag: para
 #, no-c-format
 msgid "The width of the neighborhood, in cells."
 msgstr "セル単位の近傍の幅です。"
 
-#. Tag: term
-#, no-c-format
-msgid "ngbheight"
-msgstr "ngbheight"
-
 #. Tag: para
 #, no-c-format
 msgid "The height of the neighborhood, in cells."
 msgstr "セル単位の近傍の高さです。"
-
-#. Tag: term
-#, no-c-format
-msgid "onerastngbuserfunc"
-msgstr "onerastngbuserfunc"
 
 #. Tag: para
 #, no-c-format
@@ -35709,11 +35234,6 @@ msgid ""
 msgstr ""
 "ラスタの単一バンドの近傍ピクセルに適用されるPL/pgSQLユーザ定義関数です。一つ"
 "目の要素は、近傍ピクセルの四角形を表現する数値の2次元配列です。"
-
-#. Tag: term
-#, no-c-format
-msgid "nodatamode"
-msgstr "nodatamode"
 
 #. Tag: para
 #, no-c-format
@@ -35753,11 +35273,6 @@ msgstr ""
 "'value': 近傍で遭遇したNODATA値全てが参照ピクセル (近傍の中心にあるピクセル)"
 "の値に置き換えられます。この値がNODATAになった場合には、'NULL'と同じ挙動を取"
 "ります (影響のある近傍について)。"
-
-#. Tag: term
-#, no-c-format
-msgid "args"
-msgstr "args"
 
 #. Tag: para
 #, no-c-format
@@ -38667,26 +38182,6 @@ msgid ""
 msgstr ""
 "DE-9IMインタセクション行列が次の通り合致するとジオメトリはインタセクトしてい"
 "ます。"
-
-#. Tag: code
-#, no-c-format
-msgid "T********"
-msgstr "T********"
-
-#. Tag: code
-#, no-c-format
-msgid "*T*******"
-msgstr "*T*******"
-
-#. Tag: code
-#, no-c-format
-msgid "***T*****"
-msgstr "***T*****"
-
-#. Tag: code
-#, no-c-format
-msgid "****T****"
-msgstr "****T****"
 
 #. Tag: para
 #, no-c-format
@@ -44750,11 +44245,6 @@ msgstr "<varname>spatial_ref_sys</varname>の定義は次の通りです。"
 msgid "The columns are:"
 msgstr "カラムは次の通りです。"
 
-#. Tag: term
-#, no-c-format
-msgid "srid"
-msgstr "srid"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -44766,11 +44256,6 @@ msgstr ""
 "\">Spatial Reference System</link> (SRS, 空間参照系)で一意に識別される整数"
 "コードです。"
 
-#. Tag: term
-#, no-c-format
-msgid "auth_name"
-msgstr "auth_name"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -44781,11 +44266,6 @@ msgstr ""
 "この参照系に引用されている標準の名前もしくは標準そのものです。たとえば"
 "「EPSG」は妥当な<varname>auth_name</varname>です。"
 
-#. Tag: term
-#, no-c-format
-msgid "auth_srid"
-msgstr "auth_srid"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -44794,11 +44274,6 @@ msgid ""
 msgstr ""
 "空間参照系のIDは<varname>auth_name</varname>に引用される機関によって定義され"
 "ます。ここがEPSGの場合には、これはEPSGコードです。"
-
-#. Tag: term
-#, no-c-format
-msgid "srtext"
-msgstr "srtext"
 
 #. Tag: para
 #, no-c-format
@@ -44819,11 +44294,6 @@ msgstr ""
 "SRS WKTの詳細については、OGC標準の<link xlink:href=\"http://docs."
 "opengeospatial.org/is/12-063r5/12-063r5.html\">Well-known text "
 "representation of coordinate reference systems</link>をご覧下さい。"
-
-#. Tag: term
-#, no-c-format
-msgid "proj4text"
-msgstr "proj4text"
 
 #. Tag: para
 #, no-c-format
@@ -45118,11 +44588,6 @@ msgstr ""
 "タベースのシステムカタログテーブルから読み取るビューです。これによって、空間"
 "メタデータ情報が常に現在定義されているテーブルやビューと矛盾しなくなります。"
 
-#. Tag: term
-#, no-c-format
-msgid "f_table_catalog, f_table_schema, f_table_name"
-msgstr "f_table_catalog, f_table_schema, f_table_name"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45136,20 +44601,10 @@ msgstr ""
 "PostgreSQLスキーマ名が使われます (デフォルトは<varname>public</varname>で"
 "す)。"
 
-#. Tag: term
-#, no-c-format
-msgid "f_geometry_column"
-msgstr "f_geometry_column"
-
 #. Tag: para
 #, no-c-format
 msgid "The name of the geometry column in the feature table."
 msgstr "フィーチャーテーブル内のジオメトリカラムの名前。"
-
-#. Tag: term
-#, no-c-format
-msgid "coord_dimension"
-msgstr "coord_dimension"
 
 #. Tag: para
 #, no-c-format
@@ -45166,11 +44621,6 @@ msgstr ""
 "このテーブルのジオメトリの座標系として使用される座標系空間参照系のIDです。"
 "<varname>spatial_ref_sys</varname>テーブルを参照する外部キーです (<xref "
 "linkend=\"spatial_ref_sys_table\"/>を参照して下さい)。"
-
-#. Tag: term
-#, no-c-format
-msgid "type"
-msgstr "type"
 
 #. Tag: para
 #, no-c-format
@@ -45353,11 +44803,6 @@ msgstr ""
 msgid "(c|a|d|p) These are mutually exclusive options:"
 msgstr "(c|a|d|p) 相互に排他的なオプションです。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-c</term>"
-msgstr "<term>-c</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45366,11 +44811,6 @@ msgid ""
 msgstr ""
 "新しいテーブルの作成とシェープファイルからのデータの読み込みを行います。"
 "<emphasis>これがデフォルトモードです</emphasis>。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-a</term>"
-msgstr "<term>-a</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45383,11 +44823,6 @@ msgstr ""
 "をロードするためにこのオプションを使う場合は、これらのファイルは同じ属性と同"
 "じデータ型を持つ必要があります。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-d</term>"
-msgstr "<term>-d</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45396,11 +44831,6 @@ msgid ""
 msgstr ""
 "シェープファイルにあるデータを持つ新しいテーブルを作成する前にデータベース"
 "テーブルを削除します。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-p</term>"
-msgstr "<term>-p</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45412,20 +44842,10 @@ msgstr ""
 "テーブル作成のSQLコードを生成するだけで、実際のデータは追加しません。このモー"
 "ドは、テーブル作成とデータロードとを完全に分けたい場合に使用します。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-?</term>"
-msgstr "<term>-?</term>"
-
 #. Tag: para
 #, no-c-format
 msgid "Display help screen."
 msgstr "ヘルプ画面を表示します。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-D</term>"
-msgstr "<term>-D</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45438,11 +44858,6 @@ msgstr ""
 "わせて利用します。デフォルトの\"insert\"によるSQL書式よりも、大変早くロードで"
 "きます。大きなデータセットではこちらを使用して下さい。"
 
-#. Tag: term
-#, no-c-format
-msgid "-s [&lt;FROM_SRID&gt;:]&lt;SRID&gt;"
-msgstr "-s [&lt;FROM_SRID&gt;:]&lt;SRID&gt;"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45454,11 +44869,6 @@ msgstr ""
 "れた場合には、入力シェープファイルに、これを使います 。この場合には、ジオメト"
 "リは変更先SRIDに投影変換します。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-k</term>"
-msgstr "<term>-k</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45467,11 +44877,6 @@ msgid ""
 msgstr ""
 "識別子 (カラム、スキーマおよび属性)の大文字小文字を保持します。シェープファイ"
 "ルの属性は全て大文字であることに注意して下さい。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-i</term>"
-msgstr "<term>-i</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45482,20 +44887,10 @@ msgstr ""
 "全ての整数を標準の32ビット整数に強制します。DBFヘッダではそれが正当であったと"
 "しても、64ビットのbigintを生成しません。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-I</term>"
-msgstr "<term>-I</term>"
-
 #. Tag: para
 #, no-c-format
 msgid "Create a GiST index on the geometry column."
 msgstr "ジオメトリカラムにGiSTインデックスを生成します。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-m</term>"
-msgstr "<term>-m</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45509,11 +44904,6 @@ msgstr ""
 "応付けるファイルを指定します。ファイルは、1以上の行を持ちます。各行は空白区切"
 "りで二つの名前を持ち、行頭行末に空白を入れません。例を次に示します。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-S</term>"
-msgstr "<term>-S</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45524,11 +44914,6 @@ msgstr ""
 "マルチ系ジオメトリの替りに単一ジオメトリを生成します。全てのジオメトリが実際"
 "に単一である (たとえば単一の外環でなるMULTIPOLYGONや単一の頂点でなる"
 "MULTIPOINT)場合にのみ成功します。"
-
-#. Tag: term
-#, no-c-format
-msgid "-t &lt;dimensionality&gt;"
-msgstr "-t &lt;次元&gt;"
 
 #. Tag: para
 #, no-c-format
@@ -45549,11 +44934,6 @@ msgstr ""
 "入力の次元が出力より小さい場合には、出力では0が入ります。入力の次元が大きい場"
 "合には、外されます。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-w</term>"
-msgstr "<term>-w</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45562,11 +44942,6 @@ msgid ""
 msgstr ""
 "出力書式をWKBでなくWKTにします。精度が低下して、座標変動が発生しうることに注"
 "意が必要です。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-e</term>"
-msgstr "<term>-e</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45580,11 +44955,6 @@ msgstr ""
 "の元となる不良なジオメトリがいくつか含んでいる時に、大半の良好なデータのロー"
 "ドが可能にするものです。ダンプ書式ではトランザクションを常に使うので、-Dフラ"
 "グを指定している場合には使えません。"
-
-#. Tag: term
-#, no-c-format
-msgid "-W &lt;encoding&gt;"
-msgstr "-W &lt;エンコーディング&gt;"
 
 #. Tag: para
 #, no-c-format
@@ -45600,22 +44970,12 @@ msgstr ""
 "CLIENT_ENCODING to UTF8</code>が含まれるようになり、バックエンドはUTF-8から"
 "データベースが内部利用のために設定したエンコーディングに再変換できます。"
 
-#. Tag: term
-#, no-c-format
-msgid "-N &lt;policy&gt;"
-msgstr "-N &lt;方針&gt;"
-
 #. Tag: para
 #, no-c-format
 msgid "NULL geometries handling policy (insert*,skip,abort)"
 msgstr ""
 "NULLジオメトリ操作方針(insert*=挿入, skip=スキップ, abort=強制終了)を選択しま"
 "す。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-n</term>"
-msgstr "<term>-n</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45630,11 +44990,6 @@ msgstr ""
 "全なシェープファイル群を持っていて、属性データだけが欲しくてジオメトリが欲し"
 "くない時のみ使用します。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-G</term>"
-msgstr "<term>-G</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45643,11 +44998,6 @@ msgid ""
 msgstr ""
 "ジオメトリ型のかわりに、ジオグラフィ型で、WGS84経度緯度 (SRID=4326)を使用しま"
 "す (経度緯度データが必要です)。"
-
-#. Tag: term
-#, no-c-format
-msgid "-T &lt;tablespace&gt;"
-msgstr "-T &lt;tablespace&gt;"
 
 #. Tag: para
 #, no-c-format
@@ -45660,11 +45010,6 @@ msgstr ""
 "インデックスはデフォルトのテーブル空間を使用します。PostgreSQL文書には、テー"
 "ブル空間を用いるべき時に関する良い文書があります。"
 
-#. Tag: term
-#, no-c-format
-msgid "-X &lt;tablespace&gt;"
-msgstr "-X &lt;tablespace&gt;"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45674,11 +45019,6 @@ msgstr ""
 "新しいテーブルのインデックスで使われるテーブル空間を指定します。 主キーイン"
 "デックスに適用され、-Iが合わせて使われている場合にはGiST空間インデックスにも"
 "適用されます。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-Z</term>"
-msgstr "<term>-Z</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45748,21 +45088,11 @@ msgstr ""
 "性ベースで制限をかける場合には、非空間テーブルで使うのと同じSQL文を使います。"
 "空間に制限をかけるには次の関数を使います。"
 
-#. Tag: term
-#, no-c-format
-msgid "ST_Intersects"
-msgstr "ST_Intersects"
-
 #. Tag: para
 #, no-c-format
 msgid "This function tells whether two geometries share any space."
 msgstr ""
 "この関数は、二つのジオメトリが空間を共有しているかどうかをテストします。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>=</term>"
-msgstr "<term>=</term>"
 
 #. Tag: para
 #, no-c-format
@@ -45860,60 +45190,30 @@ msgstr ""
 msgid "The commandline options are:"
 msgstr "コマンドラインオプションは次の通りです。"
 
-#. Tag: term
-#, no-c-format
-msgid "-f &lt;filename&gt;"
-msgstr "-f &lt;ファイル名&gt;"
-
 #. Tag: para
 #, no-c-format
 msgid "Write the output to a particular filename."
 msgstr "特定のファイル名に出力を書きこみます。"
-
-#. Tag: term
-#, no-c-format
-msgid "-h &lt;host&gt;"
-msgstr "-h &lt;ホスト&gt;"
 
 #. Tag: para
 #, no-c-format
 msgid "The database host to connect to."
 msgstr "接続先データベースのホスト名。"
 
-#. Tag: term
-#, no-c-format
-msgid "-p &lt;port&gt;"
-msgstr "-p &lt;ポート&gt;"
-
 #. Tag: para
 #, no-c-format
 msgid "The port to connect to on the database host."
 msgstr "接続先データベースのポート。"
-
-#. Tag: term
-#, no-c-format
-msgid "-P &lt;password&gt;"
-msgstr "-P &lt;パスワード&gt;"
 
 #. Tag: para
 #, no-c-format
 msgid "The password to use when connecting to the database."
 msgstr "データベースに接続するためのパスワード。"
 
-#. Tag: term
-#, no-c-format
-msgid "-u &lt;user&gt;"
-msgstr "-u &lt;ユーザ名&gt;"
-
 #. Tag: para
 #, no-c-format
 msgid "The username to use when connecting to the database."
 msgstr "データベースに接続する際のユーザ名。"
-
-#. Tag: term
-#, no-c-format
-msgid "-g &lt;geometry column&gt;"
-msgstr "-g &lt;ジオメトリカラム&gt;"
 
 #. Tag: para
 #, no-c-format
@@ -45924,11 +45224,6 @@ msgstr ""
 "複数のジオメトリカラムを持つテーブルの場合の、シェープファイルの出力に使用す"
 "るジオメトリカラム。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-b</term>"
-msgstr "<term>-b</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45938,11 +45233,6 @@ msgstr ""
 "バイナリカーソルを使います。これは、実行時間を短くしますが、テーブルの非ジオ"
 "メトリ属性がテキストへのキャストを持っていない場合には、動作しません。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-r</term>"
-msgstr "<term>-r</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -45951,11 +45241,6 @@ msgid ""
 msgstr ""
 "Rawモード。<varname>gid</varname>フィールドを落としたり、カラム名をエスケープ"
 "してはいけません。"
-
-#. Tag: term
-#, no-c-format
-msgid "-m filename"
-msgstr "-m filename"
 
 #. Tag: para
 #, no-c-format
@@ -47641,11 +46926,6 @@ msgid ""
 "catalogs"
 msgstr "ラスタ処理: ラスタカタログに適切に登録するための制約の適用"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-C</term>"
-msgstr "<term>-C</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -47654,11 +46934,6 @@ msgid ""
 msgstr ""
 "SRIDやピクセルサイズ等のラスタ制約を適用して、<varname>raster_columns</"
 "varname>ビューで適切な登録ができるようにします。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-x</term>"
-msgstr "<term>-x</term>"
 
 #. Tag: para
 #, no-c-format
@@ -47684,11 +46959,6 @@ msgid ""
 "dataset"
 msgstr "ラスタ処理: 入力ラスタデータセットの操作に使われる追加的なパラメータ"
 
-#. Tag: term
-#, no-c-format
-msgid "-s &lt;SRID&gt;"
-msgstr "-s &lt;SRID&gt;"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -47697,11 +46967,6 @@ msgid ""
 msgstr ""
 "出力ラスタを指定されたSRIDにします。 指定しないか0を指定した場合、ラスタのメ"
 "タデータに対して、適切なSRIDを決定するためのチェックを行います。"
-
-#. Tag: term
-#, no-c-format
-msgid "-b BAND"
-msgstr "-b BAND"
 
 #. Tag: para
 #, no-c-format
@@ -47712,11 +46977,6 @@ msgid ""
 msgstr ""
 "ラスタから抽出するバンドのインデクス (1始まり)。1より多いバンドを抽出するに"
 "は、コンマ(,)で区切ります。指定しない場合、全てのバンドが抽出されます。"
-
-#. Tag: term
-#, no-c-format
-msgid "-t TILE_SIZE"
-msgstr "-t TILE_SIZE"
 
 #. Tag: para
 #, no-c-format
@@ -47730,11 +46990,6 @@ msgstr ""
 "で表現しますが、\"auto\"を指定すると、最初のラスタを使って適切なタイルサイズ"
 "が計算され、全てのラスタに適用されます。"
 
-#. Tag: term
-#, no-c-format
-msgid "<term>-P</term>"
-msgstr "<term>-P</term>"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -47743,11 +46998,6 @@ msgid ""
 msgstr ""
 "全てのタイルが同じ幅と高さを持つことを保証するために、右端、下端のタイルに詰"
 "め物を施します。"
-
-#. Tag: term
-#, no-c-format
-msgid "-R, --register"
-msgstr "-R, --register"
 
 #. Tag: para
 #, no-c-format
@@ -47762,11 +47012,6 @@ msgid ""
 msgstr ""
 "データベースには、ラスタのメタデータとラスタのファイルパスのみ格納されます "
 "(ピクセルは格納されません)。"
-
-#. Tag: term
-#, no-c-format
-msgid "-l OVERVIEW_FACTOR"
-msgstr "-l OVERVIEW_FACTOR"
 
 #. Tag: para
 #, no-c-format
@@ -47787,11 +47032,6 @@ msgstr ""
 "す。生成されたSQLファイルは元データのテーブルとオーバビューテーブルの両方を含"
 "むことに注意して下さい。"
 
-#. Tag: term
-#, no-c-format
-msgid "-N NODATA"
-msgstr "-N NODATA"
-
 #. Tag: para
 #, no-c-format
 msgid "NODATA value to use on bands without a NODATA value."
@@ -47802,40 +47042,20 @@ msgstr "NODATA値を持たないバンドで使用するNODATA値を設定しま
 msgid "Optional parameters used to manipulate database objects"
 msgstr "テータベースオブジェクトの操作に使われる追加的なパラメータ"
 
-#. Tag: term
-#, no-c-format
-msgid "-f COLUMN"
-msgstr "-f COLUMN"
-
 #. Tag: para
 #, no-c-format
 msgid "Specify name of destination raster column, default is 'rast'"
 msgstr "出力先ラスタカラムの名前を指定します。デフォルトは'rast'です。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-F</term>"
-msgstr "<term>-F</term>"
 
 #. Tag: para
 #, no-c-format
 msgid "Add a column with the name of the file"
 msgstr "ファイル名でカラムを追加します。"
 
-#. Tag: term
-#, no-c-format
-msgid "-n COLUMN"
-msgstr "-n COLUMN"
-
 #. Tag: para
 #, no-c-format
 msgid "Specify the name of the filename column. Implies -F."
 msgstr "ファイル名カラムの名前を指定します。-Fを暗に含みます。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-q</term>"
-msgstr "<term>-q</term>"
 
 #. Tag: para
 #, no-c-format
@@ -47846,11 +47066,6 @@ msgstr "PostgreSQL識別子に引用符を付けます。"
 #, no-c-format
 msgid "Create a GiST index on the raster column."
 msgstr "ラスタカラムにGiSTインデクスを生成します。"
-
-#. Tag: term
-#, no-c-format
-msgid "<term>-M</term>"
-msgstr "<term>-M</term>"
 
 #. Tag: para
 #, no-c-format
@@ -47868,11 +47083,6 @@ msgstr ""
 "間を抑えることになりますが、データベース内の不要な行がずっと増えて、これらの"
 "行が空タイルとされないことに注意して下さい。"
 
-#. Tag: term
-#, no-c-format
-msgid "-T tablespace"
-msgstr "-T tablespace"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -47884,11 +47094,6 @@ msgstr ""
 "は、インデクス (主キーを含む)はデフォルトのテーブルスペースを使用することにご"
 "注意ください。"
 
-#. Tag: term
-#, no-c-format
-msgid "-X tablespace"
-msgstr "-X tablespace"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -47897,11 +47102,6 @@ msgid ""
 msgstr ""
 "テーブルの新しいインデクスに使うテーブル空間を指定します。主キーに適用され、-"
 "Iフラグがある場合においては空間インデクスにも適用されます。"
-
-#. Tag: term
-#, no-c-format
-msgid "-Y max_rows_per_copy=50"
-msgstr "-Y max_rows_per_copy=50"
 
 #. Tag: para
 #, no-c-format
@@ -47918,11 +47118,6 @@ msgstr ""
 msgid "Execute each statement individually, do not use a transaction."
 msgstr "ステートメント毎に実行して、トランザクションを使用しないようにします。"
 
-#. Tag: term
-#, no-c-format
-msgid "-E ENDIAN"
-msgstr "-E ENDIAN"
-
 #. Tag: para
 #, no-c-format
 msgid ""
@@ -47932,11 +47127,6 @@ msgstr ""
 "生成されるラスタのバイナリ出力のエンディアンを制御します。XDR (訳注: ビッグエ"
 "ンディアン)の場合は0を、NDR (訳注:リトルエンディアン)の場合は1を、それぞれ指"
 "定します。デフォルトは1です。現時点ではNDR出力のみサポートします。"
-
-#. Tag: term
-#, no-c-format
-msgid "-V version"
-msgstr "-V version"
 
 #. Tag: para
 #, no-c-format
@@ -47966,9 +47156,7 @@ msgstr ""
 msgid ""
 "Create a table with a raster column to hold the new raster records which can "
 "be accomplished with:"
-msgstr ""
-"新しいラスタ行を保持するためのラスタカラムを持つテーブルを生成します。次を実"
-"行します。"
+msgstr "新しいラスタ行を保持するためのラスタカラムを持つテーブルを生成します:"
 
 #. Tag: para
 #, no-c-format
@@ -47980,7 +47168,7 @@ msgid ""
 msgstr ""
 "この目標で助けとなる関数は多数あります。他のラスタの派生でないラスタを生成す"
 "る場合、<xref linkend=\"RT_ST_MakeEmptyRaster\"/>と<xref linkend="
-"\"RT_ST_AddBand\"/>を順次実行して作業を開始します。"
+"\"RT_ST_AddBand\"/>を順次実行して作業を開始します"
 
 #. Tag: para
 #, no-c-format
@@ -48004,17 +47192,16 @@ msgid ""
 "projection from an existing one using <xref linkend=\"RT_ST_Transform\"/>"
 msgstr ""
 "既存テーブルから新しいラスタテーブルを生成するための多数の選択肢があります。"
-"たとえば、<xref linkend=\"RT_ST_Transform\"/>を使って、既存テーブルから異なる"
-"投影法のラスタテーブルを生成します。"
+"たとえば、<xref linkend=\"RT_ST_Transform\""
+"/>を使って、既存テーブルから異なる投影法のラスタテーブルを生成します"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Once you are done populating your table initially, you'll want to create a "
 "spatial index on the raster column with something like:"
-msgstr ""
-"はじめにテーブルにデータを入れたら、ラスタカラムに空間インデクスを生成したく"
-"なるでしょう。次のようにします。"
+msgstr "はじめにテーブルにデータを入れたら、ラスタカラムに空間インデクスを生成したく"
+"なるでしょう:"
 
 #. Tag: para
 #, no-c-format
@@ -48040,8 +47227,7 @@ msgstr ""
 #, no-c-format
 msgid ""
 "Apply raster constraints using <xref linkend=\"RT_AddRasterConstraints\"/>"
-msgstr ""
-"<xref linkend=\"RT_AddRasterConstraints\"/>を用いてラスタ制約を適用します。"
+msgstr "<xref linkend=\"RT_AddRasterConstraints\"/>を用いてラスタ制約を適用します"
 
 #. Tag: title
 #, no-c-format
@@ -48918,3 +48104,651 @@ msgstr "2.5次元/3次元対応"
 #, no-c-format
 msgid "Supports geography"
 msgstr "ジオグラフィ対応"
+
+#, no-c-format
+#~ msgid "building"
+#~ msgstr "building"
+
+#, no-c-format
+#~ msgid "house_num"
+#~ msgstr "house_num"
+
+#, no-c-format
+#~ msgid "predir"
+#~ msgstr "predir"
+
+#, no-c-format
+#~ msgid "qual"
+#~ msgstr "qual"
+
+#, no-c-format
+#~ msgid "pretype"
+#~ msgstr "pretype"
+
+#, no-c-format
+#~ msgid "name"
+#~ msgstr "name"
+
+#, no-c-format
+#~ msgid "suftype"
+#~ msgstr "suftype"
+
+#, no-c-format
+#~ msgid "sufdir"
+#~ msgstr "sufdir"
+
+#, no-c-format
+#~ msgid "ruralroute"
+#~ msgstr "ruralroute"
+
+#, no-c-format
+#~ msgid "extra"
+#~ msgstr "extra"
+
+#, no-c-format
+#~ msgid "city"
+#~ msgstr "city"
+
+#, no-c-format
+#~ msgid "state"
+#~ msgstr "state"
+
+#, no-c-format
+#~ msgid "country"
+#~ msgstr "country"
+
+#, no-c-format
+#~ msgid "postcode"
+#~ msgstr "postcode"
+
+#, no-c-format
+#~ msgid "<term>box</term>"
+#~ msgstr "<term>box</term>"
+
+#, no-c-format
+#~ msgid "unit"
+#~ msgstr "unit"
+
+#, no-c-format
+#~ msgid "<term>id</term>"
+#~ msgstr "<term>id</term>"
+
+#, no-c-format
+#~ msgid "rule"
+#~ msgstr "rule"
+
+#, no-c-format
+#~ msgid "AMPERS"
+#~ msgstr "AMPERS"
+
+#, no-c-format
+#~ msgid "DASH"
+#~ msgstr "DASH"
+
+#, no-c-format
+#~ msgid "DOUBLE"
+#~ msgstr "DOUBLE"
+
+#, no-c-format
+#~ msgid "FRACT"
+#~ msgstr "FRACT"
+
+#, no-c-format
+#~ msgid "MIXED"
+#~ msgstr "MIXED"
+
+#, no-c-format
+#~ msgid "NUMBER"
+#~ msgstr "NUMBER"
+
+#, no-c-format
+#~ msgid "<term>ORD</term>"
+#~ msgstr "<term>ORD</term>"
+
+#, no-c-format
+#~ msgid "WORD"
+#~ msgstr "WORD"
+
+#, no-c-format
+#~ msgid "BOXH"
+#~ msgstr "BOXH"
+
+#, no-c-format
+#~ msgid "BUILDH"
+#~ msgstr "BUILDH"
+
+#, no-c-format
+#~ msgid "BUILDT"
+#~ msgstr "BUILDT"
+
+#, no-c-format
+#~ msgid "DIRECT"
+#~ msgstr "DIRECT"
+
+#, no-c-format
+#~ msgid "MILE"
+#~ msgstr "MILE"
+
+#, no-c-format
+#~ msgid "ROAD"
+#~ msgstr "ROAD"
+
+#, no-c-format
+#~ msgid "<term>RR</term>"
+#~ msgstr "<term>RR</term>"
+
+#, no-c-format
+#~ msgid "TYPE"
+#~ msgstr "TYPE"
+
+#, no-c-format
+#~ msgid "UNITH"
+#~ msgstr "UNITH"
+
+#, no-c-format
+#~ msgid "QUINT"
+#~ msgstr "QUINT"
+
+#, no-c-format
+#~ msgid "QUAD"
+#~ msgstr "QUAD"
+
+#, no-c-format
+#~ msgid "<term>PCH</term>"
+#~ msgstr "<term>PCH</term>"
+
+#, no-c-format
+#~ msgid "<term>PCT</term>"
+#~ msgstr "<term>PCT</term>"
+
+#, no-c-format
+#~ msgid "STOPWORD"
+#~ msgstr "STOPWORD"
+
+#, no-c-format
+#~ msgid "CITY"
+#~ msgstr "CITY"
+
+#, no-c-format
+#~ msgid "STATE"
+#~ msgstr "STATE"
+
+#, no-c-format
+#~ msgid "NATION"
+#~ msgstr "NATION"
+
+#, no-c-format
+#~ msgid "POSTAL"
+#~ msgstr "POSTAL"
+
+#, no-c-format
+#~ msgid "HOUSE"
+#~ msgstr "HOUSE"
+
+#, no-c-format
+#~ msgid "street"
+#~ msgstr "street"
+
+#, no-c-format
+#~ msgid "BLDNG"
+#~ msgstr "BLDNG"
+
+#, no-c-format
+#~ msgid "BOXT"
+#~ msgstr "BOXT"
+
+#, no-c-format
+#~ msgid "UNITT"
+#~ msgstr "UNITT"
+
+#, no-c-format
+#~ msgid "UNKNWN"
+#~ msgstr "UNKNWN"
+
+#, no-c-format
+#~ msgid "<term>seq</term>"
+#~ msgstr "<term>seq</term>"
+
+#, no-c-format
+#~ msgid "word"
+#~ msgstr "word"
+
+#, no-c-format
+#~ msgid "stdword"
+#~ msgstr "stdword"
+
+#, no-c-format
+#~ msgid "token"
+#~ msgstr "token"
+
+#, no-c-format
+#~ msgid "input_tokens"
+#~ msgstr "input_tokens"
+
+#, no-c-format
+#~ msgid "rules"
+#~ msgstr "rules"
+
+#, no-c-format
+#~ msgid "<term>stdaddr</term>"
+#~ msgstr "<term>stdaddr</term>"
+
+#, no-c-format
+#~ msgid "polygon_hull"
+#~ msgstr "polygon_hull"
+
+#, no-c-format
+#~ msgid "points_hull"
+#~ msgstr "points_hull"
+
+#, no-c-format
+#~ msgid "index integer"
+#~ msgstr "index integer"
+
+#, no-c-format
+#~ msgid "pixeltype text"
+#~ msgstr "pixeltype text"
+
+#, no-c-format
+#~ msgid "initialvalue double precision"
+#~ msgstr "initialvalue double precision"
+
+#, no-c-format
+#~ msgid "nodataval double precision"
+#~ msgstr "nodataval double precision"
+
+#, no-c-format
+#~ msgid "rast raster"
+#~ msgstr "rast raster"
+
+#, no-c-format
+#~ msgid "nband integer"
+#~ msgstr "nband integer"
+
+#, no-c-format
+#~ msgid "reclassexpr text"
+#~ msgstr "reclassexpr text"
+
+#, no-c-format
+#~ msgid "uniontype text"
+#~ msgstr "uniontype text"
+
+#, no-c-format
+#~ msgid "value"
+#~ msgstr "value"
+
+#, no-c-format
+#~ msgid "input_points"
+#~ msgstr "input_points"
+
+#, no-c-format
+#~ msgid "algorithm_options"
+#~ msgstr "algorithm_options"
+
+#, no-c-format
+#~ msgid "template"
+#~ msgstr "template"
+
+#, no-c-format
+#~ msgid "template_band_num"
+#~ msgstr "template_band_num"
+
+#, no-c-format
+#~ msgid "width double precision[]"
+#~ msgstr "width double precision[]"
+
+#, no-c-format
+#~ msgid "bins integer"
+#~ msgstr "bins integer"
+
+#, no-c-format
+#~ msgid "right boolean"
+#~ msgstr "right boolean"
+
+#, no-c-format
+#~ msgid "rast,rast1,rast2, rastbandargset"
+#~ msgstr "rast,rast1,rast2, rastbandargset"
+
+#, no-c-format
+#~ msgid "nband, nband1, nband2"
+#~ msgstr "nband, nband1, nband2"
+
+#, no-c-format
+#~ msgid "callbackfunc"
+#~ msgstr "callbackfunc"
+
+#, no-c-format
+#~ msgid "mask"
+#~ msgstr "mask"
+
+#, no-c-format
+#~ msgid "weighted"
+#~ msgstr "weighted"
+
+#, no-c-format
+#~ msgid "pixeltype"
+#~ msgstr "pixeltype"
+
+#, no-c-format
+#~ msgid "extenttype"
+#~ msgstr "extenttype"
+
+#, no-c-format
+#~ msgid "customextent"
+#~ msgstr "customextent"
+
+#, no-c-format
+#~ msgid "distancex"
+#~ msgstr "distancex"
+
+#, no-c-format
+#~ msgid "distancey"
+#~ msgstr "distancey"
+
+#, no-c-format
+#~ msgid "userargs"
+#~ msgstr "userargs"
+
+#, no-c-format
+#~ msgid "expression"
+#~ msgstr "expression"
+
+#, no-c-format
+#~ msgid "nodata1expr"
+#~ msgstr "nodata1expr"
+
+#, no-c-format
+#~ msgid "nodata2expr"
+#~ msgstr "nodata2expr"
+
+#, no-c-format
+#~ msgid "nodatanodataval"
+#~ msgstr "nodatanodataval"
+
+#, no-c-format
+#~ msgid "rast"
+#~ msgstr "rast"
+
+#, no-c-format
+#~ msgid "band"
+#~ msgstr "band"
+
+#, no-c-format
+#~ msgid "ngbwidth"
+#~ msgstr "ngbwidth"
+
+#, no-c-format
+#~ msgid "ngbheight"
+#~ msgstr "ngbheight"
+
+#, no-c-format
+#~ msgid "onerastngbuserfunc"
+#~ msgstr "onerastngbuserfunc"
+
+#, no-c-format
+#~ msgid "nodatamode"
+#~ msgstr "nodatamode"
+
+#, no-c-format
+#~ msgid "args"
+#~ msgstr "args"
+
+#, no-c-format
+#~ msgid "T********"
+#~ msgstr "T********"
+
+#, no-c-format
+#~ msgid "*T*******"
+#~ msgstr "*T*******"
+
+#, no-c-format
+#~ msgid "***T*****"
+#~ msgstr "***T*****"
+
+#, no-c-format
+#~ msgid "****T****"
+#~ msgstr "****T****"
+
+#, no-c-format
+#~ msgid "srid"
+#~ msgstr "srid"
+
+#, no-c-format
+#~ msgid "auth_name"
+#~ msgstr "auth_name"
+
+#, no-c-format
+#~ msgid "auth_srid"
+#~ msgstr "auth_srid"
+
+#, no-c-format
+#~ msgid "srtext"
+#~ msgstr "srtext"
+
+#, no-c-format
+#~ msgid "proj4text"
+#~ msgstr "proj4text"
+
+#, no-c-format
+#~ msgid "f_table_catalog, f_table_schema, f_table_name"
+#~ msgstr "f_table_catalog, f_table_schema, f_table_name"
+
+#, no-c-format
+#~ msgid "f_geometry_column"
+#~ msgstr "f_geometry_column"
+
+#, no-c-format
+#~ msgid "coord_dimension"
+#~ msgstr "coord_dimension"
+
+#, no-c-format
+#~ msgid "type"
+#~ msgstr "type"
+
+#, no-c-format
+#~ msgid "<term>-c</term>"
+#~ msgstr "<term>-c</term>"
+
+#, no-c-format
+#~ msgid "<term>-a</term>"
+#~ msgstr "<term>-a</term>"
+
+#, no-c-format
+#~ msgid "<term>-d</term>"
+#~ msgstr "<term>-d</term>"
+
+#, no-c-format
+#~ msgid "<term>-p</term>"
+#~ msgstr "<term>-p</term>"
+
+#, no-c-format
+#~ msgid "<term>-?</term>"
+#~ msgstr "<term>-?</term>"
+
+#, no-c-format
+#~ msgid "<term>-D</term>"
+#~ msgstr "<term>-D</term>"
+
+#, no-c-format
+#~ msgid "-s [&lt;FROM_SRID&gt;:]&lt;SRID&gt;"
+#~ msgstr "-s [&lt;FROM_SRID&gt;:]&lt;SRID&gt;"
+
+#, no-c-format
+#~ msgid "<term>-k</term>"
+#~ msgstr "<term>-k</term>"
+
+#, no-c-format
+#~ msgid "<term>-i</term>"
+#~ msgstr "<term>-i</term>"
+
+#, no-c-format
+#~ msgid "<term>-I</term>"
+#~ msgstr "<term>-I</term>"
+
+#, no-c-format
+#~ msgid "<term>-m</term>"
+#~ msgstr "<term>-m</term>"
+
+#, no-c-format
+#~ msgid "<term>-S</term>"
+#~ msgstr "<term>-S</term>"
+
+#, no-c-format
+#~ msgid "-t &lt;dimensionality&gt;"
+#~ msgstr "-t &lt;次元&gt;"
+
+#, no-c-format
+#~ msgid "<term>-w</term>"
+#~ msgstr "<term>-w</term>"
+
+#, no-c-format
+#~ msgid "<term>-e</term>"
+#~ msgstr "<term>-e</term>"
+
+#, no-c-format
+#~ msgid "-W &lt;encoding&gt;"
+#~ msgstr "-W &lt;エンコーディング&gt;"
+
+#, no-c-format
+#~ msgid "-N &lt;policy&gt;"
+#~ msgstr "-N &lt;方針&gt;"
+
+#, no-c-format
+#~ msgid "<term>-n</term>"
+#~ msgstr "<term>-n</term>"
+
+#, no-c-format
+#~ msgid "<term>-G</term>"
+#~ msgstr "<term>-G</term>"
+
+#, no-c-format
+#~ msgid "-T &lt;tablespace&gt;"
+#~ msgstr "-T &lt;tablespace&gt;"
+
+#, no-c-format
+#~ msgid "-X &lt;tablespace&gt;"
+#~ msgstr "-X &lt;tablespace&gt;"
+
+#, no-c-format
+#~ msgid "<term>-Z</term>"
+#~ msgstr "<term>-Z</term>"
+
+#, no-c-format
+#~ msgid "ST_Intersects"
+#~ msgstr "ST_Intersects"
+
+#, no-c-format
+#~ msgid "<term>=</term>"
+#~ msgstr "<term>=</term>"
+
+#, no-c-format
+#~ msgid "-f &lt;filename&gt;"
+#~ msgstr "-f &lt;ファイル名&gt;"
+
+#, no-c-format
+#~ msgid "-h &lt;host&gt;"
+#~ msgstr "-h &lt;ホスト&gt;"
+
+#, no-c-format
+#~ msgid "-p &lt;port&gt;"
+#~ msgstr "-p &lt;ポート&gt;"
+
+#, no-c-format
+#~ msgid "-P &lt;password&gt;"
+#~ msgstr "-P &lt;パスワード&gt;"
+
+#, no-c-format
+#~ msgid "-u &lt;user&gt;"
+#~ msgstr "-u &lt;ユーザ名&gt;"
+
+#, no-c-format
+#~ msgid "-g &lt;geometry column&gt;"
+#~ msgstr "-g &lt;ジオメトリカラム&gt;"
+
+#, no-c-format
+#~ msgid "<term>-b</term>"
+#~ msgstr "<term>-b</term>"
+
+#, no-c-format
+#~ msgid "<term>-r</term>"
+#~ msgstr "<term>-r</term>"
+
+#, no-c-format
+#~ msgid "-m filename"
+#~ msgstr "-m filename"
+
+#, no-c-format
+#~ msgid "<term>-C</term>"
+#~ msgstr "<term>-C</term>"
+
+#, no-c-format
+#~ msgid "<term>-x</term>"
+#~ msgstr "<term>-x</term>"
+
+#, no-c-format
+#~ msgid "-s &lt;SRID&gt;"
+#~ msgstr "-s &lt;SRID&gt;"
+
+#, no-c-format
+#~ msgid "-b BAND"
+#~ msgstr "-b BAND"
+
+#, no-c-format
+#~ msgid "-t TILE_SIZE"
+#~ msgstr "-t TILE_SIZE"
+
+#, no-c-format
+#~ msgid "<term>-P</term>"
+#~ msgstr "<term>-P</term>"
+
+#, no-c-format
+#~ msgid "-R, --register"
+#~ msgstr "-R, --register"
+
+#, no-c-format
+#~ msgid "-l OVERVIEW_FACTOR"
+#~ msgstr "-l OVERVIEW_FACTOR"
+
+#, no-c-format
+#~ msgid "-N NODATA"
+#~ msgstr "-N NODATA"
+
+#, no-c-format
+#~ msgid "-f COLUMN"
+#~ msgstr "-f COLUMN"
+
+#, no-c-format
+#~ msgid "<term>-F</term>"
+#~ msgstr "<term>-F</term>"
+
+#, no-c-format
+#~ msgid "-n COLUMN"
+#~ msgstr "-n COLUMN"
+
+#, no-c-format
+#~ msgid "<term>-q</term>"
+#~ msgstr "<term>-q</term>"
+
+#, no-c-format
+#~ msgid "<term>-M</term>"
+#~ msgstr "<term>-M</term>"
+
+#, no-c-format
+#~ msgid "-T tablespace"
+#~ msgstr "-T tablespace"
+
+#, no-c-format
+#~ msgid "-X tablespace"
+#~ msgstr "-X tablespace"
+
+#, no-c-format
+#~ msgid "-Y max_rows_per_copy=50"
+#~ msgstr "-Y max_rows_per_copy=50"
+
+#, no-c-format
+#~ msgid "-E ENDIAN"
+#~ msgstr "-E ENDIAN"
+
+#, no-c-format
+#~ msgid "-V version"
+#~ msgstr "-V version"
