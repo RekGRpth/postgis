@@ -105,13 +105,13 @@ XSLTPROC_COMMONOPTS= \
 	--param header.rule 0 \
 	--param footer.rule 0 \
 	--param table.borders.with.css 1 \
-	--stringparam chunker.output.encoding UTF-8 \
-	--stringparam chunker.output.indent no \
 	--stringparam html.ext .html \
 	--stringparam saxon.character.representation decimal \
 	$(XSLTPROCFLAGS)
 
 XSLTPROC_CHUNKED_HTML_OPTS = \
+	--stringparam chunker.output.encoding UTF-8 \
+	--stringparam chunker.output.indent yes \
 	--stringparam admon.graphics.path ../images/ \
 	--stringparam img.src.path ../ \
 	--stringparam html.stylesheet ../style.css
@@ -395,28 +395,16 @@ chunked-html: $(html_builddir)/postgis$(DOCSUFFIX)/docbook.css
 $(html_builddir)/postgis$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile
 	$(XSLTPROC) $(XSLTPROC_COMMONOPTS) \
 		$(XSLTPROC_CHUNKED_HTML_OPTS) \
+		$(XSLTPROCFLAGS) \
 		--output $(dir $@) \
 		$(CHUNK_HTML_DOCBOOK_XSL) \
 		$<
 
-chunked-html-web: $(html_builddir)/postgis-web$(DOCSUFFIX)/docbook.css
-$(html_builddir)/postgis-web$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile
-	$(XSLTPROC) $(XSLTPROC_COMMONOPTS) \
-		$(XSLTPROC_CHUNKED_HTML_OPTS) \
-		--output $(dir $@) \
-		--stringparam html.script ga.js \
-		$(CHUNK_HTML_DOCBOOK_XSL) \
-		$<
-
+# TODO: drop this, replace with a generic CSS handling both mobile and # desktop
 HTML_BITS = $(wildcard html/*.html)
 chunked-html-web-mobile: $(html_builddir)/postgis-web-mobile$(DOCSUFFIX)/docbook.css
 $(html_builddir)/postgis-web-mobile$(DOCSUFFIX)/docbook.css: postgis-out.xml Makefile
-	$(XSLTPROC) $(XSLTPROC_COMMONOPTS) \
-		$(XSLTPROC_CHUNKED_HTML_OPTS) \
-		--output $(dir $@) \
-		--stringparam html.script ga.js \
-		$(CHUNK_HTML_DOCBOOK_XSL) \
-		$<
+	$(MAKE) chunked-html
 	$(PERL) -pi -e 's/<head>/<head><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">/g' $(HTML_BITS)
 
 html: $(html_builddir)/postgis$(DOCSUFFIX).html

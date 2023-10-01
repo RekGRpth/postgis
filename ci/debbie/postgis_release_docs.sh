@@ -74,7 +74,7 @@ if [[ "$POSTGIS_MICRO_VERSION" == *"dev"* ]]; then
 fi
 
 make cheatsheets
-make -e chunked-html-web # TODO: do we really want this too in the doc-html-*.tar.gz package ?
+make -e chunked-html # TODO: do we really want this too in the doc-html-*.tar.gz package ?
 make html-localized # TODO: do we really want this too in the doc-html-*.tar.gz package ?
 
 package="doc-html-${POSTGIS_MAJOR_VERSION}.${POSTGIS_MINOR_VERSION}.${POSTGIS_MICRO_VERSION}.tar.gz"
@@ -85,23 +85,25 @@ cp $package ${STUFF_DIR}
 make html-assets-install
 make html-install
 make html-install-localized
-make chunked-html-web-install
-make chunked-html-web-install-localized
+make chunked-html-install
+make chunked-html-install-localized
 make cheatsheet-install
 make cheatsheet-install-localized
 
-# Strip out the "postgis-web-" suffix
+# Strip out the "postgis-" suffix
 # from chunked html directories, backing
 # up any previous target directory
-for f in ${HTML_DIR}/postgis-web-*; do
-  if test -e $f; then
-    nf=$(echo $f| sed 's/postgis-web-//');
-    if test -e $nf; then
-      rm -rf $nf.old
-      mv -v $nf $nf.old
-    fi
-    mv -v $f $nf;
+for f in $(
+  find ${HTML_DIR} -type d \
+    -maxdepth 1 -mindepth 1 \
+    -name 'postgis-*'
+); do
+  nf=$(echo $f| sed 's/postgis-//');
+  if test -e $nf; then
+    rm -rf $nf.old
+    mv -v $nf $nf.old
   fi
+  mv -v $f $nf;
 done
 
 
