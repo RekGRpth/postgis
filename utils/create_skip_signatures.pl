@@ -75,15 +75,12 @@ sub strip_argument_names {
 		my $a = $_;
 
 		#print "  XXX arg: $a\n";
-		# If the arg is composed by multiple words
-		# drop the first, unless it's a reserved word
-		if ( $a =~ m/([^ ]*) (.*)/ )
+		# Drop all but reserved words from multi-word arg
+		while ( $a =~ m/^([^ ]*) (.*)/ )
 		{
-			unless ( $reserved_sql_word{$1} )
-			{
-				$a = $2;
-				#print "  XXX arg became: $a\n";
-			}
+			last if $reserved_sql_word{$1};
+			$a = $2;
+			#print "  XXX arg became: $a\n";
 		}
 		push @out, $a;
 	}
@@ -125,14 +122,6 @@ sub handle_function_signature {
 	my @args = split('\s*,\s*', $args);
 	@args = canonicalize_args(@args);
 
-	print "COMMENT FUNCTION $name(" . join(', ', @args) .")\n";
-
-	# Example manifest line for comments on function with inout params:
-	# 4247; 0 0 COMMENT public FUNCTION testinoutmix(INOUT "inout" double precision, second integer, OUT thirdout integer, fourth integer) strk
-
-	# Example manifest line for function with inout params:
-	# 955; 1255 27730785 FUNCTION public testinoutmix(double precision, integer, integer) strk
-
 	# No inout indicator or out parameters for function signatures
 	my @inonly_args = clean_inout_arguments(@args);
 
@@ -151,7 +140,6 @@ while (<>)
 	{
 		my $t = lc($1);
 		$t =~ s/topology\.//g;
-		print "COMMENT TYPE $t\n";
 		print "TYPE $t\n";
 	}
 
@@ -167,8 +155,6 @@ while (<>)
 		$args =~ s/topology\.//g;
 		my @args = split('\s*,\s*', $args);
 		@args = canonicalize_args(@args);
-
-		print "COMMENT AGGREGATE $name(" . join(', ', @args) . ")\n";
 
 		# For *aggregate* signature we are supposed to strip
 		# also argument names, which aint easy
@@ -208,12 +194,12 @@ while (<>)
 	# Deprecated function signature using
 	# _postgis_drop_function_by_signature
 	# EXAMPLE: SELECT _postgis_drop_function_by_signature('pgis_geometry_union_finalfn(internal)');
-	elsif ( /SELECT _postgis_drop_function_by_signature\('[^']*'\);/ )
+	elsif ( /SELECT _postgis_drop_function_by_signature\('[^']*'/ )
 	{
 		my $origline = $_;
 		my $line = $origline;
 
-		$line =~ s/SELECT _postgis_drop_function_by_signature\('([^']*)'\);/$1/;
+		$line =~ s/.*SELECT _postgis_drop_function_by_signature\('([^']*)'.*/$1/;
 
 		handle_function_signature($line);
 	}
