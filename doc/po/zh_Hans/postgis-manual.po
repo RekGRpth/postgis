@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-06 06:13+0000\n"
-"PO-Revision-Date: 2023-10-20 09:23+0000\n"
+"PO-Revision-Date: 2023-10-25 06:23+0000\n"
 "Last-Translator: Zuochenwei <zuochenwei5@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://weblate.osgeo.org/projects/"
 "postgis/postgis-manual/zh_Hans/>\n"
@@ -3909,8 +3909,8 @@ msgid ""
 "TopoGeometry are the properties: topology_id, layer_id, id integer, type "
 "integer."
 msgstr ""
-"复合类型是指特定拓扑层中的拓扑几何结构，具有特定类型和特定id。 TopoGeometry "
-"的元素是属性：topology_id、layer_id、id 整数、type 整数。"
+"一个复合类型，它引用了特定拓扑层中的拓扑几何图形，具有特定的类型和特定的标识"
+"符。TopoGeometry 的元素包括属性：topology_id、layer_id、id 整数和 type 整数。"
 
 #. Tag: para
 #, no-c-format
@@ -3953,14 +3953,14 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Casting Behavior"
-msgstr "强制转换行为"
+msgstr "类型强制转换"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "This section lists the automatic as well as explicit casts allowed for this "
 "data type"
-msgstr "本节列出了此数据类型允许的显式和自动强制转换"
+msgstr "这个部分列出了允许用于这种数据类型的自动转换以及显式转换"
 
 #. Tag: entry
 #, no-c-format
@@ -3975,7 +3975,7 @@ msgstr "行为"
 #. Tag: entry
 #, no-c-format
 msgid "geometry"
-msgstr "几何"
+msgstr "geometry"
 
 #. Tag: entry
 #, no-c-format
@@ -6740,9 +6740,9 @@ msgid ""
 "edges, 3: faces) that a given topogeometry object in <varname>toponame</"
 "varname> schema is composed of."
 msgstr ""
-"返回与<varname>拓扑名称</varname>架构中给定拓扑几何对象组成的原始拓扑元素 "
-"<xref linkend=\"topoelement\"/>（1：节点，2：边，3：面）对应的一组 "
-"element_id、element_type（topoelements）。"
+"返回一组与基本拓扑元素<xref linkend=\"topoelement\"/>（1：节点，2：边，3：面"
+"）对应的element_id、element_type（topoelements），这些元素组成了<varname>topo"
+"name</varname>模式中的给定拓扑几何对象。"
 
 #. Tag: para
 #, no-c-format
@@ -7083,8 +7083,8 @@ msgid ""
 "Invoking <filename>pgtopo_export</filename> with the <code>--help</code> (or "
 "<code>-h</code> for short) switch will always print short usage string."
 msgstr ""
-"使用<code> --help </code>（或简称 <code>-h</code>）命令调用 "
-"<filename>pgtopo_export</filename> 将始终打印简短的用法字符串。"
+"调用 <filename>pgtopo_export</filename>时使用 <code>--help</code>（或缩写的 "
+"<code>-h</code>）指令将始终打印简短的用法说明字符串。"
 
 #. Tag: para
 #, no-c-format
@@ -11977,10 +11977,9 @@ msgid ""
 "ST_Endpoint(g)</code>) and <xref linkend=\"ST_IsSimple\"/> (does not self "
 "intersect)."
 msgstr ""
-"如果这个<varname>线串</varname>（LINESTRING）既是封闭的（即 <xref linkend="
-"\"ST_IsClosed\"/> 返回真，即 <code>ST_StartPoint(g) ~= ST_Endpoint(g)</"
-"code>），又是简单的（即没有自交，即 <xref linkend=\"ST_IsSimple\"/> 返回"
-"真），则返回 <varname>TRUE</varname>。"
+"返回 <varname>TRUE</varname>，当<varname>LINESTRING</varname> 同时满足 <xref "
+"linkend=\"ST_IsClosed\"/>（即 <code>ST_StartPoint(g) ~= "
+"ST_Endpoint(g)</code>）和 <xref linkend=\"ST_IsSimple\"/>（即不自交）时。"
 
 #. Tag: para
 #, no-c-format
@@ -17954,7 +17953,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 1.5, requires libxml2 2.6+"
-msgstr "可用性： 1.5需要 libxml2 2.6 或更高版本。"
+msgstr "可用性：1.5，需要 libxml2 2.6+"
 
 #. Tag: para
 #, no-c-format
