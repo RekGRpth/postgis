@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 04:00+0000\n"
+"POT-Creation-Date: 2023-12-13 03:42+0000\n"
 "PO-Revision-Date: 2023-09-22 19:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish <https://weblate.osgeo.org/projects/postgis/postgis-"
@@ -8158,7 +8158,7 @@ msgstr ""
 
 #. Tag: para
 #, no-c-format
-msgid "This will only have data is you marked zcta5 to be loaded"
+msgid "This will only have data if you marked zcta5 to be loaded"
 msgstr ""
 
 #. Tag: para
@@ -10523,8 +10523,8 @@ msgid ""
 "&reference_relationship; &reference_measure; &reference_overlay; "
 "&reference_processing; &reference_coverage; &reference_transformation; "
 "&reference_cluster; &reference_bbox; &reference_lrs; &reference_trajectory; "
-"&reference_sfcgal; &reference_transaction; &reference_version; "
-"&reference_guc; &reference_troubleshooting;"
+"&reference_transaction; &reference_version; &reference_guc; "
+"&reference_troubleshooting;"
 msgstr ""
 
 #. Tag: title
@@ -13054,7 +13054,7 @@ msgstr ""
 #, no-c-format
 msgid ""
 "ST_ClusterWithin is equivalent to running <xref linkend=\"ST_ClusterDBSCAN\"/"
-"> with <code>minpoints := 0</code>."
+"> with <code>minpoints =&gt; 0</code>."
 msgstr ""
 
 #. Tag: para
@@ -13085,7 +13085,7 @@ msgstr ""
 #, no-c-format
 msgid ""
 "ST_ClusterWithinWin is equivalent to running <xref linkend=\"ST_ClusterDBSCAN"
-"\"/> with <code>minpoints := 0</code>."
+"\"/> with <code>minpoints =&gt; 0</code>."
 msgstr ""
 
 #. Tag: para
@@ -24256,43 +24256,54 @@ msgstr ""
 #. Tag: refpurpose
 #, no-c-format
 msgid ""
-"Returns a simplified version of a geometry, using the Douglas-Peucker "
+"Returns a simplified representation of a geometry, using the Douglas-Peucker "
 "algorithm."
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
-"Returns a \"simplified\" version of the given geometry using the Douglas-"
-"Peucker algorithm. Will actually do something only with (multi)lines and "
-"(multi)polygons but you can safely call it with any kind of geometry. Since "
-"simplification occurs on a object-by-object basis you can also feed a "
-"GeometryCollection to this function."
+"Computes a simplified representation of a geometry using the <link xlink:"
+"href=\"https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas"
+"%E2%80%93Peucker_algorithm\">Douglas-Peucker algorithm</link>. The "
+"simplification <varname>tolerance</varname> is a distance value, in the "
+"units of the input SRS. Simplification removes vertices which are within the "
+"tolerance distance of the simplified linework. The result may not be valid "
+"even if the input is."
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
-"The \"preserve collapsed\" flag will retain objects that would otherwise be "
-"too small given the tolerance. For example, a 1m long line simplified with a "
-"10m tolerance. If <varname>preserveCollapsed</varname> argument is specified "
-"as true, the line will not disappear. This flag is useful for rendering "
-"engines, to avoid having large numbers of very small objects disappear from "
-"a map leaving surprising gaps."
+"The function can be called with any kind of geometry (including "
+"GeometryCollections), but only line and polygon elements are simplified. "
+"Endpoints of linear geometry are preserved."
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
-"Note that returned geometry might lose its simplicity (see <xref linkend="
-"\"ST_IsSimple\"/>)"
+"The <varname>preserveCollapsed</varname> flag retains small geometries that "
+"would otherwise be removed at the given tolerance. For example, if a 1m long "
+"line is simplified with a 10m tolerance, when <varname>preserveCollapsed</"
+"varname> is true the line will not disappear. This flag is useful for "
+"rendering purposes, to prevent very small features disappearing from a map."
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
-"Note topology may not be preserved and may result in invalid geometries. Use "
-"(see <xref linkend=\"ST_SimplifyPreserveTopology\"/>) to preserve topology."
+"The returned geometry may lose its simplicity (see <xref linkend="
+"\"ST_IsSimple\"/>), topology may not be preserved, and polygonal results may "
+"be invalid (see <xref linkend=\"ST_IsValid\"/>). Use <xref linkend="
+"\"ST_SimplifyPreserveTopology\"/> to preserve topology and ensure validity."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"This function does not preserve boundaries shared between polygons. Use "
+"<xref linkend=\"ST_CoverageSimplify\"/> if this is required."
 msgstr ""
 
 #. Tag: para
@@ -24302,27 +24313,52 @@ msgstr ""
 
 #. Tag: para
 #, no-c-format
-msgid ""
-", <xref linkend=\"ST_SimplifyPreserveTopology\"/>, <xref linkend="
-"\"ST_SimplifyVW\"/>, Topology <xref linkend=\"TP_ST_Simplify\"/>"
+msgid "Simplifying a set of lines. Lines may intersect after simplification."
 msgstr ""
 
-#. Tag: refpurpose
+#. Tag: para
 #, no-c-format
-msgid ""
-"Returns a simplified and valid version of a geometry, using the Douglas-"
-"Peucker algorithm."
+msgid "Simplifying a MultiPolygon. Polygonal results may be invalid."
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
-"Returns a \"simplified\" version of the given geometry using the Douglas-"
-"Peucker algorithm. Will avoid creating derived geometries (polygons in "
-"particular) that are invalid. Will actually do something only with "
-"(multi)lines and (multi)polygons but you can safely call it with any kind of "
-"geometry. Since simplification occurs on a object-by-object basis you can "
-"also feed a GeometryCollection to this function."
+", <xref linkend=\"ST_SimplifyPreserveTopology\"/>, <xref linkend="
+"\"ST_SimplifyVW\"/>, <xref linkend=\"ST_CoverageSimplify\"/>, Topology <xref "
+"linkend=\"TP_ST_Simplify\"/>"
+msgstr ""
+
+#. Tag: refpurpose
+#, no-c-format
+msgid ""
+"Returns a simplified and valid representation of a geometry, using the "
+"Douglas-Peucker algorithm."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"Computes a simplified representation of a geometry using a variant of the "
+"<link xlink:href=\"https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas"
+"%E2%80%93Peucker_algorithm\">Douglas-Peucker algorithm</link> which limits "
+"simplification to ensure the result has the same topology as the input. The "
+"simplification <varname>tolerance</varname> is a distance value, in the "
+"units of the input SRS. Simplification removes vertices which are within the "
+"tolerance distance of the simplified linework, as long as topology is "
+"preserved. The result will be valid and simple if the input is."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"The function can be called with any kind of geometry (including "
+"GeometryCollections), but only line and polygon elements are simplified. For "
+"polygonal inputs, the result will have the same number of rings (shells and "
+"holes), and the rings will not cross. Ring endpoints may be simplified. For "
+"linear inputs, the result will have the same number of lines, and lines will "
+"not intersect if they did not do so in the original geometry. Endpoints of "
+"linear geometry are preserved."
 msgstr ""
 
 #. Tag: para
@@ -24333,8 +24369,26 @@ msgstr "Disponibilidad: 1.3.3"
 #. Tag: para
 #, no-c-format
 msgid ""
-"Same example as Simplify, but we see Preserve Topology prevents "
-"oversimplification. The circle can at most become a square."
+"For the same example as <xref linkend=\"ST_Simplify\"/>, "
+"ST_SimplifyPreserveTopology prevents oversimplification. The circle can at "
+"most become a square."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"Simplifying a set of lines, preserving topology of non-intersecting lines."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Simplifying a MultiPolygon, preserving topology of shells and holes."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+", <xref linkend=\"ST_SimplifyVW\"/>, <xref linkend=\"ST_CoverageSimplify\"/>"
 msgstr ""
 
 #. Tag: refpurpose
@@ -24416,18 +24470,29 @@ msgstr ""
 #. Tag: refpurpose
 #, no-c-format
 msgid ""
-"Returns a simplified version of a geometry, using the Visvalingam-Whyatt "
-"algorithm"
+"Returns a simplified representation of a geometry, using the Visvalingam-"
+"Whyatt algorithm"
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
-"Returns a \"simplified\" version of the given geometry using the Visvalingam-"
-"Whyatt algorithm. Will actually do something only with (multi)lines and "
-"(multi)polygons but you can safely call it with any kind of geometry. Since "
-"simplification occurs on a object-by-object basis you can also feed a "
-"GeometryCollection to this function."
+"Returns a simplified representation of a geometry using the <link xlink:href="
+"\"https://en.wikipedia.org/wiki/Visvalingam%E2%80%93Whyatt_algorithm"
+"\">Visvalingam-Whyatt algorithm</link>. The simplification "
+"<varname>tolerance</varname> is an area value, in the units of the input "
+"SRS. Simplification removes vertices which form \"corners\" with area less "
+"than the tolerance. The result may not be valid even if the input is."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"The returned geometry may lose its simplicity (see <xref linkend="
+"\"ST_IsSimple\"/>), topology may not be preserved, and polygonal results may "
+"be invalid (see <xref linkend=\"ST_IsValid\"/>). Use <xref linkend="
+"\"ST_SimplifyPreserveTopology\"/> to preserve topology and ensure validity. "
+"<xref linkend=\"ST_CoverageSimplify\"/> also preserves topology and validity."
 msgstr ""
 
 #. Tag: para
@@ -24438,15 +24503,25 @@ msgstr ""
 
 #. Tag: para
 #, no-c-format
-msgid "A LineString is simplified with a minimum area threshold of 30."
+msgid "A LineString is simplified with a minimum-area tolerance of 30."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Simplifying a line."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Simplifying a polygon."
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
 ", <xref linkend=\"ST_Simplify\"/>, <xref linkend="
-"\"ST_SimplifyPreserveTopology\"/>, Topology <xref linkend=\"TP_ST_Simplify\"/"
-">"
+"\"ST_SimplifyPreserveTopology\"/>, <xref linkend=\"ST_CoverageSimplify\"/>, "
+"Topology <xref linkend=\"TP_ST_Simplify\"/>"
 msgstr ""
 
 #. Tag: refpurpose
@@ -24482,6 +24557,20 @@ msgid ""
 "you can safely call it with any kind of geometry. Since simplification "
 "occurs on a object-by-object basis you can also feed a GeometryCollection to "
 "this function."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"Note that returned geometry might lose its simplicity (see <xref linkend="
+"\"ST_IsSimple\"/>)"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"Note topology may not be preserved and may result in invalid geometries. Use "
+"(see <xref linkend=\"ST_SimplifyPreserveTopology\"/>) to preserve topology."
 msgstr ""
 
 #. Tag: para
@@ -28698,7 +28787,21 @@ msgid ""
 "If <varname>crop</varname> is not specified, true is assumed meaning the "
 "output raster is cropped to the intersection of the <varname>geom</"
 "varname>and <varname>rast</varname> extents. If <varname>crop</varname> is "
-"set to false, the new raster gets the same extent as <varname>rast</varname>."
+"set to false, the new raster gets the same extent as <varname>rast</"
+"varname>. If <varname>touched</varname> is set to true, then all pixels in "
+"the <varname>rast</varname> that intersect the geometry are selected."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"The default behavior is touched=false, which will only select pixels where "
+"the center of the pixel is covered by the geometry."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Enhanced: 3.5.0 - touched argument added."
 msgstr ""
 
 #. Tag: para
@@ -28710,13 +28813,18 @@ msgstr ""
 #, no-c-format
 msgid ""
 "Examples here use Massachusetts aerial data available on MassGIS site <link "
-"xlink:href=\"http://www.mass.gov/mgis/colororthos2008.htm\">MassGIS Aerial "
-"Orthos</link>. Coordinates are in Massachusetts State Plane Meters."
+"xlink:href=\"https://www.mass.gov/info-details/massgis-data-20082009-aerial-"
+"imagery\">MassGIS Aerial Orthos</link>."
 msgstr ""
 
 #. Tag: title
 #, no-c-format
-msgid "Examples: 1 band clipping"
+msgid "Examples: Comparing selecting all touched vs. not all touched"
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Examples: 1 band clipping (not touched)"
 msgstr ""
 
 #. Tag: para
@@ -28748,8 +28856,8 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid ""
-", <xref linkend=\"RT_ST_MapAlgebra\"/>, <xref linkend=\"RT_ST_Intersection\"/"
-">"
+", <xref linkend=\"RT_ST_Count\"/>, <xref linkend=\"RT_ST_MapAlgebra\"/>, "
+"<xref linkend=\"RT_ST_Intersection\"/>"
 msgstr ""
 
 #. Tag: refpurpose
@@ -33159,7 +33267,7 @@ msgstr ""
 
 #. Tag: title
 #, no-c-format
-msgid "SFCGAL Functions"
+msgid "SFCGAL Functions Reference"
 msgstr ""
 
 #. Tag: para
@@ -33182,6 +33290,18 @@ msgstr ""
 "página principal de SFCGAL <link xlink:href=\"http://www.sfcgal.org\">http://"
 "www.sfcgal.org</link>. Para cargar las funciones crear la extensión "
 "postgis_sfcgal."
+
+#. Tag: title
+#, no-c-format
+msgid "SFCGAL Management Functions"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"This section lists functions for determining version of SFCGAL and library "
+"dependencies you are running."
+msgstr ""
 
 #. Tag: refpurpose
 #, no-c-format
@@ -33222,6 +33342,18 @@ msgid ""
 "versions</para>"
 msgstr ""
 
+#. Tag: title
+#, no-c-format
+msgid "SFCGAL Accessors and Setters"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"These functions access or set properties of geometries. Geometries primarily "
+"supported by these functions are TINS and Polyhedral Surfaces."
+msgstr ""
+
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes area of 3D surface geometries. Will return 0 for solids."
@@ -33244,6 +33376,78 @@ msgstr ""
 msgid ""
 ", <xref linkend=\"ST_MakeSolid\"/>, <xref linkend=\"ST_IsSolid\"/>, <xref "
 "linkend=\"ST_Area\"/>"
+msgstr ""
+
+#. Tag: refpurpose
+#, no-c-format
+msgid "Force LHR orientation"
+msgstr ""
+
+#. Tag: refpurpose
+#, no-c-format
+msgid "Check if a surface is or not planar"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"Availability: 2.2.0: This was documented in 2.1.0 but got accidentally left "
+"out in 2.1 release."
+msgstr ""
+
+#. Tag: refpurpose
+#, no-c-format
+msgid "Test if the geometry is a solid. No validity check is performed."
+msgstr ""
+
+#. Tag: refpurpose
+#, no-c-format
+msgid ""
+"Cast the geometry into a solid. No check is performed. To obtain a valid "
+"solid, the input geometry must be a closed Polyhedral Surface or a closed "
+"TIN."
+msgstr ""
+
+#. Tag: refpurpose
+#, no-c-format
+msgid "Determine surface orientation"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"The function only applies to polygons. It returns -1 if the polygon is "
+"counterclockwise oriented and 1 if the polygon is clockwise oriented."
+msgstr ""
+
+#. Tag: refpurpose
+#, no-c-format
+msgid ""
+"Computes the volume of a 3D solid. If applied to surface (even closed) "
+"geometries will return 0."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "&sqlmm_compliant; SQL-MM IEC 13249-3: 9.1 (same as ST_3DVolume)"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"When closed surfaces are created with WKT, they are treated as areal rather "
+"than solid. To make them solid, you need to use <xref linkend=\"ST_MakeSolid"
+"\"/>. Areal geometries have no volume. Here is an example to demonstrate."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ", <xref linkend=\"ST_MakeSolid\"/>, <xref linkend=\"ST_IsSolid\"/>"
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "SFCGAL Processing and Relationship Functions"
 msgstr ""
 
 #. Tag: refpurpose
@@ -33456,6 +33660,60 @@ msgstr ""
 
 #. Tag: refpurpose
 #, no-c-format
+msgid "Computes approximal convex partition of the polygon geometry"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"Computes approximal convex partition of the polygon geometry (using a "
+"triangulation)."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"A partition of a polygon P is a set of polygons such that the interiors of "
+"the polygons do not intersect and the union of the polygons is equal to the "
+"interior of the original polygon P. CG_ApproxConvexPartition and "
+"CG_GreeneApproxConvexPartition functions produce approximately optimal "
+"convex partitions. Both these functions produce convex decompositions by "
+"first decomposing the polygon into simpler polygons; "
+"CG_ApproxConvexPartition uses a triangulation and "
+"CG_GreeneApproxConvexPartition a monotone partition. These two functions "
+"both guarantee that they will produce no more than four times the optimal "
+"number of convex pieces but they differ in their runtime complexities. "
+"Though the triangulation-based approximation algorithm often results in "
+"fewer convex pieces, this is not always the case."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Availability: 3.5.0 - requires SFCGAL &gt;= 1.5.0."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Requires SFCGAL &gt;= 1.5.0"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"Approximal Convex Partition (same example As <xref linkend="
+"\"CG_YMonotonePartition\"/>, <xref linkend=\"CG_GreeneApproxConvexPartition"
+"\"/> and <xref linkend=\"CG_OptimalConvexPartition\"/>)"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+", <xref linkend=\"CG_GreeneApproxConvexPartition\"/>, <xref linkend="
+"\"CG_OptimalConvexPartition\"/>"
+msgstr ""
+
+#. Tag: refpurpose
+#, no-c-format
 msgid "Compute the approximate medial axis of an areal geometry."
 msgstr ""
 
@@ -33536,32 +33794,51 @@ msgstr ""
 
 #. Tag: refpurpose
 #, no-c-format
-msgid "Force LHR orientation"
+msgid "Straight Skeleton Extrusion"
 msgstr ""
 
-#. Tag: refpurpose
+#. Tag: para
 #, no-c-format
-msgid "Check if a surface is or not planar"
+msgid "Computes an extrusion with a maximal height of the polygon geometry."
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
-"Availability: 2.2.0: This was documented in 2.1.0 but got accidentally left "
-"out in 2.1 release."
+"Perhaps the first (historically) use-case of straight skeletons: given a "
+"polygonal roof, the straight skeleton directly gives the layout of each "
+"tent. If each skeleton edge is lifted from the plane a height equal to its "
+"offset distance, the resulting roof is \"correct\" in that water will always "
+"fall down to the contour edges (the roof's border), regardless of where it "
+"falls on the roof. The function computes this extrusion aka \"roof\" on a "
+"polygon. If the argument body_height > 0, so the polygon is extruded like "
+"with ST_Extrude(polygon, 0, 0, body_height). The result is an union of these "
+"polyhedralsurfaces."
 msgstr ""
 
-#. Tag: refpurpose
+#. Tag: para
 #, no-c-format
-msgid "Test if the geometry is a solid. No validity check is performed."
+msgid ", <xref linkend=\"ST_StraightSkeleton\"/>"
 msgstr ""
 
-#. Tag: refpurpose
+#. Tag: para
+#, no-c-format
+msgid "Computes approximal monotone convex partition of the polygon geometry."
+msgstr ""
+
+#. Tag: para
 #, no-c-format
 msgid ""
-"Cast the geometry into a solid. No check is performed. To obtain a valid "
-"solid, the input geometry must be a closed Polyhedral Surface or a closed "
-"TIN."
+"Greene Approximal Convex Partition (same example As <xref linkend="
+"\"CG_YMonotonePartition\"/>, <xref linkend=\"CG_ApproxConvexPartition\"/> "
+"and <xref linkend=\"CG_OptimalConvexPartition\"/>)"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+", <xref linkend=\"CG_ApproxConvexPartition\"/>, <xref linkend="
+"\"CG_OptimalConvexPartition\"/>"
 msgstr ""
 
 #. Tag: refpurpose
@@ -33684,14 +33961,36 @@ msgstr ""
 
 #. Tag: refpurpose
 #, no-c-format
-msgid "Determine surface orientation"
+msgid "Computes an optimal convex partition of the polygon geometry"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Computes an optimal convex partition of the polygon geometry."
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid ""
-"The function only applies to polygons. It returns -1 if the polygon is "
-"counterclockwise oriented and 1 if the polygon is clockwise oriented."
+"A partition of a polygon P is a set of polygons such that the interiors of "
+"the polygons do not intersect and the union of the polygons is equal to the "
+"interior of the original polygon P. CG_OptimalConvexPartition produces a "
+"partition that is optimal in the number of pieces."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+"Optimal Convex Partition (same example As <xref linkend="
+"\"CG_YMonotonePartition\"/>, <xref linkend=\"CG_ApproxConvexPartition\"/> "
+"and <xref linkend=\"CG_GreeneApproxConvexPartition\"/>)"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid ""
+", <xref linkend=\"CG_ApproxConvexPartition\"/>, <xref linkend="
+"\"CG_GreeneApproxConvexPartition\"/>"
 msgstr ""
 
 #. Tag: refpurpose
@@ -33760,42 +34059,12 @@ msgstr ""
 
 #. Tag: para
 #, no-c-format
-msgid "Availability: 3.5.0 - requires SFCGAL &gt;= 1.5.0."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
 msgid "Visibility from the point"
 msgstr ""
 
 #. Tag: para
 #, no-c-format
 msgid "Visibility from the segment"
-msgstr ""
-
-#. Tag: refpurpose
-#, no-c-format
-msgid ""
-"Computes the volume of a 3D solid. If applied to surface (even closed) "
-"geometries will return 0."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid "&sqlmm_compliant; SQL-MM IEC 13249-3: 9.1 (same as ST_3DVolume)"
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-"When closed surfaces are created with WKT, they are treated as areal rather "
-"than solid. To make them solid, you need to use <xref linkend=\"ST_MakeSolid"
-"\"/>. Areal geometries have no volume. Here is an example to demonstrate."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ", <xref linkend=\"ST_MakeSolid\"/>, <xref linkend=\"ST_IsSolid\"/>"
 msgstr ""
 
 #. Tag: refpurpose
@@ -33827,133 +34096,6 @@ msgid ""
 "\"CG_ApproxConvexPartition\"/>, <xref linkend="
 "\"CG_GreeneApproxConvexPartition\"/> and <xref linkend="
 "\"CG_OptimalConvexPartition\"/>)"
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-", <xref linkend=\"CG_GreeneApproxConvexPartition\"/>, <xref linkend="
-"\"CG_OptimalConvexPartition\"/>"
-msgstr ""
-
-#. Tag: refpurpose
-#, no-c-format
-msgid "Computes approximal convex partition of the polygon geometry"
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-"Computes approximal convex partition of the polygon geometry (using a "
-"triangulation)."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-"A partition of a polygon P is a set of polygons such that the interiors of "
-"the polygons do not intersect and the union of the polygons is equal to the "
-"interior of the original polygon P. CG_ApproxConvexPartition and "
-"CG_GreeneApproxConvexPartition functions produce approximately optimal "
-"convex partitions. Both these functions produce convex decompositions by "
-"first decomposing the polygon into simpler polygons; "
-"CG_ApproxConvexPartition uses a triangulation and "
-"CG_GreeneApproxConvexPartition a monotone partition. These two functions "
-"both guarantee that they will produce no more than four times the optimal "
-"number of convex pieces but they differ in their runtime complexities. "
-"Though the triangulation-based approximation algorithm often results in "
-"fewer convex pieces, this is not always the case."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-"Approximal Convex Partition (same example As <xref linkend="
-"\"CG_YMonotonePartition\"/>, <xref linkend=\"CG_GreeneApproxConvexPartition"
-"\"/> and <xref linkend=\"CG_OptimalConvexPartition\"/>)"
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid "Computes approximal monotone convex partition of the polygon geometry."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-"Greene Approximal Convex Partition (same example As <xref linkend="
-"\"CG_YMonotonePartition\"/>, <xref linkend=\"CG_ApproxConvexPartition\"/> "
-"and <xref linkend=\"CG_OptimalConvexPartition\"/>)"
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-", <xref linkend=\"CG_ApproxConvexPartition\"/>, <xref linkend="
-"\"CG_OptimalConvexPartition\"/>"
-msgstr ""
-
-#. Tag: refpurpose
-#, no-c-format
-msgid "Computes an optimal convex partition of the polygon geometry"
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid "Computes an optimal convex partition of the polygon geometry."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-"A partition of a polygon P is a set of polygons such that the interiors of "
-"the polygons do not intersect and the union of the polygons is equal to the "
-"interior of the original polygon P. CG_OptimalConvexPartition produces a "
-"partition that is optimal in the number of pieces."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-"Optimal Convex Partition (same example As <xref linkend="
-"\"CG_YMonotonePartition\"/>, <xref linkend=\"CG_ApproxConvexPartition\"/> "
-"and <xref linkend=\"CG_GreeneApproxConvexPartition\"/>)"
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-", <xref linkend=\"CG_ApproxConvexPartition\"/>, <xref linkend="
-"\"CG_GreeneApproxConvexPartition\"/>"
-msgstr ""
-
-#. Tag: refpurpose
-#, no-c-format
-msgid "Straight Skeleton Extrusion"
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid "Computes an extrusion with a maximal height of the polygon geometry."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ""
-"Perhaps the first (historically) use-case of straight skeletons: given a "
-"polygonal roof, the straight skeleton directly gives the layout of each "
-"tent. If each skeleton edge is lifted from the plane a height equal to its "
-"offset distance, the resulting roof is \"correct\" in that water will always "
-"fall down to the contour edges (the roof's border), regardless of where it "
-"falls on the roof. The function computes this extrusion aka \"roof\" on a "
-"polygon. If the argument body_height > 0, so the polygon is extruded like "
-"with ST_Extrude(polygon, 0, 0, body_height). The result is an union of these "
-"polyhedralsurfaces."
-msgstr ""
-
-#. Tag: para
-#, no-c-format
-msgid ", <xref linkend=\"ST_StraightSkeleton\"/>"
 msgstr ""
 
 #. Tag: title
@@ -41480,6 +41622,11 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Requires GEOS (3.9,3.10,3.11,3.12) or higher"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Requires SFCGAL 1.5 or higher"
 msgstr ""
 
 #. Tag: para
