@@ -26,7 +26,7 @@
 
 #include "../postgis_config.h"
 
-#define POSTGIS_DEBUG_LEVEL 1
+/*#define POSTGIS_DEBUG_LEVEL 1*/
 #include "lwgeom_log.h"
 
 #include "liblwgeom_internal.h"
@@ -6146,6 +6146,22 @@ lwt_GetFaceContainingPoint(LWT_TOPOLOGY* topo, const LWPOINT* pt)
   {
     /* If there are no edges the point is in the universal face */
     return 0;
+  }
+
+  if ( closestEdge->face_left < 0 )
+  {
+    lwerror("Closest edge %" LWTFMT_ELEMID " has invalid face %" LWTFMT_ELEMID
+			" on its left side", closestEdge->edge_id, closestEdge->face_left);
+    _lwt_release_edges(closestEdge, 1);
+    return -1;
+  }
+
+  if ( closestEdge->face_right < 0 )
+  {
+    lwerror("Closest edge %" LWTFMT_ELEMID " has invalid face %" LWTFMT_ELEMID
+			" on its right side", closestEdge->edge_id, closestEdge->face_right);
+    _lwt_release_edges(closestEdge, 1);
+    return -1;
   }
 
   LWDEBUGGF(2, lwline_as_lwgeom(closestEdge->geom), "Closest edge %" LWTFMT_ELEMID, closestEdge->edge_id);
