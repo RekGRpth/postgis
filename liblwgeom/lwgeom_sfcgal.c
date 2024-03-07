@@ -133,21 +133,32 @@ ptarray_from_SFCGAL(const sfcgal_geometry_t *geom, int want3d)
 	POINT4D point;
 	uint32_t i, npoints;
 	POINTARRAY *pa = NULL;
+	int is_3d;
+	int is_measured = 0;
 
 	assert(geom);
+
+	is_3d = sfcgal_geometry_is_3d(geom);
+
+#if POSTGIS_SFCGAL_VERSION >= 10308
+	is_measured = sfcgal_geometry_is_measured(geom);
+#endif
 
 	switch (sfcgal_geometry_type_id(geom))
 	{
 	case SFCGAL_TYPE_POINT:
 	{
-		pa = ptarray_construct(want3d, 0, 1);
+		pa = ptarray_construct(want3d, is_measured, 1);
 		point.x = sfcgal_point_x(geom);
 		point.y = sfcgal_point_y(geom);
 
-		if (sfcgal_geometry_is_3d(geom))
+		if (is_3d)
 			point.z = sfcgal_point_z(geom);
 		else if (want3d)
 			point.z = 0.0;
+
+		if (is_measured)
+			point.m = sfcgal_point_m(geom);
 
 		ptarray_set_point4d(pa, 0, &point);
 	}
@@ -156,7 +167,7 @@ ptarray_from_SFCGAL(const sfcgal_geometry_t *geom, int want3d)
 	case SFCGAL_TYPE_LINESTRING:
 	{
 		npoints = sfcgal_linestring_num_points(geom);
-		pa = ptarray_construct(want3d, 0, npoints);
+		pa = ptarray_construct(want3d, is_measured, npoints);
 
 		for (i = 0; i < npoints; i++)
 		{
@@ -164,10 +175,13 @@ ptarray_from_SFCGAL(const sfcgal_geometry_t *geom, int want3d)
 			point.x = sfcgal_point_x(pt);
 			point.y = sfcgal_point_y(pt);
 
-			if (sfcgal_geometry_is_3d(geom))
+			if (is_3d)
 				point.z = sfcgal_point_z(pt);
 			else if (want3d)
 				point.z = 0.0;
+
+			if (is_measured)
+				point.m = sfcgal_point_m(pt);
 
 			ptarray_set_point4d(pa, i, &point);
 		}
@@ -176,7 +190,7 @@ ptarray_from_SFCGAL(const sfcgal_geometry_t *geom, int want3d)
 
 	case SFCGAL_TYPE_TRIANGLE:
 	{
-		pa = ptarray_construct(want3d, 0, 4);
+		pa = ptarray_construct(want3d, is_measured, 4);
 
 		for (i = 0; i < 4; i++)
 		{
@@ -184,10 +198,13 @@ ptarray_from_SFCGAL(const sfcgal_geometry_t *geom, int want3d)
 			point.x = sfcgal_point_x(pt);
 			point.y = sfcgal_point_y(pt);
 
-			if (sfcgal_geometry_is_3d(geom))
+			if (is_3d)
 				point.z = sfcgal_point_z(pt);
 			else if (want3d)
 				point.z = 0.0;
+
+			if (is_measured)
+				point.m = sfcgal_point_m(pt);
 
 			ptarray_set_point4d(pa, i, &point);
 		}

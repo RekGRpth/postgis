@@ -28,7 +28,15 @@ SELECT 'ST_ForceLHR', ST_AsText(ST_ForceLHR('POLYGON((0 0,0 1,1 1,1 0,0 0))'));
 SELECT 'ST_Orientation_1', ST_Orientation(ST_ForceLHR('POLYGON((0 0,0 1,1 1,1 0,0 0))'));
 SELECT 'ST_Orientation_2', ST_Orientation(ST_ForceRHR('POLYGON((0 0,0 1,1 1,1 0,0 0))'));
 SELECT 'ST_MinkowskiSum', ST_AsText(ST_MinkowskiSum('LINESTRING(0 0,4 0)','POLYGON((0 0,1 0,1 1,0 1,0 0))'));
-SELECT 'ST_StraightSkeleton', ST_AsText(ST_StraightSkeleton('POLYGON((1 1,2 1,2 2,1 2,1 1))'));
+SELECT 'CG_StraightSkeleton', ST_AsText(CG_StraightSkeleton('POLYGON((1 1,2 1,2 2,1 2,1 1))'));
+SELECT 'CG_StraightSkeletonUseMDistance',
+CASE WHEN string_to_array(postgis_sfcgal_version(), '.')::int[] >= string_to_array('1.3.8', '.')::int[]
+THEN
+	ST_AsText(CG_StraightSkeleton('POLYGON((0 0,1 0,1 1,0 1,0 0))', true))
+ELSE
+	-- export result directly
+	'MULTILINESTRING M ((0 0 0,0.5 0.5 0.5),(1 0 0,0.5 0.5 0.5),(1 1 0,0.5 0.5 0.5),(0 1 0,0.5 0.5 0.5))'
+END;
 SELECT 'ST_ConstrainedDelaunayTriangles', ST_AsText(ST_ConstrainedDelaunayTriangles('GEOMETRYCOLLECTION(POINT(0 0), POLYGON((2 2, 2 -2, 4 0, 2 2)))'));
 SELECT 'postgis_sfcgal_noop', ST_NPoints(postgis_sfcgal_noop(ST_Buffer('POINT(0 0)', 5)));
 SELECT 'ST_3DConvexHull', ST_3DArea(ST_3DConvexHull('MULTIPOINTZ(0 0 5, 1 5 3, 5 7 6, 9 5 3 , 5 7 5, 6 3 5)'))::numeric(10,4);

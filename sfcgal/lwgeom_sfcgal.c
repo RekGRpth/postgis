@@ -423,6 +423,7 @@ sfcgal_straight_skeleton(PG_FUNCTION_ARGS)
 	sfcgal_geometry_t *geom;
 	sfcgal_geometry_t *result;
 	srid_t srid;
+	bool use_m_as_distance;
 
 	sfcgal_postgis_init();
 
@@ -431,7 +432,26 @@ sfcgal_straight_skeleton(PG_FUNCTION_ARGS)
 	geom = POSTGIS2SFCGALGeometry(input);
 	PG_FREE_IF_COPY(input, 0);
 
-	result = sfcgal_geometry_straight_skeleton(geom);
+	use_m_as_distance = PG_GETARG_BOOL(1);
+	if ( ( POSTGIS_SFCGAL_VERSION < 10308) && use_m_as_distance) {
+		lwpgnotice("The SFCGAL version this PostGIS binary "
+							"was compiled against (%d) doesn't support "
+							"'is_measured' argument in straight_skeleton "
+							"function (1.3.8+ required) "
+						  "fallback to function not using m as distance.",
+							POSTGIS_SFCGAL_VERSION);
+		use_m_as_distance = false;
+	}
+
+  if ( use_m_as_distance )
+  {
+		result = sfcgal_geometry_straight_skeleton_distance_in_m(geom);
+	}
+  else
+	{
+		result = sfcgal_geometry_straight_skeleton(geom);
+	}
+
 	sfcgal_geometry_delete(geom);
 
 	output = SFCGALGeometry2POSTGIS(result, 0, srid);
