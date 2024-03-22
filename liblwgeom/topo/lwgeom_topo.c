@@ -26,18 +26,12 @@
 
 #include "../postgis_config.h"
 
-/*#define POSTGIS_DEBUG_LEVEL 1*/
+/*#define POSTGIS_DEBUG_LEVEL 2*/
 #include "lwgeom_log.h"
 
 #include "liblwgeom_internal.h"
 #include "liblwgeom_topo_internal.h"
 #include "lwgeom_geos.h"
-
-/* This is a non-tolerance based 2d equality for points
- * whereas the p2d_same function is tolerance based
- * TODO: move in higher headers ?
- */
-#define P2D_SAME_STRICT(a,b) ((a)->x == (b)->x && (a)->y == (b)->y)
 
 /*********************************************************************
  *
@@ -951,6 +945,7 @@ _lwt_EdgeSplit( LWT_TOPOLOGY* topo, LWT_ELEMID edge, LWPOINT* pt, int skipISOChe
   LWDEBUG(1, "calling lwt_be_getEdgeById");
   *oldedge = lwt_be_getEdgeById(topo, &edge, &i, LWT_COL_EDGE_ALL);
   LWDEBUGF(1, "lwt_be_getEdgeById returned %p", *oldedge);
+  LWDEBUGG(2, lwline_as_lwgeom(oldedge[0]->geom), "Edge to be split");
   if ( ! *oldedge )
   {
     LWDEBUGF(1, "lwt_be_getEdgeById returned NULL and set i=%d", i);
@@ -1006,13 +1001,14 @@ _lwt_EdgeSplit( LWT_TOPOLOGY* topo, LWT_ELEMID edge, LWPOINT* pt, int skipISOChe
     return NULL;
   }
   if (split_col->ngeoms < 2) {
+    LWDEBUGG(1, lwpoint_as_lwgeom(pt), "Unable to split edge by point");
     _lwt_release_edges(*oldedge, 1);
     lwgeom_free(split);
     lwerror("SQL/MM Spatial exception - point not on edge");
     return NULL;
   }
 
-#if 0
+#if POSTGIS_DEBUG_LEVEL > 1
   {
   size_t sz;
   char *wkt = lwgeom_to_wkt((LWGEOM*)split_col, WKT_EXTENDED, 2, &sz);
