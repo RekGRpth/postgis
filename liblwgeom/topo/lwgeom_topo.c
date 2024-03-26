@@ -18,7 +18,7 @@
  *
  **********************************************************************
  *
- * Copyright (C) 2015-2022 Sandro Santilli <strk@kbt.io>
+ * Copyright (C) 2015-2024 Sandro Santilli <strk@kbt.io>
  *
  **********************************************************************/
 
@@ -27,6 +27,7 @@
 #include "../postgis_config.h"
 
 /*#define POSTGIS_DEBUG_LEVEL 2*/
+#define POSTGIS_DEBUG_GEOMETRY_WKB 1
 #include "lwgeom_log.h"
 
 #include "liblwgeom_internal.h"
@@ -587,7 +588,9 @@ lwt_AddIsoNode( LWT_TOPOLOGY* topo, LWT_ELEMID face,
 	return _lwt_AddIsoNode( topo, face, pt, skipISOChecks, 1 );
 }
 
-/* Check that an edge does not cross an existing node or edge
+/*
+ * Check that an edge does not cross an existing node and
+ * does not have non-boundary intersection with existing edge
  *
  * @param myself the id of an edge to skip, if any
  *               (for ChangeEdgeGeom). Can use 0 for none.
@@ -681,7 +684,7 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
 
     LWDEBUGF(2, "Edge %d converted to GEOS", edge_id);
 
-    /* check if the edge crosses our edge (not boundary-boundary) */
+    /* check if the edge has a non-boundary-boundary intersection with our edge */
 
     relate = GEOSRelateBoundaryNodeRule(eegg, edgegg, 2);
     if ( ! relate ) {
@@ -694,7 +697,7 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
 
     LWDEBUGF(2, "Edge %d relate pattern is %s", edge_id, relate);
 
-    match = GEOSRelatePatternMatch(relate, "F********");
+    match = GEOSRelatePatternMatch(relate, "FF*F*****");
     if ( match ) {
       /* error or no interior intersection */
       GEOSGeom_destroy(eegg);
@@ -753,12 +756,42 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
       return -1;
     }
 
+    match = GEOSRelatePatternMatch(relate, "*T*******");
+    if ( match ) {
+      _lwt_release_edges(edges, num_edges);
+      GEOSGeom_destroy(edgegg);
+      GEOSGeom_destroy(eegg);
+      GEOSFree(relate);
+      if ( match == 2 ) {
+        lwerror("GEOSRelatePatternMatch error: %s", lwgeom_geos_errmsg);
+      } else {
+        lwerror("Spatial exception - geometry boundary touches interior of edge %"
+                LWTFMT_ELEMID, edge_id);
+      }
+      return -1;
+    }
+
+    match = GEOSRelatePatternMatch(relate, "***T*****");
+    if ( match ) {
+      _lwt_release_edges(edges, num_edges);
+      GEOSGeom_destroy(edgegg);
+      GEOSGeom_destroy(eegg);
+      GEOSFree(relate);
+      if ( match == 2 ) {
+        lwerror("GEOSRelatePatternMatch error: %s", lwgeom_geos_errmsg);
+      } else {
+        lwerror("Spatial exception - boundary of edge % touches interior of geometry"
+                LWTFMT_ELEMID, edge_id);
+      }
+      return -1;
+    }
+
     LWDEBUGF(2, "Edge %d analisys completed, it does no harm", edge_id);
 
     GEOSFree(relate);
     GEOSGeom_destroy(eegg);
   }
-  LWDEBUGF(1, "No edge crossing detected amongh the %d candidate edges", num_edges);
+  LWDEBUGF(1, "No edge crossing detected among the %d candidate edges", num_edges);
   if ( edges ) _lwt_release_edges(edges, num_edges);
               /* would be NULL if num_edges was 0 */
 
@@ -5408,6 +5441,7 @@ _lwt_AddLineEdge( LWT_TOPOLOGY* topo, LWLINE* edge, double tol,
   lwpoint_free(start_point); /* too late if lwt_AddPoint calls lwerror */
   if ( nid[0] == -1 ) return -1; /* lwerror should have been called */
   moved += mm;
+  LWDEBUGF(1, "node for start point added or found to be %" LWTFMT_ELEMID " (moved ? %d)", nid[0], mm);
 
 
   end_point = lwline_get_lwpoint(edge, edge->points->npoints-1);
@@ -5420,9 +5454,10 @@ _lwt_AddLineEdge( LWT_TOPOLOGY* topo, LWLINE* edge, double tol,
   nid[1] = _lwt_AddPoint( topo, end_point,
                           _lwt_minTolerance(lwpoint_as_lwgeom(end_point)),
                           handleFaceSplit, &mm );
-  moved += mm;
   lwpoint_free(end_point); /* too late if lwt_AddPoint calls lwerror */
   if ( nid[1] == -1 ) return -1; /* lwerror should have been called */
+  moved += mm;
+  LWDEBUGF(1, "node for end point added or found to be %" LWTFMT_ELEMID " (moved ? %d)", nid[1], mm);
 
   /*
     -- Added endpoints may have drifted due to tolerance, so
@@ -5430,6 +5465,8 @@ _lwt_AddLineEdge( LWT_TOPOLOGY* topo, LWLINE* edge, double tol,
   */
   if ( moved )
   {
+
+    LWDEBUG(1, "One or both line endpoints moved by snap, updating line");
 
     nn = nid[0] == nid[1] ? 1 : 2;
     node = lwt_be_getNodeById( topo, nid, &nn,
@@ -5463,8 +5500,12 @@ _lwt_AddLineEdge( LWT_TOPOLOGY* topo, LWLINE* edge, double tol,
 
     if ( nn ) _lwt_release_nodes(node, nn);
 
+    LWDEBUGG(2, lwline_as_lwgeom(edge), "Snapped after drifted endpoints snap");
+
     /* make valid, after snap (to handle collapses) */
     tmp = lwgeom_make_valid(lwline_as_lwgeom(edge));
+
+    LWDEBUGG(2, tmp, "Made-valid after snap to drifted endpoints");
 
     col = lwgeom_as_lwcollection(tmp);
     if ( col )
@@ -5504,6 +5545,7 @@ _lwt_AddLineEdge( LWT_TOPOLOGY* topo, LWLINE* edge, double tol,
         return 0;
       }
     }
+
   }
 
   /* check if the so-snapped edge _now_ exists */
