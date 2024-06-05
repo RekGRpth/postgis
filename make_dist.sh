@@ -34,12 +34,12 @@ if [ "$MAKE" = "" ]; then
 fi
 
 # Extract tag from git or default to trunk
-tag=`git branch | grep \* | awk '{print $2}'`
+tag=$(git rev-parse HEAD)
 
 if [ -n "$1" ]; then
   if [ "$1" = "-b" ]; then
     shift
-    tag=svn-$1
+    tag=stable-$1
     branch=yes
   else
     tag=$1
@@ -54,7 +54,8 @@ if [ -d "$outdir" ]; then
 	exit 1
 fi
 
-git clone -b $tag . $outdir || exit 1
+git clone . $outdir || exit 1
+cd $outdir && git checkout $tag && cd -
 
 echo "Removing make_dist.sh and HOWTO_RELEASE"
 rm -fv "$outdir"/make_dist.sh "$outdir"/HOWTO_RELEASE
@@ -134,8 +135,23 @@ fi
 if test "x$package" = "x"; then
     package="postgis-$version.tar.gz"
 fi
+
+echo "Tweaking timestamps"
+
+# Extract last commit date from git
+date=$(git log -1 --pretty=format:%cI HEAD)
+
+# Enforce timestamp on files to be included in the pacakge
+find "${outdir}" -exec touch -d "${date}" {} \;
+
 echo "Generating $package file"
-tar czf "$package" "$outdir" || exit 1
+
+# Create tar
+tar cf - --sort=name --mode=a+rwX --owner=0 --group=0 --numeric-owner "$outdir" > ${package}.tar || exit 1
+
+# Compress
+gzip -n9 < ${package}.tar > ${package} || exit 1
+rm ${package}.tar
 
 echo "Generating ${package}.md5 file"
 md5sum "${package}" > ${package}.md5
