@@ -691,8 +691,8 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
     /* check if the edge has a non-boundary-boundary intersection with our edge */
 
     relate = GEOSRelateBoundaryNodeRule(eegg, edgegg, 2);
+    GEOSGeom_destroy(eegg);
     if ( ! relate ) {
-      GEOSGeom_destroy(eegg);
       GEOSGeom_destroy(edgegg);
       _lwt_release_edges(edges, num_edges);
       lwerror("GEOSRelateBoundaryNodeRule error: %s", lwgeom_geos_errmsg);
@@ -704,7 +704,6 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
     match = GEOSRelatePatternMatch(relate, "FF*F*****");
     if ( match ) {
       /* error or no interior intersection */
-      GEOSGeom_destroy(eegg);
       GEOSFree(relate);
       if ( match == 2 ) {
         _lwt_release_edges(edges, num_edges);
@@ -719,7 +718,6 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
     if ( match ) {
       _lwt_release_edges(edges, num_edges);
       GEOSGeom_destroy(edgegg);
-      GEOSGeom_destroy(eegg);
       GEOSFree(relate);
       if ( match == 2 ) {
         lwerror("GEOSRelatePatternMatch error: %s", lwgeom_geos_errmsg);
@@ -734,7 +732,6 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
     if ( match ) {
       _lwt_release_edges(edges, num_edges);
       GEOSGeom_destroy(edgegg);
-      GEOSGeom_destroy(eegg);
       GEOSFree(relate);
       if ( match == 2 ) {
         lwerror("GEOSRelatePatternMatch error: %s", lwgeom_geos_errmsg);
@@ -749,7 +746,6 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
     if ( match ) {
       _lwt_release_edges(edges, num_edges);
       GEOSGeom_destroy(edgegg);
-      GEOSGeom_destroy(eegg);
       GEOSFree(relate);
       if ( match == 2 ) {
         lwerror("GEOSRelatePatternMatch error: %s", lwgeom_geos_errmsg);
@@ -764,7 +760,6 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
     if ( match ) {
       _lwt_release_edges(edges, num_edges);
       GEOSGeom_destroy(edgegg);
-      GEOSGeom_destroy(eegg);
       GEOSFree(relate);
       if ( match == 2 ) {
         lwerror("GEOSRelatePatternMatch error: %s", lwgeom_geos_errmsg);
@@ -779,7 +774,6 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
     if ( match ) {
       _lwt_release_edges(edges, num_edges);
       GEOSGeom_destroy(edgegg);
-      GEOSGeom_destroy(eegg);
       GEOSFree(relate);
       if ( match == 2 ) {
         lwerror("GEOSRelatePatternMatch error: %s", lwgeom_geos_errmsg);
@@ -792,7 +786,6 @@ _lwt_CheckEdgeCrossing( LWT_TOPOLOGY* topo,
     LWDEBUGF(2, "Edge %" LWTFMT_ELEMID " analisys completed, it does no harm", edge_id);
 
     GEOSFree(relate);
-    GEOSGeom_destroy(eegg);
   }
   LWDEBUGF(1, "No edge crossing detected among the %lu candidate edges", num_edges);
   if ( edges ) _lwt_release_edges(edges, num_edges);
@@ -5410,6 +5403,75 @@ _lwt_SnapEdgeToExistingNode(
 
     /* TODO: check that newSplitEdgeLine part does not crosses any other edge ? */
     /* TODO: check that newSplitEdgeLine retains its position in the edge end star (see ticket #5786) */
+    /* TODO: check that the motion range does not contain any node */
+    {{
+      // build the motion range shape: splitC->geoms[0] + splitC->geoms[1] - edge->geom
+      POINTARRAY *motionRange = ptarray_clone_deep(lwgeom_as_lwline(splitC->geoms[0])->points);
+      ptarray_append_ptarray(motionRange, lwgeom_as_lwline(splitC->geoms[1])->points, 0);
+      POINTARRAY *reverseNewLine = ptarray_clone_deep(edge->geom->points);
+      ptarray_reverse_in_place(reverseNewLine);
+      ptarray_append_ptarray(motionRange, reverseNewLine, 0);
+      ptarray_free(reverseNewLine);
+
+      // motionBounds takes ownership of motionRange
+      LWLINE *motionBounds = lwline_construct(topo->srid, NULL, motionRange);
+
+      // motionPolyBare takes ownership of motionBounds
+      LWGEOM *motionPolyBare = (LWGEOM *)lwpoly_from_lwlines(motionBounds, 0, NULL);
+      LWGEOM *motionPoly = lwgeom_make_valid(motionPolyBare);
+      lwgeom_free(motionPolyBare);
+
+      LWDEBUGG(1, motionPoly, "Motion range");
+
+      // check the Motion range doesn't cover any of
+      // the edges incident to the split node other
+      // than the existing edge
+      GEOSGeometry *motionPolyG = NULL;
+      for ( uint64_t t=0; t<splitNodeEdges->numEdges; t++ )
+      {
+        LWT_ISO_EDGE *e = &(splitNodeEdges->edges[t]);
+        GEOSGeometry *eg;
+        if ( e == existingEdge ) continue;
+        if ( e == edge ) continue;
+        if ( ! motionPolyG ) {
+          motionPolyG = LWGEOM2GEOS( motionPoly, 0 );
+          if ( ! motionPolyG )
+          {
+            lwerror("Could not convert edge geometry to GEOS: %s", lwgeom_geos_errmsg);
+            return -1;
+          }
+        }
+        eg = LWGEOM2GEOS( lwline_as_lwgeom(e->geom), 0 );
+        if ( ! eg )
+        {
+          lwerror("Could not convert edge geometry to GEOS: %s", lwgeom_geos_errmsg);
+          return -1;
+        }
+
+        int covers = GEOSCovers( motionPolyG, eg );
+        // TODO: use preparedCovers ?
+        GEOSGeom_destroy(eg);
+        if (covers == 2)
+        {
+          lwerror("Covers error: %s", lwgeom_geos_errmsg);
+          return -1;
+        }
+        if ( covers )
+        {
+          lwgeom_free(motionPoly);
+          lwerror("snapping edge %" LWTFMT_ELEMID
+            " to new node moves it past edge %" LWTFMT_ELEMID,
+            edge->edge_id, e->edge_id
+          );
+          return -1;
+        }
+      }
+      if ( motionPolyG ) GEOSGeom_destroy(motionPolyG);
+
+      lwgeom_free(motionPoly);
+    }}
+
+
 
     LWDEBUGF(1, "Existing edge %"
         LWTFMT_ELEMID " (post-modEdgeSplit) next_right:%"
@@ -7119,9 +7181,9 @@ _lwt_AddLine(LWT_TOPOLOGY* topo, LWLINE* line, double tol, int* nedges,
         lwerror("GEOSDistanceIndexed error: %s", lwgeom_geos_errmsg);
         return NULL;
       }
+      GEOSGeom_destroy(edge_g);
       if ( dist && dist >= tol ) continue;
       nearby[nearbyindex++] = g;
-      GEOSGeom_destroy(edge_g);
     }}
     LWDEBUGF(1, "Found %d edges closer than tolerance (%g)", nearbyindex, tol);
     GEOSGeom_destroy(noded_g);
