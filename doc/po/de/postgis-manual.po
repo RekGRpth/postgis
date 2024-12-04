@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-19 11:58+0000\n"
-"PO-Revision-Date: 2024-11-28 14:47+0000\n"
+"PO-Revision-Date: 2024-12-04 16:04+0000\n"
 "Last-Translator: Andreas Schild <andreas.schild@bfw.gv.at>\n"
 "Language-Team: German <https://weblate.osgeo.org/projects/postgis/"
 "postgis-manual/de/>\n"
@@ -10684,7 +10684,7 @@ msgstr "Charlie Savage"
 #. Tag: member
 #, no-c-format
 msgid "Chris Mayo"
-msgstr ""
+msgstr "Chris Mayo"
 
 #. Tag: member
 #, fuzzy, no-c-format
@@ -10709,7 +10709,7 @@ msgstr "Dane Springmeyer"
 #. Tag: member
 #, no-c-format
 msgid "Dapeng Wang"
-msgstr ""
+msgstr "Dapeng Wang"
 
 #. Tag: member
 #, fuzzy, no-c-format
@@ -10739,7 +10739,7 @@ msgstr "David Zwarg"
 #. Tag: member
 #, no-c-format
 msgid "Dian M Fay"
-msgstr ""
+msgstr "Dian M Fay"
 
 #. Tag: member
 #, fuzzy, no-c-format
@@ -10844,7 +10844,7 @@ msgstr "Jackie Leng"
 #. Tag: member
 #, no-c-format
 msgid "James Addison"
-msgstr ""
+msgstr "James Addison"
 
 #. Tag: member
 #, fuzzy, no-c-format
@@ -11079,7 +11079,7 @@ msgstr "Ron Mayer"
 #. Tag: member
 #, no-c-format
 msgid "Sam Peters"
-msgstr ""
+msgstr "Sam Peters"
 
 #. Tag: member
 #, fuzzy, no-c-format
@@ -11184,7 +11184,7 @@ msgstr "Volf Tomáš"
 #. Tag: member
 #, no-c-format
 msgid "Zuo Chenwei"
-msgstr ""
+msgstr "Zuo Chenwei"
 
 #. Tag: term
 #, no-c-format
@@ -11293,7 +11293,7 @@ msgstr "Geografische Daten BC"
 #. Tag: link
 #, no-c-format
 msgid "HighGo"
-msgstr ""
+msgstr "HighGo"
 
 #. Tag: simpara
 #, fuzzy, no-c-format
@@ -11303,7 +11303,7 @@ msgstr "Hunter Systeme Gruppe"
 #. Tag: link
 #, no-c-format
 msgid "INIA-CSIC"
-msgstr ""
+msgstr "INIA-CSIC"
 
 #. Tag: link
 #, fuzzy, no-c-format
@@ -11908,7 +11908,7 @@ msgstr "PostGIS-Aggregat-Funktionen"
 #. Tag: section
 #, no-c-format
 msgid "&list_aggregates;"
-msgstr ""
+msgstr "&list_aggregates;"
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -11929,7 +11929,7 @@ msgstr "PostGIS-Fenster-Funktionen"
 #. Tag: section
 #, no-c-format
 msgid "&list_window_functions;"
-msgstr ""
+msgstr "&list_window_functions;"
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -12118,7 +12118,7 @@ msgstr "PostGIS-Funktionen zur Unterstützung polyedrischer Flächen"
 #. Tag: section
 #, no-c-format
 msgid "&list_polyhedral_geometry_functions;"
-msgstr ""
+msgstr "&list_polyhedral_geometry_functions;"
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -12327,6 +12327,13 @@ msgid ""
 "&reference_cluster; &reference_bbox; &reference_lrs; &reference_trajectory; "
 "&reference_version; &reference_guc; &reference_troubleshooting;"
 msgstr ""
+"&reference_type; &reference_management; &reference_constructor; "
+"&reference_accessor; &reference_editor; &reference_validation; "
+"&reference_srs; &reference_input; &reference_output; &reference_operator; "
+"&reference_relationship; &reference_measure; &reference_overlay; "
+"&reference_processing; &reference_coverage; &reference_transformation; "
+"&reference_cluster; &reference_bbox; &reference_lrs; &reference_trajectory; "
+"&reference_version; &reference_guc; &reference_troubleshooting;"
 
 #. Tag: title
 #, no-c-format
@@ -12819,6 +12826,9 @@ msgid ""
 "represent the linear segments of the supplied geometry, while the "
 "<varname>CIRCULARSTRING</varname>s represent the arc segments."
 msgstr ""
+"Die Felder <parameter>geom</parameter> <varname> LINESTRING</varname>s "
+"stellen die linearen Segmente der gelieferten Geometrie dar, während die "
+"Felder <varname>CIRCULARSTRING</varname>s die Bogensegmente darstellen."
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -13252,7 +13262,7 @@ msgstr ""
 #. Tag: refpurpose
 #, no-c-format
 msgid "Return the number of component curves in a CompoundCurve."
-msgstr ""
+msgstr "Gibt die Anzahl der Kurvenkomponenten einer CompoundCurve zurück."
 
 #. Tag: para
 #, no-c-format
@@ -13260,6 +13270,8 @@ msgid ""
 "Return the number of component curves in a CompoundCurve, zero for an empty "
 "CompoundCurve, or NULL for a non-CompoundCurve input."
 msgstr ""
+"Gibt die Anzahl der Kurvenkomponenten einer CompoundCurve zurück, Null steht "
+"für eine leere CompoundCurve und NULL für keine Eingabe einer CompoundCurve."
 
 #. Tag: para
 #, no-c-format
@@ -13267,11 +13279,14 @@ msgid ""
 ", <xref linkend=\"ST_Dump\"/>, <xref linkend=\"ST_ExteriorRing\"/>, <xref "
 "linkend=\"ST_NumInteriorRings\"/>, <xref linkend=\"ST_NumGeometries\"/>"
 msgstr ""
+", <xref linkend=\"ST_Dump\"/>, <xref linkend=\"ST_ExteriorRing\"/>, <xref "
+"linkend=\"ST_NumInteriorRings\"/>, <xref linkend=\"ST_NumGeometries\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Returns the Nth component curve geometry of a CompoundCurve."
 msgstr ""
+"Gibt die N-te Geometrie einer Kurvenkomponente in einer CompoundCurve zurück."
 
 #. Tag: para
 #, no-c-format
