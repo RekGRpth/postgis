@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-19 11:58+0000\n"
-"PO-Revision-Date: 2024-11-20 02:47+0000\n"
+"PO-Revision-Date: 2024-12-12 10:47+0000\n"
 "Last-Translator: Teramoto Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "postgis-manual/ja/>\n"
@@ -150,8 +150,8 @@ msgid ""
 "the EXTENSION mechanism."
 msgstr ""
 "PostgreSQL 9.1以上を使っていて、エクステンションのPostGISモジュールをコンパイ"
-"ル、インストールしている場合には、エクステンションというメカニズムを使用し"
-"て、データベースを空間データベースに切り替えることができます。"
+"ル、インストールしている場合には、エクステンションというメカニズムを使用して"
+"、データベースを空間データベースに変えることができます。"
 
 #. Tag: para
 #, no-c-format
@@ -160,9 +160,9 @@ msgid ""
 "the functions and comments. Raster and topology are packaged as a separate "
 "extension."
 msgstr ""
-"中核となるPostGISエクステンションには、ジオメトリ、ジオグラフィ、"
-"spatial_ref_sysおよび全ての関数とコメントが含まれています。ラスタとトポロジは"
-"別のエクステンションになっています。"
+"中核となるPostGISエクステンションには、ジオメトリ、ジオグラフィ、spatial_ref_"
+"sysおよび全ての関数とコメントが含まれています。ラスタとトポロジは別のエクステ"
+"ンションになっています。"
 
 #. Tag: para
 #, no-c-format
@@ -183,9 +183,9 @@ msgid ""
 "installed in the PostgreSQL extension directory (for example during testing, "
 "development or in a restricted environment)."
 msgstr ""
-"これは、通常はPostgreSQLのエクステンションのディレクトリ内にPostGISをインス"
-"トールできないか、したくない場合 (たとえばテスト中や開発中、または制限のある"
-"環境内)にのみ必要となります。"
+"これは、通常はPostgreSQLのエクステンションのディレクトリ内にPostGISをインスト"
+"ールできないか、したくない場合 "
+"(たとえばテスト中や開発中、または制限のある環境内)にのみ必要となります。"
 
 #. Tag: para
 #, no-c-format
@@ -206,10 +206,11 @@ msgid ""
 "objects are in the <filename>rtpostgis.sql</filename> script. Topology "
 "objects are in the <filename>topology.sql</filename> script."
 msgstr ""
-"中核のPostGISオブジェクト (ジオメトリ型とジオグラフィ型、これらに対応する関"
-"数)は<filename>postgis.sql</filename>スクリプトにあります。ラスタオブジェクト"
-"は<filename>rtpostgis.sql</filename>スクリプトにあります。トポロジオブジェク"
-"トは<filename>topology.sql</filename>スクリプトにあります。"
+"中核のPostGISオブジェクト "
+"(ジオメトリ型とジオグラフィ型、これらに対応する関数)は<filename>postgis."
+"sql</filename>スクリプトにあります。ラスタオブジェクトは<filename>rtpostgis."
+"sql</filename>スクリプトにあります。トポロジオブジェクトは<filename>topology."
+"sql</filename>スクリプトにあります。"
 
 #. Tag: para
 #, no-c-format
@@ -219,10 +220,10 @@ msgid ""
 "populate the <varname>spatial_ref_sys</varname> table. This will permit you "
 "to perform ST_Transform() operations on geometries."
 msgstr ""
-"完全なEPSG座標系定義IDセットについては、<filename>spatial_ref_sys.sql</"
-"filename>定義ファイルをロードして<varname>spatial_ref_sys</varname>テーブルを"
-"生成して下さい。これによりジオメトリ関数ST_Transform()が実行できるようになり"
-"ます。"
+"EPSG座標系定義IDの完全なテーブルを得るには、<filename>spatial_ref_sys.sql</fi"
+"lename>定義ファイルをロードして<varname>spatial_ref_sys</varname>テーブルを生"
+"成して下さい。これによりジオメトリ関数ST_Transform()が実行できるようになりま"
+"す。"
 
 #. Tag: para
 #, no-c-format
@@ -232,10 +233,10 @@ msgid ""
 "by simply typing <command>\\dd [function_name]</command> from a "
 "<command>psql</command> terminal window."
 msgstr ""
-"PostGIS関数にコメントを追加したい場合には、<filename>postgis_comments.sql</"
-"filename>スクリプト内のコメントが見つかると思います。コメントは"
-"<command>psql</command>のターミナルウィンドウから単に<command>\\dd [関数名]</"
-"command>と打ち込むだけで見ることができます。"
+"PostGIS関数にコメントを追加したい場合には、<filename>postgis_comments.sql</fi"
+"lename>スクリプト内にコメントがあるのが分かると思います。コメントは<command>p"
+"sql</command>のターミナルウィンドウから単に<command>\\dd "
+"[関数名]</command>と打ち込むだけで見ることができます。"
 
 #. Tag: para
 #, no-c-format
@@ -261,9 +262,8 @@ msgstr ""
 msgid ""
 "Unfortunately not all definitions can be easily replaced in a live database, "
 "so sometimes your best bet is a dump/reload process."
-msgstr ""
-"不幸なことに、定義の全てが実行中のデータベース内で簡単には置き換えられるわけ"
-"ではないので、ダンプ/リロードが最善策となることがあります。"
+msgstr "不幸なことに、定義の全てが実行中のデータベース内で簡単に置き換えられるわけで"
+"はないので、ダンプ/リロードが最善策となることがあります。"
 
 #. Tag: para
 #, no-c-format
@@ -342,13 +342,13 @@ msgid ""
 "If you have multiple versions of PostGIS installed, and you don't want to "
 "upgrade to the latest, you can explicitly specify the version as follows:"
 msgstr ""
-"インストールされたPostGISに複数のバージョンがあり、最新版にアップグレードした"
-"くない場合には、明示的なバージョンの指定ができます。次のようにします:"
+"複数のバージョンのPostGISがインストールされていて、最新版にはアップグレードし"
+"たくない場合には、明示的なバージョンの指定ができます。次のようにします:"
 
 #. Tag: para
 #, no-c-format
 msgid "If you get an error notice something like:"
-msgstr "次のようなエラー通知が表示されることがあります。"
+msgstr "次のようなエラー通知が表示されることがあります:"
 
 #. Tag: para
 #, no-c-format
@@ -357,9 +357,9 @@ msgid ""
 "<xref linkend=\"create_new_db_extensions\"/> and then restore your backup on "
 "top of this new database."
 msgstr ""
-"この場合は、データベースをバックアップして、 <xref "
-"linkend=\"create_new_db_extensions\"/> に記述されているように新しいデータベー"
-"スを生成し、バックアップを新しいデータベースにリストアしなければなりません。"
+"この場合には、データベースをバックアップして、 <xref linkend="
+"\"create_new_db_extensions\"/> に記述されているように新しいデータベースを生成"
+"し、バックアップを新しいデータベースにリストアしなければなりません。"
 
 #. Tag: para
 #, no-c-format
@@ -375,10 +375,10 @@ msgid ""
 "in that case you can append \"next\" to the version string, and next time "
 "you'll need to drop the \"next\" suffix again:"
 msgstr ""
-"この場合は、全てアップデートされていて、安全に無視できます。SVN版から次版 (新"
-"しい版番号を得ていないもの)にアップグレードしようと<emphasis role=\"bold\">し"
-"ない限り</emphasis>、\"next\"を版文字列に追加できますが、次回に\"next\"を削除"
-"する必要があります:"
+"この場合には、全てアップデートされていて、安全に無視できます。"
+"開発版からその次のバージョン (新しいバージョン番号を得ていないもの)"
+"にアップグレードしようと<emphasis role=\"bold\">しない限り</emphasis>、\"next"
+"\"をバージョン文字列に追加できますが、次回に\"next\"を削除する必要があります:"
 
 #. Tag: para
 #, no-c-format
@@ -388,9 +388,10 @@ msgid ""
 "the backup just has <code>CREATE EXTENSION postgis</code> and thus picks up "
 "the newest latest version during restore."
 msgstr ""
-"PostGISをバージョン指定なしにインストールした場合には、 しばしば再格納の前の"
-"PostGIS EXTENSIONの再インストールをとばすことができます。 バックアップは"
-"<code>CREATE EXTENSION postgis</code>だけで、リストアの間に最新版になります。"
+"PostGISをバージョン指定なしにインストールした場合には、 しばしばリストア前のP"
+"ostGISエクステンションの再インストールをとばすことができます。 "
+"バックアップには<code>CREATE EXTENSION "
+"postgis</code>があって、リストアの間に最新版になります。"
 
 #. Tag: para
 #, no-c-format
