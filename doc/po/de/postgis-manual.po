@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-19 11:58+0000\n"
-"PO-Revision-Date: 2024-12-04 16:04+0000\n"
+"PO-Revision-Date: 2024-12-16 17:47+0000\n"
 "Last-Translator: Andreas Schild <andreas.schild@bfw.gv.at>\n"
 "Language-Team: German <https://weblate.osgeo.org/projects/postgis/"
 "postgis-manual/de/>\n"
@@ -7087,8 +7087,8 @@ msgid ""
 "is deprecated as of 3.5.0. Use <xref linkend=\"TopoGeo_AddLineString\"/> "
 "instead."
 msgstr ""
-"Seit 3.5.0 veraltet. Stattdessen sollte <xref linkend=\"TopoGeo_AddLineString"
-"\"/> verwendet werden."
+"Veraltet seit 3.5.0. Bitte verwenden Sie <xref linkend="
+"\"TopoGeo_AddLineString\"/> stattdessen."
 
 #. Tag: para
 #, no-c-format
@@ -8576,6 +8576,17 @@ msgid ""
 "xlink:href=\"https://gitlab.com/sfcgal/SFCGAL/\">https://gitlab.com/sfcgal/"
 "SFCGAL/</link>."
 msgstr ""
+"SFCGAL, 1.4.1 oder höher ist nötig, und 1.5.0+ erforderlich um alle "
+"Funktionen nutzen zu können. SFCGAL kann verwendet werden, um zusätzliche 2D-"
+" und 3D-Analysefunktionen für PostGIS cf <xref linkend=\"reference_sfcgal\"/"
+"> bereitzustellen. Außerdem kann SFCGAL anstelle von GEOS für einige 2D-"
+"Funktionen verwendet werden, die von beiden Backends bereitgestellt werden ("
+"z. B. ST_Intersection oder ST_Area). Die PostgreSQL-Konfigurationsvariable "
+"<code>postgis.backend</code> erlaubt es dem Endbenutzer das Backend "
+"auszuwählen, falls SFCGAL installiert ist (GEOS ist Standard). Hinweis: "
+"SFCGAL 1.2 benötigt mindestens CGAL 4.3 und Boost 1.54 (cf <link xlink:href="
+"\"https://sfcgal.org\">https://sfcgal.org</link>) <link xlink:href=\"https"
+"://gitlab.com/sfcgal/SFCGAL/\">https://gitlab.com/sfcgal/SFCGAL/</link>."
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -13295,6 +13306,9 @@ msgid ""
 "starts at 1. Returns NULL if the geometry is not a CompoundCurve or the "
 "index is out of range."
 msgstr ""
+"Gibt die N-te Komponente einer Kurvengeometrie von einer CompoundCurve "
+"zurück. Der Index beginnt mit 1. Gibt NULL zurück, wenn die Geometrie keine "
+"CompoundCurve ist oder der Index außerhalb des Bereichs liegt."
 
 #. Tag: refpurpose
 #, fuzzy, no-c-format
@@ -14526,6 +14540,13 @@ msgid ""
 "afterwards remove the first and last double-quote character. For geometry "
 "column pass as is.\""
 msgstr ""
+"Namen für Tabellen und/oder Namensräume, die Sonderzeichen und "
+"Anführungszeichen enthalten, erfordern möglicherweise eine besondere "
+"Behandlung. Anmerkung eines Benutzers: \"Für die Bezeichnung von Schemata "
+"und Tabellen sollten Sie Escape-Regeln verwenden, um einen doppelt in "
+"Anführungszeichen gesetzten String zu erzeugen, und anschließend das erste "
+"und letzte Anführungszeichen entfernen. Für Geometriespalten können Sie den "
+"Namen unverändert angeben.\""
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -15747,6 +15768,9 @@ msgid ""
 "<xref linkend=\"ST_GeomFromText\"/> and <xref linkend=\"ST_PointFromText\"/"
 ">. It is also easier to use for numeric coordinate values."
 msgstr ""
+"<varname>ST_MakePoint</varname> ist zwar nicht OGC-konform, aber schneller "
+"als <xref linkend=\"ST_GeomFromText\"/> und <xref linkend=\"ST_PointFromText"
+"\"/>. Auch ist die Verwendung von numerischen Koordinatenwerten einfacher."
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -18074,11 +18098,14 @@ msgid ""
 "Only geometries of type (MULTI)POLYGON and (MULTI)LINESTRING are evaluated. "
 "Other geometries keep unchanged."
 msgstr ""
+"Es wird nur die Geometrie vom Typ (MULTI)POLYGON und (MULTI)LINESTRING "
+"ausgewertet. Die restliche Geometrie bleibt unverändert."
 
 #. Tag: para
 #, no-c-format
 msgid "In contrast to <code>ST_ClipByBox2D()</code> this function"
 msgstr ""
+"Im Gegensatz zu <code>ST_ClipByBox2D()</code> werden von dieser Funktion"
 
 #. Tag: para
 #, no-c-format
@@ -18086,16 +18113,20 @@ msgid ""
 "sorts out points without computing new intersection points which avoids "
 "rounding errors and usually increases performance,"
 msgstr ""
+"irrelevante Punkte ausgeschlossen, ohne neue Schnittpunkte zu berechnen, "
+"wodurch Rundungsfehler vermieden werden und die Leistung in der Regel steigt,"
 
 #. Tag: para
 #, no-c-format
 msgid "returns a geometry with equal or similar point number,"
-msgstr ""
+msgstr "eine Geometrie mit gleicher oder ähnlicher Punktanzahl zurückgegeben,"
 
 #. Tag: para
 #, no-c-format
 msgid "leads to the same rendering result within the specified view, and"
 msgstr ""
+"das gleiche Rendering-Ergebnis innerhalb der gegebenen Ansicht ausgegeben, "
+"und"
 
 #. Tag: para
 #, no-c-format
@@ -18103,6 +18134,8 @@ msgid ""
 "may introduce self-intersections which would make the resulting geometry "
 "invalid (see example below)."
 msgstr ""
+"es kann zu Selbstüberschneidungen kommen, welche die resultierende Geometrie "
+"ungültig machen würden (siehe Beispiel unten)."
 
 #. Tag: para
 #, no-c-format
@@ -18113,6 +18146,13 @@ msgid ""
 "introduce rendering artifacts if the resulting coordinates are projected "
 "into another (non-cartesian) coordinate system before rendering."
 msgstr ""
+"Wenn <code>cartesian_hint</code> auf <code>true</code> gesetzt ist, wendet "
+"der Algorithmus zusätzliche Optimierungen unter Verwendung kartesischer "
+"Mathematik an, um die resultierende Punktanzahl weiter zu reduzieren. "
+"Beachten Sie bitte, dass die Verwendung dieser Option Rendering-Artefakte "
+"verursachen kann, wenn die resultierenden Koordinaten in ein anderes (nicht-"
+"kartesisches) Koordinatensystem projiziert werden, bevor sie gerendert "
+"werden.“"
 
 #. Tag: para
 #, no-c-format
@@ -18121,6 +18161,9 @@ msgid ""
 "valid. This situation can be checked with <xref linkend=\"ST_IsValid\"/> and "
 "repaired with <xref linkend=\"ST_MakeValid\"/>."
 msgstr ""
+"Für Polygone stellt diese Funktion derzeit nicht sicher, dass das Ergebnis "
+"gültig ist. Diese Situation kann mit <xref linkend=\"ST_IsValid\"/> "
+"überprüft und mit <xref linkend=\"ST_MakeValid\"/> repariert werden."
 
 #. Tag: para
 #, no-c-format
@@ -18129,6 +18172,9 @@ msgid ""
 "points remain, the rendering result (light-blue area) within the grey view "
 "box remains as well."
 msgstr ""
+"Beispiel: ST_RemoveIrrelevantPointsForView() angewendet auf ein Polygon. "
+"Blaue Punkte bleiben erhalten, das Rendering-Ergebnis (hellblauer Bereich) "
+"innerhalb der grauen Viewbox bleibt ebenfalls erhalten."
 
 #. Tag: para
 #, no-c-format
@@ -18137,16 +18183,19 @@ msgid ""
 "are computed, the result of ST_RemoveIrrelevantPointsForView() may contain "
 "self-intersections."
 msgstr ""
+"Beispiel: Da die Punkte nur aussortiert werden und keine neuen Punkte "
+"berechnet werden, kann das Ergebnis von ST_RemoveIrrelevantPointsForView() "
+"Selbstüberschneidungen enthalten."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_Intersection\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_Intersection\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Removes small parts (polygon rings or linestrings) of a geometry."
-msgstr ""
+msgstr "Entfernt kleine Teile (Polygonringe oder Linienzüge) einer Geometrie."
 
 #. Tag: para
 #, no-c-format
@@ -18154,6 +18203,8 @@ msgid ""
 "Returns a <xref linkend=\"geometry\"/> without small parts (exterior or "
 "interior polygon rings, or linestrings)."
 msgstr ""
+"Gibt eine <xref linkend=\"geometry\"/> ohne kleine Teile (äußere oder innere "
+"Polygonringe oder Linienzüge) zurück."
 
 #. Tag: para
 #, no-c-format
@@ -18161,6 +18212,8 @@ msgid ""
 "This function can be used as preprocessing step for creating simplified "
 "maps, e. g. to remove small islands or holes."
 msgstr ""
+"Diese Funktion kann als Vorverarbeitungsschritt zur Erstellung vereinfachter "
+"Karten verwendet werden, z. B. um kleine Inseln oder Löcher zu entfernen."
 
 #. Tag: para
 #, no-c-format
@@ -18168,6 +18221,8 @@ msgid ""
 "It evaluates only geometries of type (MULTI)POLYGON and (MULTI)LINESTRING. "
 "Other geometries remain unchanged."
 msgstr ""
+"Es wertet nur Geometrien vom Typ (MULTI)POLYGON und (MULTI)LINESTRING aus. "
+"Andere Geometrien bleiben unverändert."
 
 #. Tag: para
 #, no-c-format
@@ -18175,6 +18230,9 @@ msgid ""
 "If <parameter>minSizeX</parameter> is greater than 0, parts are sorted out "
 "if their width is smaller than <parameter>minSizeX</parameter>."
 msgstr ""
+"Wenn <parameter>minSizeX</parameter> größer als 0 ist, werden Teile "
+"ausgeschlossen, wenn ihre Breite kleiner als <parameter>minSizeX</parameter> "
+"ist."
 
 #. Tag: para
 #, no-c-format
@@ -18182,6 +18240,9 @@ msgid ""
 "If <parameter>minSizeY</parameter> is greater than 0, parts are sorted out "
 "if their height is smaller than <parameter>minSizeY</parameter>."
 msgstr ""
+"Wenn <parameter>minSizeY</parameter> größer als 0 ist, werden Teile "
+"ausgeschlossen, wenn ihre Höhe kleiner als <parameter>minSizeY</parameter> "
+"ist."
 
 #. Tag: para
 #, no-c-format
@@ -18189,6 +18250,8 @@ msgid ""
 "Both <parameter>minSizeX</parameter> and <parameter>minSizeY</parameter> are "
 "measured in coordinate system units of the geometry."
 msgstr ""
+"Sowohl <parameter>minSizeX</parameter> als auch <parameter>minSizeY</"
+"parameter> werden in den Koordinatensystemeinheiten der Geometrie gemessen."
 
 #. Tag: para
 #, no-c-format
@@ -18196,16 +18259,18 @@ msgid ""
 "For polygon types, evaluation is done separately for each ring which can "
 "lead to one of the following results:"
 msgstr ""
+"Bei Polygonen wird die Auswertung für jeden Ring getrennt vorgenommen, was "
+"zu einem der folgenden Ergebnisse führen kann:"
 
 #. Tag: para
 #, no-c-format
 msgid "the original geometry,"
-msgstr ""
+msgstr "die ursprüngliche Geometrie,"
 
 #. Tag: para
 #, no-c-format
 msgid "a POLYGON with all rings with less vertices,"
-msgstr ""
+msgstr "ein POLYGON mit allen Ringen, die weniger Scheitelpunkte haben"
 
 #. Tag: para
 #, no-c-format
@@ -18213,11 +18278,13 @@ msgid ""
 "a POLYGON with a reduced number of interior rings (having possibly less "
 "vertices),"
 msgstr ""
+"ein POLYGON mit einer reduzierten Anzahl an inneren Ringen (möglicherweise "
+"mit weniger Scheitelpunkten),"
 
 #. Tag: para
 #, no-c-format
 msgid "a POLYGON EMPTY, or"
-msgstr ""
+msgstr "ein POLYGON EMPTY, oder"
 
 #. Tag: para
 #, no-c-format
@@ -18225,11 +18292,13 @@ msgid ""
 "a MULTIPOLYGON with a reduced number of polygons (having possibly less "
 "interior rings or vertices), or"
 msgstr ""
+"ein MULTIPOLYGON mit einer reduzierten Anzahl an Polygonen (möglicherweise "
+"weniger innere Ringe oder Scheitelpunkte), oder"
 
 #. Tag: para
 #, no-c-format
 msgid "a MULTIPOLYGON EMPTY."
-msgstr ""
+msgstr "ein MULTIPOLYGON EMPTY."
 
 #. Tag: para
 #, no-c-format
@@ -18237,16 +18306,18 @@ msgid ""
 "For linestring types, evaluation is done for each linestring which can lead "
 "to one of the following results:"
 msgstr ""
+"Bei Linienzügen wird die Auswertung für jeden Linienzug getrennt "
+"vorgenommen, was zu einem der folgenden Ergebnisse führen kann:"
 
 #. Tag: para
 #, no-c-format
 msgid "a LINESTRING with a reduced number of vertices,"
-msgstr ""
+msgstr "ein LINESTRING mit einer reduzierten Anzahl an Scheitelpunkten,"
 
 #. Tag: para
 #, no-c-format
 msgid "a LINESTRING EMPTY,"
-msgstr ""
+msgstr "ein LINESTRING LEER,"
 
 #. Tag: para
 #, no-c-format
@@ -18254,17 +18325,21 @@ msgid ""
 "a MULTILINESTRING with a reduced number of linestrings (having possibly less "
 "vertices), or"
 msgstr ""
+"ein MULTILINESTRING mit einer reduzierten Anzahl an Linienzügen ("
+"möglicherweise weniger Scheitelpunkten), oder"
 
 #. Tag: para
 #, no-c-format
 msgid "a MULTILINESTRING EMPTY."
-msgstr ""
+msgstr "ein MULTILINESTRING LEER."
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Example: ST_RemoveSmallParts() applied to a multi-polygon. Blue parts remain."
 msgstr ""
+"Beispiel: ST_RemoveSmallParts() angewendet auf ein Multi-Polygon. Blaue "
+"Teile bleiben erhalten."
 
 #. Tag: refpurpose
 #, no-c-format
@@ -18893,6 +18968,10 @@ msgid ""
 "href=\"https://www.postgresql.org/docs/current/sql-altersystem.html\">SQL "
 "ALTER SYSTEM</link>"
 msgstr ""
+"Weitere Anwendungsbeispiele finden Sie unter <link xlink:href=\"https://www."
+"postgresql.org/docs/current/sql-set.html\">SQL SET</link> und <link "
+"xlink:href=\"https://www.postgresql.org/docs/current/sql-altersystem.html\""
+">SQL ALTER SYSTEM</link>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -19117,11 +19196,15 @@ msgid ""
 "To set and reset <varname>postgis.gdal_enabled_drivers</varname> for current "
 "session"
 msgstr ""
+"Um <varname>postgis.gdal_enabled_drivers</varname> für die aktuelle Sitzung "
+"zu setzen oder zurückzusetzen"
 
 #. Tag: para
 #, no-c-format
 msgid "Set for all new connections to a specific database to specific drivers"
 msgstr ""
+"Setzt bestimmte Treiber für alle neuen Verbindungen zu einer bestimmten "
+"Datenbank"
 
 #. Tag: para
 #, no-c-format
@@ -19130,6 +19213,9 @@ msgid ""
 "user access. Also note that database, session, and user settings override "
 "this."
 msgstr ""
+"Aktiviert alle Treiber für den gesamten Datenbank-Cluster. Erfordert "
+"Superuser-Zugriff. Beachten Sie auch, dass Datenbank-, Sitzungs- und "
+"Benutzereinstellungen dies überschreiben."
 
 #. Tag: para
 #, no-c-format
@@ -19205,7 +19291,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Set for all new connections to a specific database"
-msgstr ""
+msgstr "Für alle neuen Verbindungen zu einer bestimmten Datenbank aktivieren"
 
 #. Tag: para
 #, no-c-format
@@ -19213,6 +19299,9 @@ msgid ""
 "Setting for whole database cluster. Requires super user access. Also note "
 "that database, session, and user settings override this."
 msgstr ""
+"Für den gesamten Datenbank-Cluster aktivieren. Erfordert Superuser-Zugriff. "
+"Beachten Sie auch, dass Datenbank-, Sitzungs- und Benutzereinstellungen dies "
+"überschreiben."
 
 #. Tag: refpurpose
 #, fuzzy, no-c-format
@@ -22203,6 +22292,10 @@ msgid ""
 "web.archive.org/web/20160827203903/http://boundlessgeo.com/2012/07/making-"
 "geography-faster/\">Making Geography faster</link> for details."
 msgstr ""
+"Erweitert: 2.1.0 verbesserte die Geschwindigkeit für Geographie. Weitere "
+"Details finden Sie unter <link xlink:href=\"https://web.archive.org/web/"
+"20160827203903/http://boundlessgeo.com/2012/07/making-geography-faster/\""
+">Making Geography faster</link>."
 
 #. Tag: para
 #, no-c-format
@@ -25338,6 +25431,8 @@ msgstr "3D-Geometrien werden unterstützt:"
 #, no-c-format
 msgid "Options argument can be used to add BBOX and CRS in GeoJSON output:"
 msgstr ""
+"Das Argument options kann verwendet werden, um BBOX oder CRS in der GeoJSON-"
+"Ausgabe hinzuzufügen:"
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -29137,6 +29232,9 @@ msgid ""
 "Behavior changed in GEOS 3.11 so offset curves now have the same direction "
 "as the input line, for both positive and negative offsets."
 msgstr ""
+"Durch die Änderung des Verhaltens in GEOS 3.11 haben versetzte Kurven nun "
+"die gleiche Richtung wie die Eingabelinie, sowohl bei positiven als auch bei "
+"negativen Versetzungen."
 
 #. Tag: para
 #, no-c-format
@@ -31548,7 +31646,7 @@ msgstr ""
 #. Tag: refpurpose
 #, no-c-format
 msgid "Aggregate. Renders PostGIS geometries into a new raster."
-msgstr ""
+msgstr "Aggregiert. Wandelt PostGIS-Geometrien in einen neuen Raster um."
 
 #. Tag: para
 #, no-c-format
@@ -31556,17 +31654,20 @@ msgid ""
 "Returns a single-band raster containing the rendered version of all incoming "
 "geometries, each with its associated value."
 msgstr ""
+"Gibt einen einbandigen Raster zurück, der die gerasterte Version aller "
+"eingehenden Geometrien und den jeweils zugehörigen Wert enthält."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 3.6.0"
-msgstr ""
+msgstr "Verfügbarkeit: 3.6.0"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 ", <xref linkend=\"RT_ST_DumpAsPolygons\"/>, <xref linkend=\"RT_ST_Union\"/>"
 msgstr ""
+", <xref linkend=\"RT_ST_DumpAsPolygons\"/>, <xref linkend=\"RT_ST_Union\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -33238,7 +33339,7 @@ msgstr ""
 "hinzugefügt."
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 ", <xref linkend=\"RT_ST_SetValue\"/>, <xref linkend=\"RT_ST_DumpAsPolygons\"/"
 ">, <xref linkend=\"RT_ST_NumBands\"/>, <xref "
@@ -33249,6 +33350,13 @@ msgid ""
 "linkend=\"ST_MakeEnvelope\"/>, <xref linkend=\"ST_Intersects\"/>, <xref "
 "linkend=\"ST_Intersection\"/>"
 msgstr ""
+", <xref linkend=\"RT_ST_SetValue\"/>, <xref linkend=\"RT_ST_DumpAsPolygons\"/"
+">, <xref linkend=\"RT_ST_NumBands\"/>, <xref linkend=\"RT_ST_PixelAsPolygon\""
+"/>, <xref linkend=\"RT_ST_ScaleX\"/>, <xref linkend=\"RT_ST_ScaleY\"/>, "
+"<xref linkend=\"RT_ST_UpperLeftX\"/>, <xref linkend=\"RT_ST_UpperLeftY\"/>, "
+"<xref linkend=\"RT_ST_SRID\"/>, <xref linkend=\"ST_AsText\"/>, <xref linkend="
+"\"ST_Point\"/>, <xref linkend=\"ST_MakeEnvelope\"/>, <xref linkend="
+"\"ST_Intersects\"/>, <xref linkend=\"ST_Intersection\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -35570,6 +35678,12 @@ msgid ""
 "varname> is set to TRUE, then touched pixels are included, otherwise only if "
 "the center of the pixel is in the geometry it is included."
 msgstr ""
+"Gibt den nach der Eingabegeometrie zugeschnittenen Raster zurück. Falls die "
+"Bandnummer nicht angegeben ist, werden alle Bänder verarbeitet. Wenn "
+"<varname>crop</varname> nicht angegeben oder auf TRUE gesetzt ist, wird der "
+"Ausgaberaster entsprechend zugeschnitten. Wenn <varname>touched</varname> "
+"auf TRUE gesetzt ist, werden auch berührte Pixel einbezogen, andernfalls nur "
+"Pixel, bei denen sich der Mittelpunkt im Inneren der Geometrie befindet."
 
 #. Tag: para
 #, no-c-format
