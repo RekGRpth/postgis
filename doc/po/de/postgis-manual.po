@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-19 11:58+0000\n"
-"PO-Revision-Date: 2024-12-16 17:47+0000\n"
+"PO-Revision-Date: 2024-12-17 12:47+0000\n"
 "Last-Translator: Andreas Schild <andreas.schild@bfw.gv.at>\n"
 "Language-Team: German <https://weblate.osgeo.org/projects/postgis/"
 "postgis-manual/de/>\n"
@@ -112,7 +112,7 @@ msgstr ""
 "PostgreSQL-Version und main auf den Cluster bezieht."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "On windows, if you are running as a service, you can set via System "
 "variables which for Windows 7 you can get to by right-clicking on Computer-"
@@ -121,13 +121,12 @@ msgid ""
 "clicking <emphasis>Advanced System Settings -&gt;Advanced-&gt;Environment "
 "Variables</emphasis> and adding new system variables."
 msgstr ""
-"Unter Windows können Sie, wenn Sie als Dienst ausgeführt werden, "
-"Systemvariablen festlegen, die Sie unter Windows 7 mit einem Rechtsklick auf "
-"Computer-&gt;Eigenschaften Erweiterte Systemeinstellungen oder im Explorer "
-"unter <varname>Systemsteuerung\\Alle Systemsteuerungselemente\\System</"
-"varname> erreichen. Klicken Sie dann auf <emphasis>Erweiterte "
-"Systemeinstellungen -&gt;Erweitert-&gt;Umgebungsvariablen</emphasis> und "
-"fügen Sie neue Systemvariablen hinzu."
+"Wenn Sie PostgreSQL unter Windows als Dienst ausführen, können sie die "
+"Systemvariablen unter Windows 7 mit einem Rechtsklick auf Computer-&gt;"
+"roperties Advanced System Settings oder im Explorer unter <varname>Control "
+"Panel\\All Control Panel Items\\System</varname>. setzen. Klicken Sie "
+"anschließend auf <emphasis>Advanced System Settings -&gt;Advanced-&gt;"
+"Environment Variables</emphasis> um neue Systemvariablen hinzuzufügen."
 
 #. Tag: para
 #, no-c-format
@@ -179,10 +178,11 @@ msgstr ""
 "folgende SQL Befehl ausgeführt:"
 
 #. Tag: title
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Spatially enable database without using EXTENSION (discouraged)"
 msgstr ""
-"Datenbank räumlich aktivieren, ohne EXTENSION zu verwenden (nicht empfohlen)"
+"Räumliche Aktivierung der Datenbank ohne Verwendung von EXTENSION (nicht "
+"empfohlen)"
 
 #. Tag: para
 #, no-c-format
@@ -196,19 +196,19 @@ msgstr ""
 "(wie in einer Test-, Entwicklungs- oder eingeschränkten Umgebung)."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Adding PostGIS objects and function definitions into your database is done "
 "by loading the various sql files located in <filename>[prefix]/share/"
 "contrib</filename> as specified during the build phase."
 msgstr ""
 "Das Hinzufügen von PostGIS-Objekten und Funktionsdefinitionen in Ihre "
-"Datenbank erfolgt durch das Laden der verschiedenen sql-Dateien, die sich in "
-"<filename>[prefix]/share/contrib</filename> befinden, wie während der "
-"Erstellungsphase angegeben."
+"Datenbank erfolgt durch das Laden unterschiedlicher SQL-Dateien unter "
+"<filename>[prefix]/share/contrib</filename>, wie während der "
+"Erstellungsphase angezeigt."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "The core PostGIS objects (geometry and geography types, and their support "
 "functions) are in the <filename>postgis.sql</filename> script. Raster "
@@ -217,26 +217,24 @@ msgid ""
 msgstr ""
 "Die zentralen PostGIS-Objekte (Geometrie- und Geografietypen sowie deren "
 "Unterstützungsfunktionen) befinden sich im Skript <filename>postgis.sql</"
-"filename>. Rasterobjekte befinden sich im Skript <filename>rtpostgis.sql</"
-"filename>. Topologieobjekte befinden sich im Skript <filename>topology.sql</"
-"filename>."
+"filename>. Rasterobjekte sind im Skript <filename>rtpostgis.sql</filename>. "
+"Topologieobjekte sind im Skript <filename>topology.sql</filename>."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "For a complete set of EPSG coordinate system definition identifiers, you can "
 "also load the <filename>spatial_ref_sys.sql</filename> definitions file and "
 "populate the <varname>spatial_ref_sys</varname> table. This will permit you "
 "to perform ST_Transform() operations on geometries."
 msgstr ""
-"Für einen vollständigen Satz von EPSG-Koordinatensystem-"
-"Definitionsbezeichnern können Sie auch die Definitionsdatei "
-"<filename>spatial_ref_sys.sql</filename> laden und die Tabelle "
-"<varname>spatial_ref_sys</varname> befüllen. Damit können Sie ST_Transform()-"
-"Operationen an Geometrien durchführen."
+"Für einen vollständigen Satz an EPSG-Koordinatensystemdefinitionen können "
+"Sie auch die Definitionsdatei <filename>spatial_ref_sys.sql</filename> laden "
+"um die Tabelle <varname>spatial_ref_sys</varname> zu befüllen. Dies "
+"ermöglicht Ihnen ST_Transform()-Operationen an Geometrien durchzuführen."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "If you wish to add comments to the PostGIS functions, you can find them in "
 "the <filename>postgis_comments.sql</filename> script. Comments can be viewed "
@@ -244,48 +242,47 @@ msgid ""
 "<command>psql</command> terminal window."
 msgstr ""
 "Wenn Sie Kommentare zu den PostGIS-Funktionen hinzufügen möchten, finden Sie "
-"diese im Skript <filename>postgis_comments.sql</filename>. Die Kommentare "
-"können einfach durch Eingabe von <command>\\dd [function_name]</command> in "
-"einem <command>psql</command> Terminalfenster angezeigt werden."
+"diese im Skript <filename>postgis_comments.sql</filename>. Kommentare können "
+"durch die Eingabe von <command>\\dd [function_name]</command> in einem "
+"<command>psql</command> Terminalfenster angezeigt werden."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Run the following Shell commands in your terminal:"
 msgstr "Führen Sie die folgenden Shell-Befehle in Ihrem Terminal aus:"
 
 #. Tag: title
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Upgrading spatial databases"
 msgstr "Aktualisierung von Geodatenbanken"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Upgrading existing spatial databases can be tricky as it requires "
 "replacement or introduction of new PostGIS object definitions."
 msgstr ""
 "Die Aktualisierung bestehender räumlicher Datenbanken kann schwierig sein, "
-"da sie den Austausch oder die Einführung neuer PostGIS-Objektdefinitionen "
+"da sie den Austausch oder die Einführung neuer PostGIS Objektdefinitionen "
 "erfordert."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Unfortunately not all definitions can be easily replaced in a live database, "
 "so sometimes your best bet is a dump/reload process."
 msgstr ""
-"Leider können nicht alle Definitionen in einer aktiven Datenbank einfach "
-"ersetzt werden, so dass manchmal ein Dump/Reload-Prozess die beste Lösung "
-"ist."
+"Da leider nicht alle Definitionen in einer aktiven Datenbank einfach ersetzt "
+"werden können, ist manchmal ein Dump/Reload-Prozess die beste Lösung."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "PostGIS provides a SOFT UPGRADE procedure for minor or bugfix releases, and "
 "a HARD UPGRADE procedure for major releases."
 msgstr ""
-"PostGIS bietet ein SOFT UPGRADE-Verfahren für Minor- oder Bugfix-Versionen "
-"und ein HARD UPGRADE-Verfahren für Major-Versionen."
+"PostGIS bietet ein SOFT UPGRADE-Verfahren für kleinere oder Bugfix-Releases "
+"sowie ein HARD-UPGRADE-Verfahren für Haupt-Releases."
 
 #. Tag: para
 #, no-c-format
@@ -304,17 +301,18 @@ msgid "Soft upgrade"
 msgstr "Sanfte Aktualisierung"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "If you installed your database using extensions, you'll need to upgrade "
 "using the extension model as well. If you installed using the old sql script "
 "way, you are advised to switch your install to extensions because the script "
 "way is no longer supported."
 msgstr ""
-"Wenn Sie Ihre Datenbank mithilfe von Erweiterungen installiert haben, müssen "
-"Sie das Upgrade auch mithilfe des Erweiterungsmodells durchführen. Wenn Sie "
-"mit dem alten SQL-Skript installiert haben, sollten Sie Ihre Installation "
-"auf Erweiterungen umstellen, da das Skript nicht mehr unterstützt wird."
+"Wenn Sie Ihre Datenbank mithilfe von EXTENSION installiert haben, müssen Sie "
+"das Upgrade ebenfalls über das EXTENSION Modell durchführen. Falls Sie die "
+"Installation über die alte SQL-Skript-Methode vorgenommen haben, wird "
+"empfohlen, auf die Nutzung von EXTENSION umzusteigen, da die Skript-Methode "
+"nicht länger unterstützt wird."
 
 #. Tag: title
 #, no-c-format
@@ -322,32 +320,33 @@ msgid "Soft Upgrade 9.1+ using extensions"
 msgstr "Sanfte Aktualisierung 9.1+ mittels Erweiterungen"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "If you originally installed PostGIS with extensions, then you need to "
 "upgrade using extensions as well. Doing a minor upgrade with extensions, is "
 "fairly painless."
 msgstr ""
-"Wenn Sie PostGIS ursprünglich mit Erweiterungen installiert haben, dann "
-"müssen Sie das Upgrade auch mit Erweiterungen durchführen. Ein kleines "
-"Upgrade mit Erweiterungen ist ziemlich schmerzlos."
+"Wenn Sie PostGIS ursprünglich mithilfe von EXTENSION installiert haben, "
+"müssen Sie das Upgrade ebenfalls über EXTENSION durchführen. Ein kleines "
+"Upgrade mit Erweiterungen ist relativ unkompliziert."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "If you are running PostGIS 3 or above, then you should use the <xref "
 "linkend=\"PostGIS_Extensions_Upgrade\"/> function to upgrade to the latest "
 "version you have installed."
 msgstr ""
-"Wenn Sie mit PostGIS 3 oder höher arbeiten, sollten Sie die Funktion <xref "
-"linkend=\"PostGIS_Extensions_Upgrade\"/> verwenden, um auf die neueste "
-"Version zu aktualisieren, die Sie installiert haben."
+"Wenn Sie PostGIS 3 oder höher verwenden, sollten Sie die Funktion <xref "
+"linkend=\"PostGIS_Extensions_Upgrade\"/> nutzen, um auf die neueste "
+"installierte Version zu aktualisieren."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "If you are running PostGIS 2.5 or lower, then do the following:"
 msgstr ""
-"Wenn Sie PostGIS 2.5 oder niedriger verwenden, gehen Sie wie folgt vor:"
+"Falls Sie PostGIS 2.5 oder niedriger verwenden, gehen Sie bitte wie folgt "
+"vor:"
 
 #. Tag: para
 #, no-c-format
@@ -360,9 +359,9 @@ msgstr ""
 "folgt explizit angeben:"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "If you get an error notice something like:"
-msgstr "Wenn Sie eine Fehlermeldung wie diese erhalten:"
+msgstr "Falls Sie eine Fehlermeldung erhalten, die in etwa wie folgt aussieht:"
 
 #. Tag: para
 #, no-c-format
@@ -377,9 +376,10 @@ msgstr ""
 "wiederherstellen."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "If you get a notice message like:"
-msgstr "Wenn Sie eine Meldung wie diese erhalten:"
+msgstr ""
+"Falls Sie eine Hinweisnachricht erhalten, die in etwa wie folgt aussieht:"
 
 #. Tag: para
 #, no-c-format
@@ -398,17 +398,18 @@ msgstr ""
 "\"next\" wieder weglassen:"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "If you installed PostGIS originally without a version specified, you can "
 "often skip the reinstallation of postgis extension before restoring since "
 "the backup just has <code>CREATE EXTENSION postgis</code> and thus picks up "
 "the newest latest version during restore."
 msgstr ""
-"Wenn Sie PostGIS ursprünglich ohne Versionsangabe installiert haben, können "
-"Sie die Neuinstallation der postgis-Erweiterung vor der Wiederherstellung "
-"oft überspringen, da das Backup nur <code>CREATE EXTENSION postgis</code> "
-"hat und somit die neueste Version bei der Wiederherstellung übernimmt."
+"Wenn Sie PostGIS ursprünglich installiert haben ohne eine Version anzugeben "
+", können Sie die Neuinstallation der postgis-Erweiterung vor der "
+"Wiederherstellung oftmals überspringen, da im Backup nur <code>CREATE "
+"EXTENSION postgis</code> steht und daher die aktuellste Version für die "
+"Wiederherstellung herangezogen wird."
 
 #. Tag: para
 #, no-c-format
@@ -417,17 +418,17 @@ msgid ""
 "will have a new extension <emphasis>postgis_raster</emphasis> which you can "
 "safely drop, if you don't need raster support. You can drop as follows:"
 msgstr ""
-"Wenn Sie die PostGIS-Erweiterung von einer Version kleiner 3.0.0 "
-"aktualisieren, erhalten Sie eine neue Erweiterung <emphasis>postgis_raster</"
-"emphasis>, die Sie getrost löschen können, wenn Sie die Rasterunterstützung "
-"nicht benötigen. Sie können diese wie folgt entfernen:"
+"Wenn Sie die PostGIS-Erweiterung vor Version 3.0.0 aktualisieren, erhalten "
+"Sie die neue Erweiterung <emphasis>postgis_raster</emphasis>, welche Sie "
+"getrost löschen können, wenn Sie keine Rasterunterstützung benötigen. Sie "
+"können diese wie folgt entfernen:"
 
 #. Tag: title
 #, no-c-format
 msgid "Soft Upgrade Pre 9.1+ or without extensions"
 msgstr ""
-"Sanfte Aktualisierung bei Version kleiner 9.1 oder wenn nicht mittels "
-"Erweiterungen installiert wurde"
+"<xref linkend=\"create_new_db\"/>Sanfte Aktualisierung bei Version kleiner "
+"9.1 oder wenn nicht mittels Erweiterungen installiert wurde"
 
 #. Tag: para
 #, no-c-format
@@ -441,7 +442,7 @@ msgstr ""
 "Ansatz versucht wird, erhalten Sie eine Meldungen wie:"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "NOTE: if you are moving from PostGIS 1.* to PostGIS 2.* or from PostGIS 2.* "
 "prior to r7409, you cannot use this procedure but would rather need to do a "
@@ -452,7 +453,7 @@ msgstr ""
 "ein <link linkend=\"hard_upgrade\">HARD UPGRADE</link> durchführen."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "After compiling and installing (make install) you should find a set of "
 "<filename>*_upgrade.sql</filename> files in the installation folders. You "
@@ -460,62 +461,62 @@ msgid ""
 msgstr ""
 "Nach dem Kompilieren und Installieren (make install) sollten Sie eine Reihe "
 "von <filename>*_upgrade.sql</filename> Dateien in den Installationsordnern "
-"finden. Sie können sie alle mit auflisten:"
+"finden. Sie können alle wie folgt auflisten:"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Load them all in turn, starting from <filename>postgis_upgrade.sql</"
 "filename>."
 msgstr ""
-"Laden Sie sie alle nacheinander, beginnend mit <filename>postgis_upgrade."
+"Laden Sie diese alle nacheinander, beginnend mit <filename>postgis_upgrade."
 "sql</filename>."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "The same procedure applies to raster, topology and sfcgal extensions, with "
 "upgrade files named <filename>rtpostgis_upgrade.sql</filename>, "
 "<filename>topology_upgrade.sql</filename> and <filename>sfcgal_upgrade.sql</"
 "filename> respectively. If you need them:"
 msgstr ""
-"Das gleiche Verfahren gilt für Raster-, Topologie- und sfcgal-Erweiterungen, "
-"mit Upgrade-Dateien namens <filename>rtpostgis_upgrade.sql</filename>, "
-"<filename>topology_upgrade.sql</filename> und <filename>sfcgal_upgrade.sql</"
-"filename>. Falls Sie sie benötigen:"
+"Das gleiche Verfahren gilt auch für die Raster-, Topologie- und sfcgal-"
+"Erweiterungen, mit den Upgrade-Dateien <filename>rtpostgis_upgrade.sql</"
+"filename>, <filename>topology_upgrade.sql</filename> und "
+"<filename>sfcgal_upgrade.sql</filename>. Falls Sie diese benötigen:"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "You are advised to switch to an extension based install by running"
 msgstr ""
-"Wir empfehlen Ihnen, zu einer erweiterungsbasierten Installation zu "
-"wechseln, indem Sie"
+"Wir empfehlen Ihnen, zu einer Installation mit EXTENSION zu wechseln, indem "
+"Sie folgendes ausführen"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "If you can't find the <filename>postgis_upgrade.sql</filename> specific for "
 "upgrading your version you are using a version too early for a soft upgrade "
 "and need to do a <link linkend=\"hard_upgrade\">HARD UPGRADE</link>."
 msgstr ""
-"Wenn Sie die <filename>postgis_upgrade.sql</filename> speziell für das "
-"Upgrade Ihrer Version nicht finden können, verwenden Sie eine Version, die "
-"zu früh für ein Soft-Upgrade ist und müssen ein <link "
-"linkend=\"hard_upgrade\">HARD UPGRADE</link> durchführen."
+"Wenn Sie <filename>postgis_upgrade.sql</filename> für das Upgrade Ihrer "
+"Version nicht finden können, so liegt das daran, dass die Version für ein "
+"Soft-Upgrade zu niedrig ist und Sie daher ein <link linkend=\"hard_upgrade\""
+">HARD UPGRADE</link> durchführen müssen."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "The <xref linkend=\"PostGIS_Full_Version\"/> function should inform you "
 "about the need to run this kind of upgrade using a \"procs need upgrade\" "
 "message."
 msgstr ""
-"Die Funktion <xref linkend=\"PostGIS_Full_Version\"/> sollte Sie mit der "
-"Meldung \"procs need upgrade\" über die Notwendigkeit eines solchen Upgrades "
+"Die Funktion <xref linkend=\"PostGIS_Full_Version\"/> sollte Sie über die "
+"Meldung \"procs need upgrade\" von der Notwendigkeit eines solchen Upgrades "
 "informieren."
 
 #. Tag: title
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Hard upgrade"
 msgstr "Hartes Upgrade"
 
@@ -804,28 +805,28 @@ msgstr ""
 "aufgeführt sind."
 
 #. Tag: title
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Startup"
 msgstr "Startup"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "These settings are configured in <code>postgresql.conf</code>:"
 msgstr ""
 "Diese Einstellungen werden in <code>postgresql.conf</code> konfiguriert:"
 
 #. Tag: link
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "constraint_exclusion"
 msgstr "constraint_exclusion"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Default: partition"
 msgstr "Standard: Partition"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "This is generally used for table partitioning. The default for this is set "
 "to \"partition\" which is ideal for PostgreSQL 8.4 and above since it will "
@@ -834,22 +835,23 @@ msgid ""
 msgstr ""
 "Dies wird im Allgemeinen für die Partitionierung von Tabellen verwendet. Die "
 "Voreinstellung hierfür ist \"partition\", was ideal für PostgreSQL 8.4 und "
-"höher ist, da es den Planer dazu zwingt, Tabellen nur dann für die "
-"Berücksichtigung von Einschränkungen zu analysieren, wenn sie sich in einer "
-"vererbten Hierarchie befinden, und den Planer ansonsten nicht zu bestrafen."
+"höher ist, da es den Planer dazu zwingt, Tabellen nur dann auf "
+"Einschränkungen zu analysieren, wenn sie sich in einer vererbten Hierarchie "
+"befinden, und so im gegensätzlichen Fall keine unnötigen Kosten durch den "
+"Planer versursacht werden."
 
 #. Tag: link
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "shared_buffers"
 msgstr "shared_buffers"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Default: ~128MB in PostgreSQL 9.6"
-msgstr "Standard: ~128MB in PostgreSQL 9.6"
+msgstr "Standardwert: ~128MB in PostgreSQL 9.6"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Set to about 25% to 40% of available RAM. On windows you may not be able to "
 "set as high."
@@ -858,7 +860,7 @@ msgstr ""
 "Windows können Sie diesen Wert möglicherweise nicht so hoch einstellen."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "<link xlink:href=\"https://www.postgresql.org/docs/current/static/runtime-"
 "config-resource.html#GUC-MAX-WORKER-PROCESSES\">max_worker_processes</link> "
@@ -868,78 +870,80 @@ msgid ""
 msgstr ""
 "<link xlink:href=\"https://www.postgresql.org/docs/current/static/runtime-"
 "config-resource.html#GUC-MAX-WORKER-PROCESSES\">max_worker_processes</link> "
-"Diese Einstellung ist nur für PostgreSQL 9.4+ verfügbar. Für PostgreSQL 9.6+ "
-"hat diese Einstellung zusätzliche Bedeutung, da sie die maximale Anzahl von "
-"Prozessen steuert, die Sie für parallele Abfragen haben können."
+"Diese Einstellung ist ab PostgreSQL 9.4 verfügbar. Ab PostgreSQL 9.6 kann "
+"mit dieser Einstellung zusätzlich die maximale Anzahl von Prozessen bei "
+"parallelen Abfragen eingestellt werden."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Default: 8"
-msgstr "Voreinstellung: 8"
+msgstr "Standardwert: 8"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Sets the maximum number of background processes that the system can support. "
 "This parameter can only be set at server start."
 msgstr ""
-"Legt die maximale Anzahl von Hintergrundprozessen fest, die das System "
-"unterstützen kann. Dieser Parameter kann nur beim Start des Servers gesetzt "
-"werden."
+"Setzt die maximale Anzahl an Hintergrundprozessen, die von dem System "
+"unterstützt werden. Dieser Parameter kann nur durch einen Serverstart "
+"gesetzt werden."
 
 #. Tag: title
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Runtime"
 msgstr "Laufzeit"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "<link xlink:href=\"http://www.postgresql.org/docs/current/static/runtime-"
 "config-resource.html#GUC-WORK-MEM\">work_mem</link> - sets the size of "
 "memory used for sort operations and complex queries"
 msgstr ""
 "<link xlink:href=\"http://www.postgresql.org/docs/current/static/runtime-"
-"config-resource.html#GUC-WORK-MEM\">work_mem</link> - legt die Größe des für "
-"Sortiervorgänge und komplexe Abfragen verwendeten Speichers fest"
+"config-resource.html#GUC-WORK-MEM\">work_mem</link> - setzt die "
+"Speichergröße für Sortiervorgänge und komplexe Abfragen"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Default: 1-4MB"
-msgstr "Standard: 1-4MB"
+msgstr "Standardwert: 1-4MB"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Adjust up for large dbs, complex queries, lots of RAM"
-msgstr "Anpassung für große Datenbanken, komplexe Abfragen, viel RAM"
+msgstr ""
+"Bitte passen Sie bei großen Datenbanken und für komplexe Abfragen mit "
+"entsprechend viel RAM an"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Adjust down for many concurrent users or low RAM."
 msgstr ""
-"Verringern Sie den Wert bei vielen gleichzeitigen Benutzern oder geringem "
-"RAM."
+"Bitte verringern Sie den Wert bei vielen gleichzeitigen Benutzern oder wenn "
+"nur wenig RAM vorhanden ist."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "If you have lots of RAM and few developers:"
 msgstr "Wenn Sie viel RAM und wenig Entwickler haben:"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "<link xlink:href=\"http://www.postgresql.org/docs/current/static/runtime-"
 "config-resource.html#GUC-MAINTENANCE-WORK-MEM\">maintenance_work_mem</link> "
 "- the memory size used for VACUUM, CREATE INDEX, etc."
 msgstr ""
 "<link xlink:href=\"http://www.postgresql.org/docs/current/static/runtime-"
-"config-resource.html#GUC-MAINTENANCE-WORK-MEM\">maintenance_work_mem</link> "
-"- die Speichergröße, die für VACUUM, CREATE INDEX, etc. verwendet wird."
+"config-resource.html#GUC-MAINTENANCE-WORK-MEM\">maintenance_work_mem</link> -"
+" die Speichergröße, welche für VACUUM, CREATE INDEX, etc. verwendet wird."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Default: 16-64MB"
-msgstr "Standard: 16-64MB"
+msgstr "Standardwert: 16-64MB"
 
 #. Tag: para
 #, fuzzy, no-c-format
@@ -5695,7 +5699,7 @@ msgid ""
 "linkend=\"CreateTopology\"/>"
 msgstr ""
 ", <xref linkend=\"TopoGeo_AddPolygon\"/>, <xref linkend="
-"\"TopoGeo_LoadGeometry\"/>, <xref linkend=\"AddEdge\"/>, <xref linkend="
+"\"TopoGeo_LoadGeometry\"/>, <xref linkend=\"AddNode\"/>, <xref linkend="
 "\"CreateTopology\"/>"
 
 #. Tag: refpurpose
@@ -5704,9 +5708,8 @@ msgid ""
 "Adds a linestring to an existing topology using a tolerance and possibly "
 "splitting existing edges/faces."
 msgstr ""
-"Erweitert eine Topologie um einen Linienzug unter Berücksichtigung eines "
-"Toleranzwerts. Kanten und Maschen können dabei möglicherweise aufgetrennt "
-"werden."
+"Fügt einen Linienzug unter Berücksichtigung eines Toleranzwerts zu einer "
+"Topologie hinzu , wobei Kanten/Maschen dabei aufgetrennt werden können."
 
 #. Tag: para
 #, no-c-format
@@ -5719,28 +5722,28 @@ msgid ""
 msgstr ""
 "Fügt einen Linienzug zu einer bestehenden Topologie hinzu und gibt einen "
 "Satz vorzeichenbehafteter Kantenbezeichner zurück, aus denen dieser "
-"aufgebaut ist (negative Bezeichner bedeuten, dass die Kante in die "
-"entgegengesetzte Richtung des eingegebenen Linienzugs verläuft). Die "
-"angegebene Linie rastet an vorhandenen Knoten oder Kanten innerhalb einer "
-"gegebenen Toleranz ein. Vorhandene Kanten und Maschen können durch die Linie "
-"geteilt werden. Neue Knoten und Maschen können hinzugefügt werden."
+"aufgebaut ist (ein negativer Bezeichner bedeutet, dass die Kante in die "
+"entgegengesetzte Richtung des gegebenen Linienzugs verläuft). Die angegebene "
+"Linie rastet an vorhandenen Knoten oder Kanten innerhalb einer gegebenen "
+"Toleranz ein. Vorhandene Kanten und Maschen können an der Linie aufgetrennt "
+"werden. Neue Knoten und Maschen können hinzugefügt werden."
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Updating statistics about topologies being loaded via this function is up to "
 "caller, see <xref linkend=\"Topology_StatsManagement\"/>."
 msgstr ""
 "Die Aktualisierung von Statistiken über Topologien, die über diese Funktion "
-"geladen werden, ist Sache des Aufrufers, siehe <xref "
-"linkend=\"Topology_StatsManagement\"/>."
+"geladen werden, obliegt dem Aufrufer, siehe <xref linkend="
+"\"Topology_StatsManagement\"/>."
 
 #. Tag: para
 #, no-c-format
 msgid "Enhanced: 3.2.0 added support for returning signed identifier."
 msgstr ""
-"Verbessert: In Version 3.2.0 wurde die Unterstützung für die Rückgabe "
-"signierter Identifikatoren hinzugefügt."
+"Erweitert: In Version 3.2.0 wurde Unterstützung für die Rückgabe signierter "
+"Identifikatoren hinzugefügt."
 
 #. Tag: para
 #, no-c-format
@@ -5759,9 +5762,9 @@ msgid ""
 "Adds a polygon to an existing topology using a tolerance and possibly "
 "splitting existing edges/faces. Returns face identifiers."
 msgstr ""
-"Fügt ein Polygon, unter Berücksichtigung einer Toleranz, an eine bestehende "
-"Topologie an. Existierende Kanten/Maschen werden eventuell aufgetrennt. Gibt "
-"den Identifikator der Masche zurück."
+"Fügt ein Polygon unter Berücksichtigung eines Toleranzwertes zu einer "
+"bestehenden Topologie hinzu, wobei bestehende Kanten/Maschen aufgetrennt "
+"werden können. Gibt Maschenidentifikatoren zurück."
 
 #. Tag: para
 #, no-c-format
@@ -5772,10 +5775,10 @@ msgid ""
 "the boundary of the new polygon."
 msgstr ""
 "Fügt ein Polygon zu einer existierenden Topologie hinzu und gibt die "
-"Identifikatoren der Maschen aus, aus denen es gebildet ist. Die Begrenzung "
-"des gegebenen Polygons wird innerhalb der angegebenen Toleranz an "
-"bestehenden Knoten und Kanten gefangen. Gegebenenfalls werden existierende "
-"Kanten und Maschen an der Begrenzung des neuen Polygons geteilt."
+"Maschenidentifikatoren zurück, aus denen dieses aufgebaut ist. Die "
+"Begrenzung des gegebenen Polygons wird innerhalb einer gegebenen Toleranz an "
+"bestehenden Knoten und Kanten gefangen. Existierende Kanten und Maschen "
+"können entlang der Begrenzung des neuen Polygons aufgetrennt werden."
 
 #. Tag: para
 #, no-c-format
@@ -18113,20 +18116,20 @@ msgid ""
 "sorts out points without computing new intersection points which avoids "
 "rounding errors and usually increases performance,"
 msgstr ""
-"irrelevante Punkte ausgeschlossen, ohne neue Schnittpunkte zu berechnen, "
-"wodurch Rundungsfehler vermieden werden und die Leistung in der Regel steigt,"
+"sortiert Punkte aus, ohne neue Schnittpunkte zu berechnen, was "
+"Rundungsfehler vermeidet und in der Regel die Leistung erhöht,"
 
 #. Tag: para
 #, no-c-format
 msgid "returns a geometry with equal or similar point number,"
-msgstr "eine Geometrie mit gleicher oder ähnlicher Punktanzahl zurückgegeben,"
+msgstr ""
+"gibt eine Geometrie mit gleicher oder ähnlicher Anzahl an Punkten zurück,"
 
 #. Tag: para
 #, no-c-format
 msgid "leads to the same rendering result within the specified view, and"
 msgstr ""
-"das gleiche Rendering-Ergebnis innerhalb der gegebenen Ansicht ausgegeben, "
-"und"
+"führt zu demselben Rendering-Ergebnis innerhalb der gegebenen Ansicht, und"
 
 #. Tag: para
 #, no-c-format
@@ -18135,7 +18138,7 @@ msgid ""
 "invalid (see example below)."
 msgstr ""
 "es kann zu Selbstüberschneidungen kommen, welche die resultierende Geometrie "
-"ungültig machen würden (siehe Beispiel unten)."
+"ungültig machen können (siehe Beispiel unten)."
 
 #. Tag: para
 #, no-c-format
@@ -19347,7 +19350,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Geometry Input"
-msgstr "Geometrische Konstruktoren"
+msgstr "Geometrische Eingabe"
 
 #. Tag: para
 #, no-c-format
@@ -20047,8 +20050,8 @@ msgid ""
 "Constructs a PostGIS ST_Geometry object from the OGC Extended Well-Known "
 "binary (EWKT) representation."
 msgstr ""
-"Erzeugt ein PostGIS ST_Geometry Objekt aus der erweiterten OGC Well-known-"
-"Text (EWKT) Darstellung."
+"Erzeugt ein PostGIS ST_Geometry Objekt aus der erweiterten OGC Well-known "
+"binären (EWKT) Darstellung."
 
 #. Tag: para
 #, no-c-format
