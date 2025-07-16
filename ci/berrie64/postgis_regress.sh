@@ -14,7 +14,8 @@ export CONFIG_FILE="$CUR_DIR/configs.sh"
 echo $PATH
 
 sh autogen.sh
-./configure --with-pgconfig=${PGPATH}/bin/pg_config --with-geosconfig=${GEOS_PATH}/bin/geos-config --with-library-minor-version --enable-lto --without-interrupt-tests --prefix=${PGPATH}
+./configure --with-pgconfig=${PGPATH}/bin/pg_config --with-geosconfig=${GEOS_PATH}/bin/geos-config --with-library-minor-version \
+    --without-interrupt-tests --prefix=${PGPATH}
 #make clean
 make
 export err_status=0
