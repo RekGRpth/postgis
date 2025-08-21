@@ -9,11 +9,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-20 04:11+0000\n"
-"PO-Revision-Date: 2025-08-19 05:21+0000\n"
+"POT-Creation-Date: 2025-08-21 03:28+0000\n"
+"PO-Revision-Date: 2025-08-21 10:47+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
-"Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
-"manual/ja/>\n"
+"Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
+"postgis-manual/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10352,6 +10352,11 @@ msgstr "David Skea"
 #, no-c-format
 msgid "David Techer"
 msgstr "David Techer"
+
+#. Tag: member
+#, no-c-format
+msgid "Denys Kovshun"
+msgstr "Denys Kovshun"
 
 #. Tag: member
 #, no-c-format
@@ -36894,7 +36899,7 @@ msgstr ""
 "す。"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Calculates the fraction of each raster cell that is covered by a given "
 "geometry. The first argument is a raster, which defines the grid geometry to "
@@ -36905,12 +36910,13 @@ msgid ""
 "that is covered by the geometry. For linestrings, the value returned for "
 "each cell is the length contained in the cell."
 msgstr ""
-"ラスタ上の個々のセルのうち与えられたジオメトリで覆われたものの断片を計算しま"
-"す。一つ目の引数はラスタで、計算に使うジオメトリグリッドを定義します。範囲と"
-"セルサイズはこのラスタから読みます。二つ目の引数はジオメトリです。グリッドを"
-"覆うもので、個々のグリッドはグリッドを覆うジオメトリに基づいて個々のグリッド"
-"を入力します。ポリゴンの場合には、個々のセルから返される値はジオメトリに覆わ"
-"れた領域の形状となり、セルごとに返される値はセル内に含まれる長さです。"
+"ラスタ上の個々のセルのうち与えられたジオメトリで覆われている割合を計算します"
+"。一つ目の引数はラスタで、計算に使うジオメトリグリッドを定義します。範囲とセ"
+"ルサイズはこのラスタから読みます。二つ目の引数はジオメトリです。グリッドを覆"
+"っていて、個々のグリッドの値は、ジオメトリが覆うグリッドに基づいて設定されま"
+"す。ポリゴンについては、個々のセルについて返される値は、ジオメトリに覆われた"
+"領域の割合です。ラインストリングについては、個々のセルから返される値はセルに"
+"含まれる長さです。"
 
 #. Tag: para
 #, no-c-format
@@ -43768,13 +43774,13 @@ msgstr "リリースノート"
 
 #. Tag: title
 #, no-c-format
-msgid "PostGIS 3.6.0rc1"
-msgstr "PostGIS 3.6.0rc1"
+msgid "PostGIS 3.6.0"
+msgstr "PostGIS 3.6.0"
 
 #. Tag: para
 #, no-c-format
-msgid "2025/08/18"
-msgstr "2025/08/18"
+msgid "2025/xx/xx"
+msgstr "2025/xx/xx"
 
 #. Tag: para
 #, no-c-format
@@ -43806,6 +43812,11 @@ msgstr "Daniel Nylanderさん (スウェーデン語チーム)"
 #, no-c-format
 msgid "Dapeng Wang, Zuo Chenwei from HighGo (Chinese Team)"
 msgstr "HighGoのDapeng Wangさん、Zuo Chenweiさん (中国語チーム)"
+
+#. Tag: para
+#, no-c-format
+msgid "Denys Kovshun (Ukrainian Team)"
+msgstr "Denys Kovshunさん (ウクライナ語チーム)"
 
 #. Tag: title
 #, no-c-format
@@ -43882,6 +43893,12 @@ msgid ""
 "extension@ for PG &gt;= 16 to schema qualify dependent extensions, switch to "
 "use typmod for tiger tables (Regina Obe)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5359\">#5359</"
+"link>, <link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5897\""
+">#5897</link>, <link xlink:href=\"https://git.osgeo.org/gitea/postgis/"
+"postgis/pulls/260\">GT-260</link> [tiger_geocoder] PG &gt;= "
+"16の依存エクステンションのスキーマ修飾での@extschema:extension@の使用、"
+"TIGERのテーブルでのtypemod使用への切替え (Regina Obe)"
 
 #. Tag: title
 #, no-c-format
@@ -43895,6 +43912,9 @@ msgid ""
 "Drop st_approxquantile(raster, double precision), wasn't usable as it "
 "triggered is not unique error when used (Regina Obe)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5498\">#5498</link> "
+"使用時に一意でないエラーで使用できなかったためst_approxquantile(raster, "
+"double precision)を削除 (Regina Obeさん)"
 
 #. Tag: title
 #, no-c-format
@@ -44037,11 +44057,10 @@ msgstr ""
 "勢調査局)"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "[raster] Add ST_ReclassExact to quickly remap values in raster (Paul Ramsey)"
-msgstr ""
-"[raster] 素早く再ラスタの値の再割り当てを行うST_ReclassExactを追加 (Paul "
+msgstr "[raster] 素早くラスタの値の再割り当てを行うST_ReclassExactを追加 (Paul "
 "Ramseyさん)"
 
 #. Tag: title
@@ -50149,6 +50168,14 @@ msgid "Supports geography"
 msgstr "ジオグラフィ対応"
 
 #, no-c-format
+#~ msgid "PostGIS 3.6.0rc1"
+#~ msgstr "PostGIS 3.6.0rc1"
+
+#, no-c-format
+#~ msgid "2025/08/18"
+#~ msgstr "2025/08/18"
+
+#, no-c-format
 #~ msgid "PostGIS 3.6.0beta1"
 #~ msgstr "PostGIS 3.6.0beta1"
 
@@ -50446,14 +50473,6 @@ msgstr "ジオグラフィ対応"
 #~ "を指定するものです。<parameter>buffer_type</parameter>は、バッファ生成タイ"
 #~ "プを指定します。0: 球形バッファ (デフォルト) 1: 平面バッファ 2: 四角形バッ"
 #~ "ファ (訳注: ST_Bufferの端点処理を参照して下さい)"
-
-#, no-c-format
-#~ msgid "PostGIS 3.6.0"
-#~ msgstr "PostGIS 3.6.0"
-
-#, no-c-format
-#~ msgid "2025/xx/xx"
-#~ msgstr "2025/xx/xx"
 
 #, no-c-format
 #~ msgid ""
