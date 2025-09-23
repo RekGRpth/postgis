@@ -1,7 +1,10 @@
 PostGIS 3.7.0dev
 xxxx/xx/xx
 
-  - #5978, return ability of geometry_columns to read constraints
+* New Features *
+
+ - #5993, [topology] Add max_edges parameter to TopoGeo_AddLinestring
+          (Sandro Santilli)
 
 PostGIS 3.6.0
 2025/09/01
