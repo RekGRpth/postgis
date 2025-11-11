@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-08-21 03:28+0000\n"
-"PO-Revision-Date: 2025-08-25 08:47+0000\n"
+"PO-Revision-Date: 2025-11-11 04:47+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
-"Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
-"manual/ja/>\n"
+"Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
+"postgis-manual/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50055,16 +50055,15 @@ msgstr "このメソッドは曲線ストリングと曲線に対応していま
 #, no-c-format
 msgid ""
 "For geography this is a thin wrapper around the geometry implementation."
-msgstr "この関数のジオグラフィ版はジオメトリ実装にかぶせた薄いラッパです。"
+msgstr "この関数のジオグラフィー版はジオメトリ実装にかぶせた薄いラッパーです。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "This function automatically includes a bounding box comparison that makes "
 "use of any spatial indexes that are available on the geometries."
-msgstr ""
-"この関数の呼び出しによって、ジオメトリで使用可能なインデックスを使用するバウ"
-"ンディングボックスの比較が自動的に行われます。"
+msgstr "この関数を実行すると、対象ジオメトリにおいて使用できるインデックスを使用した"
+"バウンディングボックスによる比較が自動的に行われます。"
 
 #. Tag: para
 #, no-c-format
@@ -50094,8 +50093,8 @@ msgid ""
 "</link>"
 msgstr ""
 "このメソッドは<link xlink:href=\"http://www.opengeospatial.org/standards/"
-"sfs\">OGC Simple Features Implementation Specification for SQL 1.1</link>の実"
-"装です。"
+"sfs\">OGC Simple Features Implementation Specification for SQL 1."
+"1</link>の実装です。"
 
 #. Tag: para
 #, no-c-format
@@ -50123,9 +50122,9 @@ msgid ""
 "input vertices must fall already on the specified grid, see <xref "
 "linkend=\"ST_ReducePrecision\"/>."
 msgstr ""
-"元の<code>gridSize</code>を与える場合には (GEOS-3.9.0以上では必要)、全ての結"
-"果頂点が指定されたサイズのグリッドに落ちることが保証されます。予測できる結果"
-"を得るには、全ての入力頂点が既に指定したグリッドに落ちている必要があります。"
+"元の<code>gridSize</code>を与える場合には (GEOS-3.9.0以上が必要)、全ての結果"
+"頂点が指定されたサイズのグリッドに落ちることが保証されます。予測できる結果を"
+"得るには、全ての入力頂点が既に指定したグリッドに落ちている必要があります。"
 "<xref linkend=\"ST_ReducePrecision\"/>をご覧ください。"
 
 #. Tag: para
@@ -50151,7 +50150,7 @@ msgstr "ウィンドウ関数"
 #. Tag: para
 #, no-c-format
 msgid "Requires GEOS (3.9,3.10,3.11,3.12) or higher"
-msgstr "GEOS (3.9,3.10,3.11,3.12) 以上"
+msgstr "GEOS (3.9,3.10,3.11,3.12) 以上が必要"
 
 #. Tag: para
 #, no-c-format
