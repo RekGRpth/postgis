@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-13 16:23+0000\n"
-"PO-Revision-Date: 2025-11-26 08:47+0000\n"
+"PO-Revision-Date: 2025-11-28 08:47+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "postgis-manual/ja/>\n"
@@ -26709,6 +26709,11 @@ msgid ""
 "does not affect POINT or POLYGON geometries. By default end caps are square "
 "when 'left' or 'right' are specified."
 msgstr ""
+"'side=both|left|right' : デフォルトは'both'です。'left'または'right'でジオメ"
+"トリーの片側へのバッファーが行われますが、左右はラインの方向で決まります。こ"
+"れはLINESTRINGジオメトリーにのみ適用可能です。POINTまたはPOLYGONジオメトリに"
+"影響を与えません。'left'または'right'を指定した場合にはデフォルトの終端スタイ"
+"ルは正方形になります。"
 
 #. Tag: para
 #, no-c-format
@@ -27672,7 +27677,7 @@ msgstr "インタセクト位置で方向数 &gt; 2 となるラインはマー�
 #. Tag: title
 #, no-c-format
 msgid "Non-Touching Lines"
-msgstr ""
+msgstr "接触していないライン"
 
 #. Tag: para
 #, no-c-format
@@ -27686,7 +27691,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Directed Parameter"
-msgstr ""
+msgstr "directedパラメーター"
 
 #. Tag: para
 #, no-c-format
@@ -27696,7 +27701,7 @@ msgstr "directed = TRUEの場合には、対応方向のラインはマージさ
 #. Tag: title
 #, no-c-format
 msgid "Z-dimension Handling"
-msgstr ""
+msgstr "Z値を取り扱う"
 
 #. Tag: para
 #, no-c-format
@@ -30909,7 +30914,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Non-georeferenced rasters and geometries use SRID 0."
-msgstr ""
+msgstr "地理参照を施していないラスターとジオメトリーのSRIDは0です。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -36327,7 +36332,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Complete example of tiles of a coverage."
-msgstr ""
+msgstr "カバレッジのタイルの完全な例。"
 
 #. Tag: para
 #, no-c-format
@@ -36905,7 +36910,8 @@ msgstr ""
 msgid ""
 "Changed 3.7.0, the polygonization honours PostgreSQL interrupts so "
 "cancellations and statement timeouts halt processing promptly."
-msgstr ""
+msgstr "Changed 3.7.0, PostgreSQLの処理中断を尊重して、キャンセルや手続時間切れによる"
+"処理の停止を即座に行うようになりました。"
 
 #. Tag: para
 #, no-c-format
@@ -43385,6 +43391,9 @@ msgid ""
 "output from the linework. The requirement that no vertices are lost can "
 "generate complex collections as outputs."
 msgstr ""
+"\"linework\"はデフォルトのアルゴリズムで、最初に全てのラインを抽出して、その"
+"ラインを繋ぎ合わせ、最後に繋いだラインから値を出力します。頂点の欠落が無いこ"
+"とを求めているので、複雑なコレクションを出力として生成できます。"
 
 #. Tag: para
 #, no-c-format
@@ -43394,6 +43403,9 @@ msgid ""
 "differencing all interior rings. The results tend to be more intuitive, "
 "where collapsed lines are discarded in the output."
 msgstr ""
+"\"structure\"は内側リングと外側リングを区別します。外側リングを結合してジオメ"
+"トリーを新規生成してから、全ての内側リングの領域を差し引きます。次元崩壊した"
+"ラインは破棄されて結果が出力されるので、より直感的と言えるでしょう。"
 
 #. Tag: para
 #, no-c-format
@@ -43401,6 +43413,8 @@ msgid ""
 "The \"keepcollapsed\" key is only valid for the \"structure\" algorithm, and "
 "takes a value of \"true\" or \"false\"."
 msgstr ""
+"\"keepcollapsed\"キーは\"structure\"アルゴリズムの時だけ見られて、\"true"
+"\"または\"false\"を取ります。"
 
 #. Tag: para
 #, no-c-format
@@ -43409,13 +43423,16 @@ msgid ""
 "components that collapse to a lower dimensionality, for example a one-point "
 "linestring will be dropped."
 msgstr ""
+"\"keepcollapsed\"のデフォルト値は\"false\"です。頂点が1個のラインストリングな"
+"どの低い空間次元に崩壊するジオメトリーは削除されます。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Keep collapsed of \"true\" means geometry components that collapse to a "
 "lower dimensionality will be retained."
-msgstr ""
+msgstr "\"keepcollapsed\"が\"true\"の場合には"
+"、低い空間次元に崩壊するジオメトリー要素も保持されます。"
 
 #. Tag: para
 #, no-c-format
@@ -45438,6 +45455,11 @@ msgid ""
 "custom geodetic spatial reference system as described in <xref "
 "linkend=\"user-spatial-ref-sys\"/>."
 msgstr ""
+"ジオメトリー型のように、ジオグラフィデータは空間参照系識別子 (Spatial "
+"Reference System Identifier, SRID)を持っています。 <varname>spatial_ref_sys</"
+"varname>で定義されている地理座標系 (経度/緯度)の空間参照系で利用できます。独"
+"自の地理座標系の空間参照系を追加することもできます。<xref linkend=\"user-"
+"spatial-ref-sys\"/>を参照してください。"
 
 #. Tag: para
 #, no-c-format
@@ -47646,6 +47668,16 @@ msgid ""
 "href=\"https://www.postgresql.org/docs/current/brin.html\">PostgreSQL "
 "manual</link>."
 msgstr ""
+"BRINは\"Block Range Index\"の意味です。PostgreSQLが提供する汎用インデックスで"
+"す。BRINは<emphasis>不可逆</emphasis>インデックスですので、"
+"レコードが検索条件に合致するか確認する二次チェックが必要です (これは提供され"
+"ているすべての空間インデックスと同じです)。BRINは、インデックス生成が非常に高"
+"速で、インデックスサイズが非常に小さく、読込み効率がそこそこ良いものです。こ"
+"れの主目的は、巨大テーブルに対してテーブル内の物理位置と相関するカラムの上に"
+"インデックスを生成することです。BRINは各種属性データ構造 "
+"(整数、配列など)の高速検索が可能です。詳細情報については<link xlink:href="
+"\"https://www.postgresql.org/docs/current/brin.html\">PostgreSQL "
+"manual</link>を参照してください。"
 
 #. Tag: para
 #, no-c-format
