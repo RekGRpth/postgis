@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-13 16:23+0000\n"
-"PO-Revision-Date: 2025-12-02 11:47+0000\n"
+"PO-Revision-Date: 2025-12-03 07:47+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "postgis-manual/ja/>\n"
@@ -9212,6 +9212,10 @@ msgid ""
 "configure it for your needs, refer to <xref linkend=\"Address_Standardizer\"/"
 ">."
 msgstr ""
+"<code>address_standardizer</code>エクステンションはPostGISに同梱されています"
+"。address_standardizerの何をするものか、"
+"設定方法などの詳細情報については<xref linkend=\"Address_Standardizer\""
+"/>をご覧ください。"
 
 #. Tag: para
 #, no-c-format
@@ -9409,6 +9413,12 @@ msgid ""
 "by default because it takes quite a bit of time to load (20 to 60 minutes), "
 "takes up quite a bit of disk space, and is not used that often."
 msgstr ""
+"有効にしたときには<varname>zcta5</varname> (Zip Code 5 digit Tabulation "
+"Area, 5桁郵便番号集計エリア)ロード手順はZCTAデータを使用して、"
+"有効にすると<xref linkend=\"Loader_Generate_Nation_Script\""
+"/>の一部として実行されます。ロードにやや時間がかかる (20から60分ぐらい)のと、"
+"からいのディスク容量を使うのと、頻繁には使わないものですから、デフォルトでは"
+"無効になっています。"
 
 #. Tag: para
 #, no-c-format
@@ -14960,6 +14970,9 @@ msgid ""
 "primitives, coordinate sequences, or existing geometries into well-formed "
 "spatial objects that can participate in subsequent analysis."
 msgstr ""
+"これらの関数は、ジオメトリーまたはジオグラフィーの値を生成します。プリミティ"
+"ブ、座標値列、既存のジオメトリーを組み立てて、これに続く分析に使うのに適切な"
+"空間オブジェクトにします。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -15207,13 +15220,18 @@ msgid ""
 "appear in the collection. <xref linkend=\"ST_RemoveRepeatedPoints\"/> can be "
 "used to collapse repeated points from the output LineString."
 msgstr ""
+"入力ラインストリングの開始位置で重複するノードはひとつのポイントに減らされま"
+"す。ポイントとマルチポイントの入力での重複するポイントは減らされません。マル"
+"チラインストリングの要素は、コレクション内の出現順で処理されます。"
+"出力ラインストリングから重複ポイントを削除するには<xref linkend="
+"\"ST_RemoveRepeatedPoints\"/>が使えます。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Availability: 3.7.0 - Support for MultiLineString input elements was "
 "introduced"
-msgstr ""
+msgstr "Availability: 3.7.0 - マルチラインストリング入力要素への対応が導入されました"
 
 #. Tag: para
 #, no-c-format
@@ -15302,7 +15320,8 @@ msgid ""
 "When ordering within the aggregate is not possible, ordering in a subquery "
 "can be used. However, sometimes the query plan may not respect the order of "
 "the subquery."
-msgstr ""
+msgstr "集約内での整列ができない時は、サブクエリーで整列させます。ただし、クエリープ"
+"ランにサブクエリーの整列が反映されない場合があります。"
 
 #. Tag: para
 #, no-c-format
@@ -16330,24 +16349,26 @@ msgstr ""
 msgid ""
 "A window function which adjusts the edges of a set of valid polygonal "
 "geometries to produce a clean coverage. Cleaning involves:"
-msgstr ""
+msgstr "妥当なポリゴン系ジオメトリーの集合のエッジを調整して、きれいなカバレッジを生"
+"成するウィンドウ関数です。きれいにする処理には次を含みます:"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "snapping vertices and edges to remove small discrepancies and ensure common "
 "edges are identically noded"
-msgstr ""
+msgstr "小さな不一致を取り除き、共有されるエッジに同じようにノードが打たれるのを確実"
+"にするために、頂点とエッジをスナップさせる"
 
 #. Tag: para
 #, no-c-format
 msgid "merging overlaps into a parent polygon"
-msgstr ""
+msgstr "オーバーラップするポリゴンをひとつの親ポリゴンとしてマージする"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid "merging narrow gaps into adjacent polygons"
-msgstr ""
+msgstr "小さい隙間を隣接ポリゴンとしてマージする"
 
 #. Tag: para
 #, no-c-format
@@ -16356,6 +16377,8 @@ msgid ""
 "are merged. Gaps with width &lt;= this distance are merged into an adjacent "
 "polygon."
 msgstr ""
+"<parameter>gapMaximumWidth</parameter>でポリゴンをマージする隙間の条件を制御"
+"します。隙間の幅がこの値以下なら隣接ポリゴンとしてマージします。"
 
 #. Tag: para
 #, no-c-format
@@ -16364,6 +16387,9 @@ msgid ""
 "edges. The default (-1) automatically determines a snapping distance based "
 "on the input extent. Set to 0.0 to turn off snapping."
 msgstr ""
+"<parameter>snappingDistance</parameter>で頂点とエッジのスナップを制御します。"
+"デフォルト (-1)では自動的にスナップ距離が入力の範囲に応じて決定されます。0."
+"0が指定されるとスナップを行いません。"
 
 #. Tag: para
 #, no-c-format
@@ -16371,30 +16397,33 @@ msgid ""
 "<parameter>overlapMergeStrategy</parameter> specifies how overlaps are "
 "merged into a parent polygon:"
 msgstr ""
+"<parameter>overlapMergeStrategy</parameter>でどれぐらいのオーバーラップまで親"
+"ポリゴンとしてマージするかが指定されます:"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "<code>MERGE_LONGEST_BORDER</code> - merges into polygon with longest common "
 "border"
-msgstr ""
+msgstr "<code>MERGE_LONGEST_BORDER</code> - 最長共有境界でマージします"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid "<code>MERGE_MAX_AREA</code> - merges into polygon with maximum area"
-msgstr ""
+msgstr "<code>MERGE_MAX_AREA</code> - 最大面積でマージします"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid "<code>MERGE_MIN_AREA</code> - merges into polygon with minimum area"
-msgstr ""
+msgstr "<code>MERGE_MIN_AREA</code> - 最小面積でマージします"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "<code>MERGE_MIN_INDEX</code> - merges into polygon with smallest input index "
 "(defined by order of input polygons)"
-msgstr ""
+msgstr "<code>MERGE_MIN_INDEX</code> - 入力インデックス "
+"(入力ポリゴンの順番で決まります)の最小値でマージします"
 
 #. Tag: para
 #, no-c-format
@@ -16403,6 +16432,8 @@ msgid ""
 "linkend=\"ST_CoverageInvalidEdges\"/> and can be input to coverage "
 "processing functions."
 msgstr ""
+"結果はきれいなポリゴンカバレッジで、<xref linkend=\"ST_CoverageInvalidEdges\""
+"/>が通り、カバレッジ処理関数の入力にすることができます。"
 
 #. Tag: para
 #, no-c-format
@@ -16415,6 +16446,12 @@ msgid ""
 "linkend=\"ST_MaximumInscribedCircle\"/> on them; the gap width is twice the "
 "computed radius."
 msgstr ""
+"最大隙間幅の判定を助けるために、<code>gapMaximumWidth => "
+"0</code>できれいにして、<xref linkend=\"ST_CoverageUnion\"/>を使って結果カバ"
+"レッジを結合することで隙間が計算できます。結合した際にできる穴は、元のデータ"
+"セットにある隙間に対応してします。隙間幅は、穴をポリゴンとして抽出して、"
+"<xref linkend=\"ST_MaximumInscribedCircle\""
+"/>を実行して得られた半径の2倍として計測できます。"
 
 #. Tag: para
 #, no-c-format
@@ -16424,17 +16461,17 @@ msgstr "Availability: 3.6.0 - GEOS &gt;= 3.14.0が必要です"
 #. Tag: para
 #, no-c-format
 msgid "Polygons with overlaps and gaps"
-msgstr ""
+msgstr "重複部と隙間があるポリゴン"
 
 #. Tag: para
 #, no-c-format
 msgid "Invalid coverage edges"
-msgstr ""
+msgstr "不正なカバレッジのエッジ"
 
 #. Tag: para
 #, no-c-format
 msgid "Clean polygonal coverage, with overlaps and narrow gaps removed"
-msgstr ""
+msgstr "重複部と狭い隙間の消去でポリゴンカバレッジをきれいにします"
 
 #. Tag: para
 #, no-c-format
@@ -16443,6 +16480,8 @@ msgid ""
 "linkend=\"ST_CoverageSimplify\"/>, <xref "
 "linkend=\"ST_MaximumInscribedCircle\"/>"
 msgstr ""
+", <xref linkend=\"ST_CoverageUnion\"/>, <xref linkend=\"ST_CoverageSimplify\""
+"/>, <xref linkend=\"ST_MaximumInscribedCircle\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -19528,6 +19567,11 @@ msgid ""
 "In this case we escape the ' with standard ANSI ', but slashes are not "
 "escaped"
 msgstr ""
+"PostgreSQLではデフォルトでstandard_conforming_stringsが設定されています。単体"
+"クエリーでの必要に応じて、またはデータベースやサーバーレベルで、デフォルトを"
+"変更することができます。次にstandard_conforming_strings = "
+"onでどう動作するかを示します。この場合には標準ANSIの ' "
+"がエスケープされますがバックスラッシュはエスケープされません"
 
 #. Tag: para
 #, no-c-format
@@ -22762,7 +22806,7 @@ msgstr ""
 #, no-c-format
 msgid ""
 "Availability: 2.3.0 support for Block Range INdexes (BRIN) was introduced."
-msgstr ""
+msgstr "Availability: 2.3.0 BRIN (Block Range INdexes)が導入されました。"
 
 #. Tag: para
 #, no-c-format
@@ -23634,6 +23678,10 @@ msgid ""
 "nearest-neighbor result sets with true KNN distance search for geometries, "
 "and distance on the sphere for geographies."
 msgstr ""
+"<varname>&lt;-&gt;</varname>演算子は二つのジオメトリーの2次元距離を返します。"
+"\"ORDER BY\"句内で使われ、インデックスの援助を受けた近傍結果集合の結果を返し"
+"ます。ジオメトリーではデカルト距離を使い、ジオグラフィでは球面上の距離を計算"
+"します。"
 
 #. Tag: para
 #, no-c-format
@@ -23675,13 +23723,16 @@ msgid ""
 "and geography. Note for geography KNN is based on sphere rather than "
 "spheroid."
 msgstr ""
+"Enhanced: 2.2.0 -- 真のKNN (k近傍法)のジオメトリーとジオグラフィーのふるまい"
+"。ジオグラフィーのKNNは回転楕円体でなく球面に基づきます。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Changed: 2.2.0 -- Old hybrid-syntax workarounds may be slower once true KNN "
 "is available. See examples below."
-msgstr ""
+msgstr "Changed: 2.2.0 -- 真のKNNが有効になると、古いハイブリッド法による回避策は遅く"
+"なることがあります。下の例を見てください。"
 
 #. Tag: para
 #, no-c-format
@@ -23690,6 +23741,9 @@ msgid ""
 "centroid distances instead of true distances. Exact results for points, "
 "inexact for all other types."
 msgstr ""
+"Availability: 2.0.0 -- 弱いKNNによって、実際の距離の代わりにジオメトリーの重"
+"心に基づく近傍が得られます。ポイントは確実な結果を得て、他のタイプは全て不確"
+"実な結果を得ます。"
 
 #. Tag: para
 #, no-c-format
@@ -23712,6 +23766,10 @@ msgid ""
 "find the true nearest neighbors. First a CTE query using the index-assisted "
 "KNN, then an exact query to get correct ordering:"
 msgstr ""
+"プランで直接確実な距離を生成できない時には、真の近傍を見つけるには複合クエリ"
+"ーを追加居ます。まずインデックスを使ったKNNによるCTE (Common Table "
+"Expression, WITH句)クエリーを実行し、その後に正しい順序を得るための確実なクエ"
+"リーを実施します。次のようにします:"
 
 #. Tag: para
 #, no-c-format
@@ -23728,13 +23786,17 @@ msgid ""
 msgstr "AトラジェクトリとBトラジェクトリとの最接近する時の距離を返します。"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "The <varname>|=|</varname> operator returns the 3D distance between two "
 "trajectories (See <xref linkend=\"ST_IsValidTrajectory\"/>). This is the "
 "same as <xref linkend=\"ST_DistanceCPA\"/> but as an operator it can be used "
 "for doing nearest neighbor searches using an N-dimensional index."
 msgstr ""
+"<varname>|=|</varname>演算子は二つの軌跡 (<xref linkend="
+"\"ST_IsValidTrajectory\"/>参照)の間の3次元距離を返します。<xref linkend="
+"\"ST_DistanceCPA\""
+"/>と同じですが、これはN次元インデックスを使った最近傍探索を行う演算子です。"
 
 #. Tag: para
 #, no-c-format
@@ -23762,7 +23824,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 2.2.0."
-msgstr ""
+msgstr "Availability: 2.2.0."
 
 #. Tag: para
 #, no-c-format
@@ -23787,6 +23849,9 @@ msgid ""
 "Useful for doing nearest neighbor <emphasis role=\"strong\">approximate</"
 "emphasis> distance ordering."
 msgstr ""
+"<varname>&lt;#&gt;</varname>演算子は、二つの浮動小数点数型ボックスの間の距離"
+"を返します。場合によっては空間インデックスから読みます。最近傍の<emphasis "
+"role=\"strong\">概算</emphasis>距離での並び替えに使えます。"
 
 #. Tag: para
 #, no-c-format
@@ -23812,7 +23877,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 2.0.0."
-msgstr ""
+msgstr "Availability: 2.0.0."
 
 #. Tag: para
 #, no-c-format
@@ -24102,6 +24167,9 @@ msgid ""
 "default. If your GUI tools require the old behavior, then SET "
 "<code>bytea_output='escape'</code> in your database."
 msgstr ""
+"デフォルトではPostgreSQLは16進エンコードがされた <varname>bytea</varname>値を"
+"出力します。お使いのGUIツールが古い振舞いを求める場合には、データベースで<cod"
+"e>bytea_output='escape'</code>を設定します。"
 
 #. Tag: para
 #, no-c-format
@@ -24440,6 +24508,10 @@ msgid ""
 "function> raises a warning in that case because PostgreSQL <type>jsonb</"
 "type> keeps only the last value for duplicate keys."
 msgstr ""
+"入力レコードのカラム名に重複があるとき、\"properties"
+"\"オブジェクトは重複キーを持つことになります"
+"。この場合には<function>ST_AsGeoJSON</function>は警告を出します。 PostgreSQL"
+"の<type>jsonb</type>は重複キーがあると最後の値だけをキープするためです。"
 
 #. Tag: para
 #, no-c-format
@@ -24512,7 +24584,7 @@ msgstr "Changed: 3.5.0 地物のidを含むカラムを指定できるように�
 #. Tag: para
 #, no-c-format
 msgid "Changed: 3.7.0 added warning about duplicate keys"
-msgstr ""
+msgstr "Changed: 3.7.0 キー重複に関する警告の追加"
 
 #. Tag: para
 #, no-c-format
@@ -25428,6 +25500,11 @@ msgid ""
 "the x/y axis. By default, <code>ST_AsX3D</code> outputs in database form "
 "(long,lat or X,Y), but the X3D default of lat/lon, y/x may be preferred."
 msgstr ""
+"'options'引数はビットフィールドです。X3D GeoCoordinates "
+"Geospatialノードを表現するかどうか、また、X/"
+"Y軸を反対にするかどうかで使います。<code>ST_AsX3D</code>は、"
+"デフォルトではデータベースの形式 (経度, 緯度またはX, Y)で出力しますが、X3Dの"
+"lat/lon, y/xのデフォルトが好まれることがあります。"
 
 #. Tag: para
 #, no-c-format
@@ -26295,6 +26372,12 @@ msgid ""
 "linkend=\"ST_Segmentize\"/> to add geodesic vertices, then cast to geometry "
 "before subdivision."
 msgstr ""
+"分割したジオメトリーをジオグラフィーにキャストすると、得られるジオグラフィー"
+"は元のものと異なることになる場合があります。分割によって平面空間 (ジオメトリ)"
+"に頂点が追加されます。頂点が境界に沿って挿入される場合には、ジオグラフィー表"
+"現のエッジは測地線上の辺として補間されます。歪みを最小化するには、"
+"最初に<xref linkend=\"ST_Segmentize\"/>を使って測地線上に頂点を追加してジオグ"
+"ラフィーを高密度化して、それから分割までの間にジオメトリーにキャストします。"
 
 #. Tag: para
 #, no-c-format
@@ -26342,6 +26425,10 @@ msgid ""
 "impact of changes to the geography representation of a geometry when "
 "subdividing."
 msgstr ""
+"<emphasis role=\"bold\">例:</emphasis> ST_Segmentize(geography, distance)を使"
+"って長いジオグラフィー型のラインの高密度化を行い、ST_Subdivideを使って結果ラ"
+"インを8頂点のラインに分割します。高密度化することで、分割時にジオメトリーのジ"
+"オグラフィー表現への変更によって与えられる影響が最小化されます。"
 
 #. Tag: para
 #, no-c-format
@@ -34812,14 +34899,15 @@ msgstr "複数のラスタ、複数のバンド"
 #. Tag: para
 #, no-c-format
 msgid "Complete example of tiles of a coverage with neighborhood."
-msgstr ""
+msgstr "近隣ピクセルを併用したカバレッジのタイルの完全な例です。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Example like the prior one for tiles of a coverage with neighborhood but "
 "using only basic SQL features."
-msgstr ""
+msgstr "前の例である近隣ピクセルを併用したカバレッジのタイルに似ていますが基本的なSQL"
+"機能だけを使用しています。"
 
 #. Tag: title
 #, no-c-format
