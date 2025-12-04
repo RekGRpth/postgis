@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-13 16:23+0000\n"
-"PO-Revision-Date: 2025-12-03 07:47+0000\n"
+"PO-Revision-Date: 2025-12-04 10:47+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "postgis-manual/ja/>\n"
@@ -2481,6 +2481,13 @@ msgid ""
 "cross-platform and also has a reverse geocoder among some other neat "
 "features."
 msgstr ""
+"<link xlink:href=\"https://www.gisgraphy.com/\">GIS "
+"Graphy</link>はPostGISを利用し、Nominatimと同じようにOpenStreetMap (OSM)デー"
+"タと他のデータソースを使います。OSMデータをロードするローダーが付属されていて"
+"、Nominatimと同じように米国以外のジオコーディングが可能です。Nominatimのよう"
+"にウェブサービスとして動作し、Java 1.5、サーブレットアプリケーション、Solrを"
+"使用しています。GisGraphyはクロスプラットフォームに対応していて、逆ジオコーダ"
+"ーやその他の機能もあります。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -8993,6 +9000,17 @@ msgid ""
 "given version of an extension. These behaviors are built into the current "
 "PostgreSQL extension model."
 msgstr ""
+"追加テーブルの<varname>spatial_ref_sys</varname>、<varname>layer</varname>、<"
+"varname>topology</varname>は明示的にはバックアップできません。<varname>postgi"
+"s</varname>または<varname>postgis_topology</varname>のそれぞれがバックアップ"
+"されるときに限ってバックアップが行われます。これはデータベース全体をバックア"
+"ップする時だけ発生します。PostGISに同梱されていないSRIDレコードだけがバックア"
+"ップに取り込まれます。なので、私たちが提供するSRIDエントリーは変更しないでく"
+"ださい。また、変更が残るとは期待しないでください。問題を発見した時にはチケッ"
+"トを発行してください。<code>CREATE EXTENSION</code>で作られ、エクステンション"
+"の指定されたバージョンと同じものと仮定されるので拡張テーブルの構造はバックア"
+"ップされません。この挙動は現在のPostgreSQLエクステンションモデルに組み込まれ"
+"ています。"
 
 #. Tag: para
 #, no-c-format
@@ -9068,6 +9086,13 @@ msgid ""
 "<varname>POSTGIS_REGRESS_ROLE_EXT_CREATOR</varname> when the extension "
 "creation role must differ from the database owner."
 msgstr ""
+"PostgreSQLスーパーユーザーでないサンドボックス化したビルドアカウントは、<varn"
+"ame>POSTGIS_REGRESS_DB_OWNER</varname>を設定することで、レグレッションテスト"
+"の間ではデータベースの所有を委任することができます。このハーネスは、より特権"
+"が少ないアカウントを使った接続を持続している間において、指名されたロールが持"
+"つ一時的なレグレッションテストのデータベースを生成します。エクステンション生"
+"成者がデータベース所有者と異なるときは<varname>POSTGIS_REGRESS_ROLE_EXT_CREAT"
+"OR</varname>と併用します。"
 
 #. Tag: para
 #, no-c-format
@@ -9077,6 +9102,10 @@ msgid ""
 "superuser, provided the target PostgreSQL instance permits extension "
 "installation by those delegate roles."
 msgstr ""
+"これらの変数によって、アカウントがスーパーユーザーになるためのプロンプトを使"
+"わずに完全なアップグレードとエクステンションのインストールをを実行するための"
+"自動化環境が可能となります。ただし、対象となるPostgreSQLインスタンスがこの委"
+"任ロールによるエクステンションのインストールが許可されている場合に限ります。"
 
 #. Tag: para
 #, no-c-format
@@ -18385,7 +18414,8 @@ msgid ""
 "These routines are reserved for diagnosing and repairing data corruption. "
 "They provide last-resort maintenance operations that are not required during "
 "normal spatial workflows."
-msgstr ""
+msgstr "これらのルーチンはデータ崩壊の診断と修復のために用意されています。通常の空間"
+"処理で求められないメンテナンスの最終手段です。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -20270,6 +20300,9 @@ msgid ""
 "fractions or measures along routes and of projecting those measures back "
 "into spatial coordinates."
 msgstr ""
+"これらの関数は、測定とイベント (地物に沿った計測値)の位置特定を行います。これ"
+"らの関数は、ルートに沿った割合や計測値としての位置表現とこれらの計測値の座標"
+"への変換との古典的な線形参照の処理に対応します。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -22010,6 +22043,10 @@ msgid ""
 "false</varname>, then the calculation is based on a sphere instead of a "
 "spheroid."
 msgstr ""
+"ジオグラフィー型: 測地線の逆解法を用います。周囲長の単位はメートルです。回転"
+"楕円体はSRIDで指定されますが、SRIDが指定されていない場合にはWGS84が使われます"
+"。<varname>use_spheroid = "
+"false</varname>の場合には回転楕円体面の代わりに球面で計算します。"
 
 #. Tag: para
 #, no-c-format
@@ -22500,6 +22537,10 @@ msgid ""
 "<varname>use_spheroid = false</varname>, then calculations will approximate "
 "a sphere instead of a spheroid."
 msgstr ""
+"ジオグラフィー型では、測地線の逆解法を用います。この際、周囲長の単位はメート"
+"ルです。回転楕円体はSRIDで指定されますが、SRIDが指定されていない場合にはWGS84"
+"が使われます。<varname>use_spheroid = "
+"false</varname>の場合には回転楕円体面の代わりに球面で近似します。"
 
 #. Tag: para
 #, no-c-format
@@ -22715,6 +22756,10 @@ msgid ""
 "follow the same geometric rules as the corresponding functions but are "
 "optimised for use in SQL expressions and index-supported filtering."
 msgstr ""
+"ここではPostGISで定義されている空間演算子について記述しています。演算子はバウ"
+"ンディングボックスの相互作用および空間関係に関する簡潔な記号による述語で関数"
+"を補うものです。関連する関数と同じ処理ルールに従って動作しますが、SQL式での利"
+"用やインデックス対応のフィルタリングでの利用に最適化されています。"
 
 #. Tag: title
 #, no-c-format
