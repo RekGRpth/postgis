@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-13 16:23+0000\n"
-"PO-Revision-Date: 2025-12-18 12:47+0000\n"
+"PO-Revision-Date: 2025-12-25 17:47+0000\n"
 "Last-Translator: Denys Kovshun <deniskovshun@gmail.com>\n"
 "Language-Team: Ukrainian <https://weblate.osgeo.org/projects/postgis/"
 "postgis-manual/uk/>\n"
@@ -23287,6 +23287,12 @@ msgid ""
 "follow the same geometric rules as the corresponding functions but are "
 "optimised for use in SQL expressions and index-supported filtering."
 msgstr ""
+"Ці записи документують просторові оператори, визначені PostGIS. Оператори "
+"доповнюють каталог функцій, надаючи стислі символічні предикати для "
+"взаємодій обмежувальних рамок та просторових відносин. Їх семантика "
+"відповідає тим самим геометричним правилам, що й відповідні функції, але "
+"оптимізована для використання в виразах SQL та фільтруванні з підтримкою "
+"індексу."
 
 #. Tag: title
 #, no-c-format
@@ -23380,6 +23386,7 @@ msgstr ""
 msgid ""
 "Availability: 2.3.0 support for Block Range INdexes (BRIN) was introduced."
 msgstr ""
+"Доступність: 2.3.0 було впроваджено підтримку Block Range INdexes (BRIN)."
 
 #. Tag: para
 #, no-c-format
@@ -24247,6 +24254,10 @@ msgid ""
 "nearest-neighbor result sets with true KNN distance search for geometries, "
 "and distance on the sphere for geographies."
 msgstr ""
+"Оператор <varname>&lt;-&gt;</varname> повертає 2D-відстань між двома "
+"геометріями. Використовується в розділі «ORDER BY» для надання наборів "
+"результатів найближчих сусідів з індексом за допомогою пошуку справжньої "
+"відстані KNN для геометрій та відстані на сфері для географічних даних."
 
 #. Tag: para
 #, no-c-format
@@ -24289,6 +24300,9 @@ msgid ""
 "and geography. Note for geography KNN is based on sphere rather than "
 "spheroid."
 msgstr ""
+"Покращено: 2.2.0 — Поведінка True KNN («K найближчих сусідів») для геометрії "
+"та географії. Примітка: для географії KNN базується на сфері, а не на "
+"сфероїді."
 
 #. Tag: para
 #, no-c-format
@@ -24296,6 +24310,9 @@ msgid ""
 "Changed: 2.2.0 -- Old hybrid-syntax workarounds may be slower once true KNN "
 "is available. See examples below."
 msgstr ""
+"Змінено: 2.2.0 — Старі обхідні шляхи з гібридною синтаксичною конструкцією "
+"можуть працювати повільніше після появи справжнього KNN. Дивіться приклади "
+"нижче."
 
 #. Tag: para
 #, no-c-format
@@ -24304,6 +24321,9 @@ msgid ""
 "centroid distances instead of true distances. Exact results for points, "
 "inexact for all other types."
 msgstr ""
+"Доступність: 2.0.0 — Слабкий KNN надає найближчих сусідів на основі "
+"геометричних відстаней до центроїдів, а не реальних відстаней. Точні "
+"результати для точок, неточні для всіх інших типів."
 
 #. Tag: para
 #, no-c-format
@@ -24326,6 +24346,10 @@ msgid ""
 "find the true nearest neighbors. First a CTE query using the index-assisted "
 "KNN, then an exact query to get correct ordering:"
 msgstr ""
+"Коли план не може безпосередньо визначити точні відстані, використовуйте "
+"гібридний запит, щоб знайти справжніх найближчих сусідів. Спочатку виконайте "
+"запит CTE з використанням KNN з індексом, а потім точний запит, щоб отримати "
+"правильний порядок:"
 
 #. Tag: para
 #, no-c-format
@@ -24350,6 +24374,10 @@ msgid ""
 "same as <xref linkend=\"ST_DistanceCPA\"/> but as an operator it can be used "
 "for doing nearest neighbor searches using an N-dimensional index."
 msgstr ""
+"Оператор <varname>|=|</varname> повертає 3D відстань між двома траєкторіями ("
+"див. <xref linkend=\"ST_IsValidTrajectory\"/>). Це те саме, що й <xref "
+"linkend=\"ST_DistanceCPA\"/>, але як оператор його можна використовувати для "
+"пошуку найближчих сусідів за допомогою N-вимірного індексу."
 
 #. Tag: para
 #, no-c-format
@@ -24378,7 +24406,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 2.2.0."
-msgstr ""
+msgstr "Доступність: 2.2.0."
 
 #. Tag: para
 #, no-c-format
@@ -24402,6 +24430,10 @@ msgid ""
 "Useful for doing nearest neighbor <emphasis role=\"strong\">approximate</"
 "emphasis> distance ordering."
 msgstr ""
+"Оператор <varname>&lt;#&gt;</varname> повертає відстань між двома "
+"обмежувальними прямокутниками з плаваючою комою, можливо зчитуючи їх із "
+"просторового індексу. Корисний для виконання <emphasis role=\"strong\""
+">наближеного</emphasis> упорядкування відстаней найближчих сусідів."
 
 #. Tag: para
 #, no-c-format
@@ -24429,7 +24461,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 2.0.0."
-msgstr ""
+msgstr "Доступність: 2.0.0."
 
 #. Tag: para
 #, no-c-format
@@ -24730,6 +24762,10 @@ msgid ""
 "default. If your GUI tools require the old behavior, then SET "
 "<code>bytea_output='escape'</code> in your database."
 msgstr ""
+"PostgreSQL за замовчуванням виводить значення <varname>bytea</varname> у "
+"шістнадцятковому кодуванні. Якщо ваші графічні інструменти вимагають старого "
+"способу роботи, то встановіть у базі даних SET "
+"<code>bytea_output=“escape”</code>."
 
 #. Tag: para
 #, no-c-format
@@ -25081,6 +25117,10 @@ msgid ""
 "function> raises a warning in that case because PostgreSQL <type>jsonb</"
 "type> keeps only the last value for duplicate keys."
 msgstr ""
+"Якщо вхідний запис містить дублікати імен стовпців, об'єкт «властивості» "
+"буде містити повторювані ключі. У цьому випадку функція "
+"<function>ST_AsGeoJSON</function> видає попередження, оскільки PostgreSQL "
+"<type>jsonb</type> зберігає тільки останнє значення для дублікатів ключів."
 
 #. Tag: para
 #, no-c-format
@@ -25156,7 +25196,7 @@ msgstr "Змінено: 3.5.0 Дозволено вказувати стовпе
 #. Tag: para
 #, no-c-format
 msgid "Changed: 3.7.0 added warning about duplicate keys"
-msgstr ""
+msgstr "Змінено: 3.7.0 додано попередження про дублювання ключів"
 
 #. Tag: para
 #, no-c-format
@@ -26123,6 +26163,11 @@ msgid ""
 "the x/y axis. By default, <code>ST_AsX3D</code> outputs in database form "
 "(long,lat or X,Y), but the X3D default of lat/lon, y/x may be preferred."
 msgstr ""
+"Аргумент «options» є бітовим полем, яке визначає, чи слід представляти "
+"координати за допомогою геопросторового вузла X3D GeoCoordinates і чи слід "
+"перевертати осі x/y. За замовчуванням <code>ST_AsX3D</code> виводить дані у "
+"формі бази даних (long,lat або X,Y), але за замовчуванням X3D може бути "
+"краще використовувати lat/lon, y/x."
 
 #. Tag: para
 #, no-c-format
@@ -26999,6 +27044,13 @@ msgid ""
 "linkend=\"ST_Segmentize\"/> to add geodesic vertices, then cast to geometry "
 "before subdivision."
 msgstr ""
+"При перетворенні поділеної геометрії на географію, отримана географія може "
+"відрізнятися від оригіналу. Поділ додає вершини в плоскому (геометричному) "
+"просторі. Якщо вершини вставляються вздовж межі, вони змінять географічне "
+"представлення, де краї інтерпретуються як геодезичні сегменти. Щоб "
+"мінімізувати спотворення, спочатку ущільніть географію за допомогою <xref "
+"linkend=\"ST_Segmentize\"/>, щоб додати геодезичні вершини, а потім "
+"перетворіть на геометрію перед поділом."
 
 #. Tag: para
 #, no-c-format
@@ -27048,6 +27100,11 @@ msgid ""
 "impact of changes to the geography representation of a geometry when "
 "subdividing."
 msgstr ""
+"<emphasis role=\"bold\">Приклад:</emphasis> Ущільніть довгу географічну "
+"лінію за допомогою ST_Segmentize(geography, distance) і використовуйте "
+"ST_Subdivide, щоб розділити отриману лінію на підлінії з 8 вершинами. "
+"Ущільнення мінімізує вплив змін на географічне представлення геометрії під "
+"час поділу."
 
 #. Tag: para
 #, no-c-format
@@ -27463,6 +27520,11 @@ msgid ""
 "does not affect POINT or POLYGON geometries. By default end caps are square "
 "when 'left' or 'right' are specified."
 msgstr ""
+"“side=both|left|right” : за замовчуванням “both”. “left” або “right” виконує "
+"односторонній буфер на геометрії, причому буферована сторона відносна до "
+"напрямку лінії. Це застосовується тільки до геометрії LINESTRING і не "
+"впливає на геометрії POINT або POLYGON. За замовчуванням кінцеві кришки є "
+"квадратними, коли вказано “left” або “right”."
 
 #. Tag: para
 #, no-c-format
@@ -28465,7 +28527,7 @@ msgstr "Лінії не об'єднуються на перетинах зі с�
 #. Tag: title
 #, no-c-format
 msgid "Non-Touching Lines"
-msgstr ""
+msgstr "Лінії, що не стикаються"
 
 #. Tag: para
 #, no-c-format
@@ -28479,7 +28541,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Directed Parameter"
-msgstr ""
+msgstr "Направлений параметр"
 
 #. Tag: para
 #, no-c-format
@@ -28489,7 +28551,7 @@ msgstr "Лінії з протилежними напрямками не об'є
 #. Tag: title
 #, no-c-format
 msgid "Z-dimension Handling"
-msgstr ""
+msgstr "Обробка Z-виміру"
 
 #. Tag: para
 #, no-c-format
@@ -29983,7 +30045,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "The raster in question/"
-msgstr ""
+msgstr "Растр, про який йде мова/"
 
 #. Tag: para
 #, no-c-format
@@ -31830,7 +31892,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Non-georeferenced rasters and geometries use SRID 0."
-msgstr ""
+msgstr "Растери та геометрії без геореференції використовують SRID 0."
 
 #. Tag: refpurpose
 #, no-c-format
@@ -33796,6 +33858,13 @@ msgid ""
 "and set it to <varname>libproj.dll</varname>. You'll have to restart your "
 "PostgreSQL service/daemon after this change."
 msgstr ""
+"Якщо ви виявили, що підтримка перетворення не працює належним чином, "
+"можливо, вам доведеться встановити змінну середовища PROJSO на бібліотеку "
+"проекцій, яку використовує ваша збірка PostGIS. Для цього потрібно лише "
+"вказати ім'я файлу. Наприклад, у Windows у Панелі керування -&gt; Система "
+"-&gt; Змінні середовища додайте системну змінну з назвою <varname>PROJSO</"
+"varname> і встановіть для неї значення <varname>libproj.dll</varname>. Після "
+"цієї зміни вам доведеться перезапустити службу/демон PostgreSQL."
 
 #. Tag: para
 #, no-c-format
@@ -35826,7 +35895,7 @@ msgstr "Кілька растрів, кілька каналів"
 #. Tag: para
 #, no-c-format
 msgid "Complete example of tiles of a coverage with neighborhood."
-msgstr ""
+msgstr "Повний приклад плиток покриття з сусідством."
 
 #. Tag: para
 #, no-c-format
@@ -35834,6 +35903,8 @@ msgid ""
 "Example like the prior one for tiles of a coverage with neighborhood but "
 "using only basic SQL features."
 msgstr ""
+"Приклад, подібний до попереднього, для плиток покриття з сусідством, але з "
+"використанням лише основних функцій SQL."
 
 #. Tag: title
 #, no-c-format
@@ -37466,7 +37537,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Complete example of tiles of a coverage."
-msgstr ""
+msgstr "Повний приклад плиток покриття."
 
 #. Tag: para
 #, no-c-format
@@ -38063,6 +38134,8 @@ msgid ""
 "Changed 3.7.0, the polygonization honours PostgreSQL interrupts so "
 "cancellations and statement timeouts halt processing promptly."
 msgstr ""
+"Змінено 3.7.0, полігонізація враховує переривання PostgreSQL, тому "
+"скасування та тайм-аути операторів негайно зупиняють обробку."
 
 #. Tag: para
 #, no-c-format
@@ -41221,7 +41294,7 @@ msgstr "Перевірте, чи є поверхня плоскою"
 #. Tag: refpurpose
 #, no-c-format
 msgid "Test if the geometry is a solid. No validity check is performed."
-msgstr ""
+msgstr "Перевірте, чи є геометрія об'ємною. Перевірка дійсності не виконується."
 
 #. Tag: refpurpose
 #, no-c-format
@@ -41230,6 +41303,9 @@ msgid ""
 "solid, the input geometry must be a closed Polyhedral Surface or a closed "
 "TIN."
 msgstr ""
+"Перетворити геометрію в об'ємне тіло. Перевірка не виконується. Щоб отримати "
+"дійсне об'ємне тіло, вхідна геометрія повинна бути закритою поліедральною "
+"поверхнею або закритою TIN."
 
 #. Tag: refpurpose
 #, no-c-format
@@ -41277,7 +41353,7 @@ msgstr ", <xref linkend=\"ST_Area\"/>"
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes area of 3D surface geometries. Will return 0 for solids."
-msgstr ""
+msgstr "Обчислює площу 3D-поверхні. Для об'ємних тіл повертає значення 0."
 
 #. Tag: para
 #, no-c-format
@@ -41290,6 +41366,9 @@ msgid ""
 "Note: By default a PolyhedralSurface built from WKT is a surface geometry, "
 "not solid. It therefore has surface area. Once converted to a solid, no area."
 msgstr ""
+"Примітка: За замовчуванням PolyhedralSurface, побудований на основі WKT, є "
+"геометрією поверхні, а не об'ємним тілом. Тому він має площу поверхні. Після "
+"перетворення на об'ємне тіло площа поверхні зникає."
 
 #. Tag: para
 #, no-c-format
@@ -41322,6 +41401,10 @@ msgid ""
 "linkend=\"CG_MakeSolid\"/>. Areal geometries have no volume. Here is an "
 "example to demonstrate."
 msgstr ""
+"Коли закриті поверхні створюються за допомогою WKT, вони розглядаються як "
+"площі, а не як об'ємні тіла. Щоб зробити їх об'ємними, потрібно "
+"використовувати <xref linkend=\"CG_MakeSolid\"/>. Площі не мають об'єму. Ось "
+"приклад для ілюстрації."
 
 #. Tag: para
 #, no-c-format
@@ -42038,31 +42121,32 @@ msgstr "Оригінальний восьмикутник, сформовани�
 #, no-c-format
 msgid "Hexagon extruded 30 units along Z produces a PolyhedralSurfaceZ"
 msgstr ""
+"Шестикутник, видавлений на 30 одиниць уздовж Z, утворює PolyhedralSurfaceZ"
 
 #. Tag: para
 #, no-c-format
 msgid "Original linestring"
-msgstr ""
+msgstr "Оригінальна лінія"
 
 #. Tag: para
 #, no-c-format
 msgid "LineString Extruded along Z produces a PolyhedralSurfaceZ"
-msgstr ""
+msgstr "LineString, видавлений вздовж Z, створює PolyhedralSurfaceZ"
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"CG_ExtrudeStraightSkeleton\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"CG_ExtrudeStraightSkeleton\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Straight Skeleton Extrusion"
-msgstr ""
+msgstr "Пряма екструзія скелета"
 
 #. Tag: para
 #, no-c-format
 msgid "Computes an extrusion with a maximal height of the polygon geometry."
-msgstr ""
+msgstr "Обчислює екструзію з максимальною висотою геометрії багатокутника."
 
 #. Tag: para
 #, no-c-format
@@ -42085,11 +42169,13 @@ msgid ""
 "linkend=\"CG_StraightSkeleton\"/>, <xref "
 "linkend=\"CG_StraightSkeletonPartition\"/>"
 msgstr ""
+", <xref linkend=\"CG_ExtrudeStraightSkeleton\"/>, <xref linkend="
+"\"CG_StraightSkeleton\"/>, <xref linkend=\"CG_StraightSkeletonPartition\"/>"
 
 #. Tag: para
 #, no-c-format
 msgid "Computes approximal monotone convex partition of the polygon geometry."
-msgstr ""
+msgstr "Обчислює наближене монотонне опукле розбиття геометрії багатокутника."
 
 #. Tag: para
 #, no-c-format
@@ -42099,6 +42185,9 @@ msgid ""
 "linkend=\"CG_ApproxConvexPartition\"/> and <xref "
 "linkend=\"CG_OptimalConvexPartition\"/>)"
 msgstr ""
+"Наближене опукле розділення Гріна (той самий приклад, що й <xref linkend="
+"\"CG_YMonotonePartition\"/>, <xref linkend=\"CG_ApproxConvexPartition\"/> та "
+"<xref linkend=\"CG_OptimalConvexPartition\"/>)"
 
 #. Tag: para
 #, no-c-format
@@ -42106,17 +42195,21 @@ msgid ""
 ", <xref linkend=\"CG_ApproxConvexPartition\"/>, <xref "
 "linkend=\"CG_OptimalConvexPartition\"/>"
 msgstr ""
+", <xref linkend=\"CG_ApproxConvexPartition\"/>, <xref linkend="
+"\"CG_OptimalConvexPartition\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Performs Minkowski sum"
-msgstr ""
+msgstr "Обчислює суму Мінковського"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "is deprecated as of 3.5.0. Use <xref linkend=\"CG_MinkowskiSum\"/> instead."
 msgstr ""
+"є застарілим з версії 3.5.0. Замість нього використовуйте <xref linkend="
+"\"CG_MinkowskiSum\"/>."
 
 #. Tag: para
 #, no-c-format
@@ -42124,6 +42217,8 @@ msgid ""
 "This function performs a 2D minkowski sum of a point, line or polygon with a "
 "polygon."
 msgstr ""
+"Ця функція виконує двовимірну суму Мінковського точки, лінії або "
+"багатокутника з багатокутником."
 
 #. Tag: para
 #, no-c-format
@@ -42134,6 +42229,11 @@ msgid ""
 "href=\"https://en.wikipedia.org/wiki/Minkowski_addition\">Wikipedia "
 "Minkowski addition</link>."
 msgstr ""
+"Сума Мінковського двох геометрій A і B — це множина всіх точок, які є сумою "
+"будь-якої точки в A і B. Суми Мінковського часто використовуються в "
+"плануванні руху та комп'ютерному проектуванні. Більш детальна інформація на "
+"<link xlink:href=\"https://en.wikipedia.org/wiki/Minkowski_addition\""
+">Вікіпедія Сума Мінковського</link>."
 
 #. Tag: para
 #, no-c-format
@@ -42143,6 +42243,10 @@ msgid ""
 "leading to possible cases of invalidity. The second parameter must be a 2D "
 "polygon."
 msgstr ""
+"Перший параметр може бути будь-якою 2D-геометрією (точка, лінія, "
+"багатокутник). Якщо передається 3D-геометрія, вона буде перетворена в 2D "
+"шляхом примусового встановлення Z на 0, що може призвести до випадків "
+"недійсність. Другий параметр повинен бути 2D-багатокутником."
 
 #. Tag: para
 #, no-c-format
@@ -42150,6 +42254,8 @@ msgid ""
 "Implementation utilizes <link xlink:href=\"http://doc.cgal.org/latest/"
 "Minkowski_sum_2/\">CGAL 2D Minkowskisum</link>."
 msgstr ""
+"Реалізація використовує <link xlink:href=\"http://doc.cgal.org/latest/"
+"Minkowski_sum_2/\">CGAL 2D Minkowskisum</link>."
 
 #. Tag: para
 #, no-c-format
@@ -42157,27 +42263,31 @@ msgid ""
 "Minkowski Sum of Linestring and circle polygon where Linestring cuts thru "
 "the circle"
 msgstr ""
+"Сума Мінковського лінійного ланцюга та багатокутника, де лінійний ланцюг "
+"перетинає коло"
 
 #. Tag: para
 #, no-c-format
 msgid "Before Summing"
-msgstr ""
+msgstr "Перед підсумовуванням"
 
 #. Tag: para
 #, no-c-format
 msgid "After summing"
-msgstr ""
+msgstr "Після підсумовування"
 
 #. Tag: para
 #, no-c-format
 msgid "Minkowski Sum of a polygon and multipoint"
-msgstr ""
+msgstr "Сума Мінковського багатокутника і багатоточкової фігури"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "After summing: polygon is duplicated and translated to position of points"
 msgstr ""
+"Після підсумовування: багатокутник дублюється і переноситься в положення "
+"точок"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -42185,6 +42295,8 @@ msgid ""
 "Computes an Alpha-shape enclosing a geometry using an \"optimal\" alpha "
 "value."
 msgstr ""
+"Обчислює альфа-форму, що охоплює геометрію, використовуючи «оптимальне» "
+"значення альфа."
 
 #. Tag: para
 #, no-c-format
@@ -42192,6 +42304,8 @@ msgid ""
 "is deprecated as of 3.5.0. Use <xref linkend=\"CG_OptimalAlphaShape\"/> "
 "instead."
 msgstr ""
+"є застарілим з версії 3.5.0. Замість нього використовуйте <xref linkend="
+"\"CG_OptimalAlphaShape\"/>."
 
 #. Tag: para
 #, no-c-format
@@ -42199,6 +42313,8 @@ msgid ""
 "Computes the \"optimal\" alpha-shape of the points in a geometry. The alpha-"
 "shape is computed using a value of α chosen so that:"
 msgstr ""
+"Обчислює «оптимальну» альфа-форму точок у геометрії. Альфа-форма "
+"обчислюється з використанням значення α, обраного таким чином, щоб:"
 
 #. Tag: para
 #, no-c-format
@@ -42206,11 +42322,13 @@ msgid ""
 "the number of polygon elements is equal to or smaller than "
 "<varname>nb_components</varname> (which defaults to 1)"
 msgstr ""
+"кількість елементів полігону дорівнює або менше, ніж <varname>nb_components</"
+"varname> (за замовчуванням 1)"
 
 #. Tag: para
 #, no-c-format
 msgid "all input points are contained in the shape"
-msgstr ""
+msgstr "всі точки введення містяться в фігурі"
 
 #. Tag: para
 #, no-c-format
@@ -42218,11 +42336,13 @@ msgid ""
 "The result will not contain holes unless the optional <varname>allow_holes</"
 "varname> argument is specified as true."
 msgstr ""
+"Результат не буде містити отвори, якщо опціональний аргумент "
+"<varname>allow_holes</varname> не буде вказаний як true."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 3.3.0 - requires SFCGAL &gt;= 1.4.1."
-msgstr ""
+msgstr "Доступність: 3.3.0 — вимагає SFCGAL &gt;= 1.4.1."
 
 #. Tag: para
 #, no-c-format
@@ -42230,6 +42350,8 @@ msgid ""
 "Optimal alpha-shape of a MultiPoint (same example as <xref "
 "linkend=\"CG_AlphaShape\"/>)"
 msgstr ""
+"Оптимальна альфа-форма MultiPoint (той самий приклад, що й <xref linkend="
+"\"CG_AlphaShape\"/>)"
 
 #. Tag: para
 #, no-c-format
@@ -42237,21 +42359,23 @@ msgid ""
 "Optimal alpha-shape of a MultiPoint, allowing holes (same example as <xref "
 "linkend=\"CG_AlphaShape\"/>)"
 msgstr ""
+"Оптимальна альфа-форма MultiPoint, що допускає отвори (той самий приклад, що "
+"і <xref linkend=\"CG_AlphaShape\"/>)"
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"CG_AlphaShape\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"CG_AlphaShape\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes an optimal convex partition of the polygon geometry"
-msgstr ""
+msgstr "Обчислює оптимальний опуклий поділ геометрії багатокутника"
 
 #. Tag: para
 #, no-c-format
 msgid "Computes an optimal convex partition of the polygon geometry."
-msgstr ""
+msgstr "Обчислює оптимальний опуклий поділ геометрії багатокутника."
 
 #. Tag: para
 #, no-c-format
@@ -42261,6 +42385,10 @@ msgid ""
 "interior of the original polygon P. CG_OptimalConvexPartition produces a "
 "partition that is optimal in the number of pieces."
 msgstr ""
+"Розбиття багатокутника P — це набір багатокутників, внутрішні частини яких "
+"не перетинаються, а об'єднання багатокутників дорівнює внутрішній частині "
+"вихідного багатокутника P. CG_OptimalConvexPartition створює розбиття, яке є "
+"оптимальним за кількістю частин."
 
 #. Tag: para
 #, no-c-format
@@ -42270,6 +42398,9 @@ msgid ""
 "linkend=\"CG_ApproxConvexPartition\"/> and <xref "
 "linkend=\"CG_GreeneApproxConvexPartition\"/>)"
 msgstr ""
+"Оптимальний опуклий поділ (той самий приклад, що й <xref linkend="
+"\"CG_YMonotonePartition\"/>, <xref linkend=\"CG_ApproxConvexPartition\"/> та "
+"<xref linkend=\"CG_GreeneApproxConvexPartition\"/>)"
 
 #. Tag: para
 #, no-c-format
@@ -42277,6 +42408,8 @@ msgid ""
 ", <xref linkend=\"CG_ApproxConvexPartition\"/>, <xref "
 "linkend=\"CG_GreeneApproxConvexPartition\"/>"
 msgstr ""
+", <xref linkend=\"CG_ApproxConvexPartition\"/>, <xref linkend="
+"\"CG_GreeneApproxConvexPartition\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -42287,6 +42420,7 @@ msgstr ""
 #, no-c-format
 msgid "Requires SFCGAL &gt;= 1.3.8 for option use_distance_as_m"
 msgstr ""
+"Для використання опції use_distance_as_m необхідна версія SFCGAL &gt;= 1.3.8"
 
 #. Tag: para
 #, no-c-format
@@ -42294,11 +42428,13 @@ msgid ""
 "Note that valid inputs with rings that touch at a single point will raise an "
 "error."
 msgstr ""
+"Зверніть увагу, що дійсні вхідні дані з кільцями, які стикаються в одній "
+"точці, спричинять помилку."
 
 #. Tag: para
 #, no-c-format
 msgid "Straight Skeleton of polygon"
-msgstr ""
+msgstr "Прямий скелет полігона"
 
 #. Tag: para
 #, no-c-format
@@ -42306,6 +42442,8 @@ msgid ""
 "is deprecated as of 3.5.0. Use <xref linkend=\"CG_StraightSkeleton\"/> "
 "instead."
 msgstr ""
+"є застарілим починаючи з версії 3.5.0. Замість нього використовуйте <xref "
+"linkend=\"CG_StraightSkeleton\"/>."
 
 #. Tag: refpurpose
 #, no-c-format
@@ -42313,12 +42451,16 @@ msgid ""
 "Perform surface Tessellation of a polygon or polyhedralsurface and returns "
 "as a TIN or collection of TINS"
 msgstr ""
+"Виконує тесселяцію поверхні полігона або багатогранної поверхні і повертає "
+"результат у вигляді TIN або набору TIN"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "is deprecated as of 3.5.0. Use <xref linkend=\"CG_Tesselate\"/> instead."
 msgstr ""
+"є застарілим з версії 3.5.0. Замість нього використовуйте <xref linkend="
+"\"CG_Tesselate\"/>."
 
 #. Tag: para
 #, no-c-format
@@ -42326,6 +42468,9 @@ msgid ""
 "Takes as input a surface such a MULTI(POLYGON) or POLYHEDRALSURFACE and "
 "returns a TIN representation via the process of tessellation using triangles."
 msgstr ""
+"Приймає як вхідні дані поверхню типу MULTI(POLYGON) або POLYHEDRALSURFACE і "
+"повертає представлення TIN за допомогою процесу тесселяції з використанням "
+"трикутників."
 
 #. Tag: para
 #, no-c-format
@@ -42333,26 +42478,28 @@ msgid ""
 "does similar to this function except that it returns a geometry collection "
 "of polygons instead of a TIN and also only works with 2D geometries."
 msgstr ""
+"виконує подібну функцію, за винятком того, що повертає колекцію геометрії "
+"багатокутників замість TIN, а також працює тільки з 2D-геометріями."
 
 #. Tag: para
 #, no-c-format
 msgid "Original Cube"
-msgstr ""
+msgstr "Оригінальний куб"
 
 #. Tag: para
 #, no-c-format
 msgid "ST_AsText output:"
-msgstr ""
+msgstr "Результат ST_AsText:"
 
 #. Tag: para
 #, no-c-format
 msgid "Tessellated Cube with triangles colored"
-msgstr ""
+msgstr "Тессельований куб з кольоровими трикутниками"
 
 #. Tag: para
 #, no-c-format
 msgid "Tessellated Polygon"
-msgstr ""
+msgstr "Тессельований багатокутник"
 
 #. Tag: para
 #, no-c-format
@@ -42360,48 +42507,52 @@ msgid ""
 ", <xref linkend=\"ST_DelaunayTriangles\"/>, <xref "
 "linkend=\"ST_TriangulatePolygon\"/>"
 msgstr ""
+", <xref linkend=\"ST_DelaunayTriangles\"/>, <xref linkend="
+"\"ST_TriangulatePolygon\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Triangulates a polygonal geometry"
-msgstr ""
+msgstr "Тріангулює полігональну геометрію"
 
 #. Tag: para
 #, no-c-format
 msgid "Triangulates a polygonal geometry."
-msgstr ""
+msgstr "Триангулює полігональну геометрію."
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "NOTE: this function returns a geometry representing the triangulated result."
 msgstr ""
+"ПРИМІТКА: ця функція повертає геометрію, що представляє триангульований "
+"результат."
 
 #. Tag: refpurpose
 #, no-c-format
 msgid ""
 "Compute a visibility polygon from a point or a segment in a polygon geometry"
-msgstr ""
+msgstr "Обчислити полігон видимості з точки або сегмента в геометрії полігона"
 
 #. Tag: para
 #, no-c-format
 msgid "Visibility from the point"
-msgstr ""
+msgstr "Видимість з точки"
 
 #. Tag: para
 #, no-c-format
 msgid "Visibility from the segment"
-msgstr ""
+msgstr "Видимість з сегмента"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes y-monotone partition of the polygon geometry"
-msgstr ""
+msgstr "Обчислює y-монотонний поділ геометрії багатокутника"
 
 #. Tag: para
 #, no-c-format
 msgid "Computes y-monotone partition of the polygon geometry."
-msgstr ""
+msgstr "Обчислює y-монотонний поділ геометрії багатокутника."
 
 #. Tag: para
 #, no-c-format
@@ -42414,6 +42565,14 @@ msgid ""
 "algorithm does not guarantee a bound on the number of polygons produced with "
 "respect to the optimal number."
 msgstr ""
+"Розбиття багатокутника P — це множина багатокутників, такі, що внутрішні "
+"частини багатокутників не перетинаються, а об'єднання багатокутників "
+"дорівнює внутрішній частині вихідного багатокутника P. Y-монотонний "
+"багатокутник — це багатокутник, вершини v1,…,vn якого можна розділити на два "
+"ланцюги v1,…,vk і vk,…,vn,v1, такі, що будь-яка горизонтальна лінія "
+"перетинає кожен ланцюг не більше одного разу. Цей алгоритм не гарантує "
+"обмеження кількості багатокутників, що утворюються, відносно оптимальної "
+"кількості."
 
 #. Tag: para
 #, no-c-format
@@ -42423,11 +42582,15 @@ msgid ""
 "linkend=\"CG_GreeneApproxConvexPartition\"/> and <xref "
 "linkend=\"CG_OptimalConvexPartition\"/>)"
 msgstr ""
+"Y-монотонний поділ (той самий приклад, що й <xref linkend="
+"\"CG_ApproxConvexPartition\"/>, <xref linkend="
+"\"CG_GreeneApproxConvexPartition\"/> та <xref linkend="
+"\"CG_OptimalConvexPartition\"/>)"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes the straight skeleton partition of a polygon."
-msgstr ""
+msgstr "Обчислює прямий скелетний поділ багатокутника."
 
 #. Tag: para
 #, no-c-format
@@ -42439,21 +42602,27 @@ msgid ""
 "automatically adjust the orientation of the input polygon to ensure correct "
 "results."
 msgstr ""
+"Обчислює пряме скелетне розділення вхідної геометрії багатокутника "
+"<parameter>geom</parameter>. Прямий скелет — це розділення багатокутника на "
+"грані, утворені шляхом відстеження збігання його ребер. Якщо "
+"<parameter>auto_orientation</parameter> встановлено на true, функція "
+"автоматично налаштує орієнтацію вхідного багатокутника, щоб забезпечити "
+"правильні результати."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 3.6.0 - requires SFCGAL &gt;= 2.0.0."
-msgstr ""
+msgstr "Доступність: 3.6.0 — вимагає SFCGAL &gt;= 2.0.0."
 
 #. Tag: para
 #, no-c-format
 msgid "Straight Skeleton Partition of polygon"
-msgstr ""
+msgstr "Пряма скелетна роздільна лінія багатокутника"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes a 3D buffer around a geometry."
-msgstr ""
+msgstr "Обчислює 3D-буфер навколо геометрії."
 
 #. Tag: para
 #, no-c-format
@@ -42471,12 +42640,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Input geometry must be a Point or LineString."
-msgstr ""
+msgstr "Геометрія вхідних даних повинна бути точкою або лінією."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 3.6.0 - requires SFCGAL &gt;= 2.0.0"
-msgstr ""
+msgstr "Доступність: 3.6.0 — вимагає SFCGAL &gt;= 2.0.0"
 
 #. Tag: para
 #, no-c-format
@@ -42485,36 +42654,39 @@ msgid ""
 "into <link xlink:href=\"https://postgis.net/docs/support/viewers/x3d_viewer."
 "htm\">X3D Viewer</link>."
 msgstr ""
+"Наступні зображення були відтворені шляхом вставлення результату запиту "
+"ST_AsX3D у <link xlink:href=\"https://postgis.net/docs/support/viewers/"
+"x3d_viewer.htm\">X3D Viewer</link>."
 
 #. Tag: para
 #, no-c-format
 msgid "segments=32 (rounded buffer)"
-msgstr ""
+msgstr "сегменти=32 (округлений буфер)"
 
 #. Tag: para
 #, no-c-format
 msgid "5 segments rounded"
-msgstr ""
+msgstr "5 сегментів, округлено"
 
 #. Tag: para
 #, no-c-format
 msgid "32 segments, round"
-msgstr ""
+msgstr "32 сегменти, круг"
 
 #. Tag: para
 #, no-c-format
 msgid "32 segments, square"
-msgstr ""
+msgstr "32 сегменти, квадрат"
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_3DConvexHull\"/>, <xref linkend=\"ST_AsX3D\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_3DConvexHull\"/>, <xref linkend=\"ST_AsX3D\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry by a given angle around the origin (0,0)."
-msgstr ""
+msgstr "Повертає геометрію на заданий кут навколо початку координат (0,0)."
 
 #. Tag: para
 #, no-c-format
@@ -42524,16 +42696,20 @@ msgid ""
 "in 2D space; Z coordinates are not modified. Positive angles rotate the "
 "geometry counter-clockwise."
 msgstr ""
+"Повертає вхідну геометрію <parameter>geom</parameter> на <parameter>angle</"
+"parameter> радіан навколо точки початку координат (0,0). Поворот виконується "
+"у 2D-просторі; координати Z не змінюються. Позитивні кути повертають "
+"геометрію проти годинникової стрілки."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_Rotate\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_Rotate\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry by a given angle around a specified point in 2D."
-msgstr ""
+msgstr "Повертає геометрію на заданий кут навколо вказаної точки в 2D."
 
 #. Tag: para
 #, no-c-format
@@ -42544,16 +42720,20 @@ msgid ""
 "coordinates are dropped. Positive angles rotate the geometry counter-"
 "clockwise."
 msgstr ""
+"Повертає вхідну геометрію <parameter>geom</parameter> на <parameter>angle</"
+"parameter> радіан навколо точки (<parameter>cx</parameter>, "
+"<parameter>cy</parameter>). Поворот виконується у 2D-просторі; координати Z "
+"ігноруються. Позитивні кути повертають геометрію проти годинникової стрілки."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"CG_3DRotate\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"CG_3DRotate\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry in 3D space around an axis vector."
-msgstr ""
+msgstr "Обертає геометрію в 3D-просторі навколо вектора осі."
 
 #. Tag: para
 #, no-c-format
@@ -42563,16 +42743,20 @@ msgid ""
 "parameter>, <parameter>ay</parameter>, <parameter>az</parameter>) passing "
 "through the origin (0,0,0)."
 msgstr ""
+"Повертає вхідну геометрію <parameter>geom</parameter> на <parameter>angle</"
+"parameter> радіан навколо осі, визначеної вектором (<parameter>ax</"
+"parameter>, <parameter>ay</parameter>, <parameter>az</parameter>), що "
+"проходить через початок координат (0,0,0)."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"CG_RotateY\"/>, <xref linkend=\"CG_RotateZ\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"CG_RotateY\"/>, <xref linkend=\"CG_RotateZ\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry around the X-axis by a given angle."
-msgstr ""
+msgstr "Повертає геометрію навколо осі X на заданий кут."
 
 #. Tag: para
 #, no-c-format
@@ -42580,16 +42764,18 @@ msgid ""
 "Rotates the input geometry <parameter>geom</parameter> by <parameter>angle</"
 "parameter> radians around the X-axis."
 msgstr ""
+"Повертає вхідну геометрію <parameter>geom</parameter> на <parameter>angle</"
+"parameter> радіан навколо осі X."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"CG_RotateZ\"/>, <xref linkend=\"CG_3DRotate\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"CG_RotateZ\"/>, <xref linkend=\"CG_3DRotate\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry around the Y-axis by a given angle."
-msgstr ""
+msgstr "Повертає геометрію навколо осі Y на заданий кут."
 
 #. Tag: para
 #, no-c-format
@@ -42597,11 +42783,13 @@ msgid ""
 "Rotates the input geometry <parameter>geom</parameter> by <parameter>angle</"
 "parameter> radians around the Y-axis passing."
 msgstr ""
+"Повертає вхідну геометрію <parameter>geom</parameter> на <parameter>angle</"
+"parameter> радіан навколо осі Y."
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry around the Z-axis by a given angle."
-msgstr ""
+msgstr "Повертає геометрію навколо осі Z на заданий кут."
 
 #. Tag: para
 #, no-c-format
@@ -42609,16 +42797,18 @@ msgid ""
 "Rotates the input geometry <parameter>geom</parameter> by <parameter>angle</"
 "parameter> radians around the Z-axis."
 msgstr ""
+"Повертає вхідну геометрію <parameter>geom</parameter> на <parameter>angle</"
+"parameter> радіан навколо осі Z."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"CG_RotateY\"/>, <xref linkend=\"CG_3DRotate\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"CG_RotateY\"/>, <xref linkend=\"CG_3DRotate\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Scales a geometry uniformly in all dimensions by a given factor."
-msgstr ""
+msgstr "Масштабує геометрію рівномірно у всіх вимірах за заданим коефіцієнтом."
 
 #. Tag: para
 #, no-c-format
@@ -42627,17 +42817,21 @@ msgid ""
 "<parameter>factor</parameter> in all dimensions (X, Y, and Z). The scaling "
 "is performed relative to the origin point (0,0,0)."
 msgstr ""
+"Масштабує вхідну геометрію <parameter>geom</parameter> за допомогою єдиного "
+"коефіцієнта масштабування <parameter>factor</parameter> у всіх вимірах (X, Y "
+"та Z). Масштабування виконується відносно точки початку координат (0,0,0)."
 
 #. Tag: para
 #, no-c-format
 msgid ""
 ", <xref linkend=\"CG_3DScaleAroundCenter\"/>, <xref linkend=\"ST_Scale\"/>"
 msgstr ""
+", <xref linkend=\"CG_3DScaleAroundCenter\"/>, <xref linkend=\"ST_Scale\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Scales a geometry by separate factors along X, Y, and Z axes."
-msgstr ""
+msgstr "Масштабує геометрію за окремими коефіцієнтами вздовж осей X, Y та Z."
 
 #. Tag: para
 #, no-c-format
@@ -42646,16 +42840,19 @@ msgid ""
 "along the X, Y, and Z axes. The scaling is performed relative to the origin "
 "point (0,0,0)."
 msgstr ""
+"Масштабує вхідну геометрію <parameter>geom</parameter> за допомогою різних "
+"коефіцієнтів вздовж осей X, Y та Z. Масштабування виконується відносно точки "
+"початку координат (0,0,0)."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"CG_3DScaleAroundCenter\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"CG_3DScaleAroundCenter\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Scales a geometry in 3D space around a specified center point."
-msgstr ""
+msgstr "Масштабує геометрію в 3D-просторі навколо вказаної центральної точки."
 
 #. Tag: para
 #, no-c-format
@@ -42665,16 +42862,20 @@ msgid ""
 "(<parameter>centerX</parameter>, <parameter>centerY</parameter>, "
 "<parameter>centerZ</parameter>)."
 msgstr ""
+"Масштабує вхідну геометрію <parameter>geom</parameter> за допомогою різних "
+"коефіцієнтів вздовж осей X, Y і Z відносно вказаної центральної точки "
+"(<parameter>centerX</parameter>, <parameter>centerY</parameter>, "
+"<parameter>centerZ</parameter>)."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"CG_3DScale\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"CG_3DScale\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Translates (moves) a geometry by given offsets in 2D space."
-msgstr ""
+msgstr "Перекладає (переміщує) геометрію на задані відступи в 2D-просторі."
 
 #. Tag: para
 #, no-c-format
@@ -42683,16 +42884,19 @@ msgid ""
 "<parameter>deltaX</parameter> to the X coordinates and <parameter>deltaY</"
 "parameter> to the Y coordinates. Z coordinates are dropped."
 msgstr ""
+"Перетворює вхідну геометрію <parameter>geom</parameter>, додаючи "
+"<parameter>deltaX</parameter> до координат X і <parameter>deltaY</parameter> "
+"до координат Y. Координати Z ігноруються."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_Translate\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_Translate\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Translates (moves) a geometry by given offsets in 3D space."
-msgstr ""
+msgstr "Перекладає (переміщує) геометрію на задані відступи в 3D-просторі."
 
 #. Tag: para
 #, no-c-format
@@ -42702,6 +42906,9 @@ msgid ""
 "parameter> to the Y coordinates, and <parameter>deltaZ</parameter> to the Z "
 "coordinates."
 msgstr ""
+"Перетворює вхідну геометрію <parameter>geom</parameter>, додаючи "
+"<parameter>deltaX</parameter> до координат X, <parameter>deltaY</parameter> "
+"до координат Y і <parameter>deltaZ</parameter> до координат Z."
 
 #. Tag: refpurpose
 #, no-c-format
@@ -42709,6 +42916,8 @@ msgid ""
 "Reduces the complexity of a geometry while preserving essential features and "
 "Z/M values."
 msgstr ""
+"Зменшує складність геометрії, зберігаючи при цьому основні характеристики та "
+"значення Z/M."
 
 #. Tag: para
 #, no-c-format
@@ -42717,6 +42926,9 @@ msgid ""
 "the number of points or vertices while preserving the essential features of "
 "the geometry. This function preserves Z and M values during simplification."
 msgstr ""
+"Спрощує геометрію за допомогою алгоритму спрощення SFCGAL, який зменшує "
+"кількість точок або вершин, зберігаючи при цьому основні характеристики "
+"геометрії. Ця функція зберігає значення Z і M під час спрощення."
 
 #. Tag: para
 #, no-c-format
@@ -42727,6 +42939,11 @@ msgid ""
 "handling to preserve Z and M coordinates. When topology is preserved and "
 "geometries intersect, Z and M values are interpolated at intersection points."
 msgstr ""
+"Алгоритм базується на обмеженій триангуляції та використовує бібліотеку "
+"<link xlink:href=\"https://doc.cgal.org/latest/Polyline_simplification_2/"
+"index.html\">CGAL Polyline Simplification 2</link> з додатковою обробкою для "
+"збереження координат Z та M. Коли топологія зберігається, а геометрії "
+"перетинаються, значення Z та M інтерполюються в точках перетину."
 
 #. Tag: para
 #, no-c-format
@@ -42734,26 +42951,28 @@ msgid ""
 "This function works well with 3D terrain-like geometries (2.5D) but is not "
 "designed for vertical surfaces like walls."
 msgstr ""
+"Ця функція добре працює з геометрією, схожою на 3D-рельєф (2,5D), але не "
+"призначена для вертикальних поверхонь, таких як стіни."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 3.6.0 - requires SFCGAL &gt;= 2.1.0"
-msgstr ""
+msgstr "Доступність: 3.6.0 — вимагає SFCGAL &gt;= 2.1.0"
 
 #. Tag: title
 #, no-c-format
 msgid "Parameters"
-msgstr ""
+msgstr "Параметри"
 
 #. Tag: para
 #, no-c-format
 msgid "Input geometry"
-msgstr ""
+msgstr "Вхідна геометрія"
 
 #. Tag: parameter
 #, no-c-format
 msgid "threshold"
-msgstr ""
+msgstr "threshold"
 
 #. Tag: para
 #, no-c-format
@@ -42761,11 +42980,13 @@ msgid ""
 "Maximum distance threshold (in geometry unit) for simplification. The higher "
 "this value, the more simplified the resulting geometry will be."
 msgstr ""
+"Максимальний поріг відстані (в одиницях геометрії) для спрощення. Чим вище "
+"це значення, тим більш спрощеною буде отримана геометрія."
 
 #. Tag: parameter
 #, no-c-format
 msgid "preserveTopology"
-msgstr ""
+msgstr "preserveTopology"
 
 #. Tag: para
 #, no-c-format
@@ -42774,41 +42995,44 @@ msgid ""
 "preserved. When geometries intersect in this mode, Z and M values at "
 "intersection points are interpolated. The default value is false."
 msgstr ""
+"Якщо встановлено значення true, функція гарантує збереження топології "
+"геометрії. Коли геометрії перетинаються в цьому режимі, значення Z і M у "
+"точках перетину інтерполюються. Значення за замовчуванням — false."
 
 #. Tag: title
 #, no-c-format
 msgid "Return Value"
-msgstr ""
+msgstr "Return Value"
 
 #. Tag: para
 #, no-c-format
 msgid "Returns a simplified geometry with preserved Z and M values."
-msgstr ""
+msgstr "Повертає спрощену геометрію із збереженими значеннями Z та M."
 
 #. Tag: para
 #, no-c-format
 msgid "Originals geometries"
-msgstr ""
+msgstr "Оригінальні геометрії"
 
 #. Tag: para
 #, no-c-format
 msgid "Simplification with 0.5 and topology preserved"
-msgstr ""
+msgstr "Спрощення з 0,5 і збереженням топології"
 
 #. Tag: para
 #, no-c-format
 msgid "Simplification with 0.5 without topology preservation"
-msgstr ""
+msgstr "Спрощення з 0,5 без збереження топології"
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_SimplifyPreserveTopology\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_SimplifyPreserveTopology\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes a 3D Alpha-wrapping strictly enclosing a geometry."
-msgstr ""
+msgstr "Обчислює 3D-обгортку альфа, яка суворо охоплює геометрію."
 
 #. Tag: para
 #, no-c-format
@@ -42819,6 +43043,11 @@ msgid ""
 "the input. It can be seen as an extension or refinement of an <link "
 "linkend=\"CG_AlphaShape\">alpha-shape</link>."
 msgstr ""
+"Обчислює <link xlink:href=\"https://doc.cgal.org/latest/Alpha_wrap_3/index."
+"html\">3D Alpha Wrapping</link> точок у геометрії. Альфа-обгортання — це "
+"водонепроникна та орієнтована поверхнева сітка, яка суворо охоплює вхідні "
+"дані. Його можна розглядати як розширення або вдосконалення <link linkend="
+"\"CG_AlphaShape\">альфа-форми</link>."
 
 #. Tag: para
 #, no-c-format
@@ -42828,6 +43057,10 @@ msgid ""
 "relative_alpha values result in simpler outputs, but they are less accurate "
 "representations of the original input."
 msgstr ""
+"Параметр <varname>relative_alpha</varname> контролює, які функції "
+"з'являтимуться у вихідних даних. Він може мати значення від 0 до "
+"нескінченності. Менші значення relative_alpha дають простіші вихідні дані, "
+"але вони є менш точними представленнями вихідних даних."
 
 #. Tag: para
 #, no-c-format
@@ -42837,6 +43070,10 @@ msgid ""
 "set to 0, its value is automatically determined based on the relative_alpha "
 "parameter."
 msgstr ""
+"Параметр <varname>relative_offset</varname> контролює точність результату. "
+"Він може мати значення від 0 до нескінченності. Якщо цей параметр "
+"встановлений на 0, його значення автоматично визначається на основі "
+"параметра relative_alpha."
 
 #. Tag: para
 #, no-c-format
@@ -42844,6 +43081,8 @@ msgid ""
 "Alpha wrapping of a MultiPoint (same example As <xref "
 "linkend=\"CG_OptimalAlphaShape\"/>)"
 msgstr ""
+"Альфа-обгортання MultiPoint (той самий приклад, що й <xref linkend="
+"\"CG_OptimalAlphaShape\"/>)"
 
 #. Tag: para
 #, no-c-format
@@ -42851,6 +43090,8 @@ msgid ""
 "Alpha wrapping of a MultiPoint (same example as <xref "
 "linkend=\"ST_ConcaveHull\"/>)"
 msgstr ""
+"Альфа-обгортання MultiPoint (той самий приклад, що і <xref linkend="
+"\"ST_ConcaveHull\"/>)"
 
 #. Tag: para
 #, no-c-format
@@ -42859,11 +43100,14 @@ msgid ""
 "and 20. A value of 5 results in a coarse output. Increasing the parameter up "
 "to 20 significantly improves the precision and granularity of the result."
 msgstr ""
+"Вплив параметра <varname>relative_alpha</varname> із значеннями 5, 10 і 20. "
+"Значення 5 дає грубий результат. Збільшення параметра до 20 значно покращує "
+"точність і детальність результату."
 
 #. Tag: title
 #, no-c-format
 msgid "Spatial Reference System Functions"
-msgstr ""
+msgstr "Функції просторової системи координат"
 
 #. Tag: para
 #, no-c-format
@@ -42871,6 +43115,8 @@ msgid ""
 "These functions work with the Spatial Reference System of geometries as "
 "defined in the <varname>spatial_ref_sys</varname> table."
 msgstr ""
+"Ці функції працюють із системою просторових координат геометрій, визначеною "
+"в таблиці <varname>spatial_ref_sys</varname>."
 
 #. Tag: refpurpose
 #, no-c-format
@@ -42879,6 +43125,9 @@ msgid ""
 "reference system using the inverse of a defined coordinate transformation "
 "pipeline."
 msgstr ""
+"Повернути нову геометрію з координатами, перетвореними в іншу систему "
+"просторових координат, використовуючи обернену функцію визначеного конвеєра "
+"перетворення координат."
 
 #. Tag: para
 #, no-c-format
@@ -42887,6 +43136,9 @@ msgid ""
 "reference system using a defined coordinate transformation pipeline to go in "
 "the inverse direction."
 msgstr ""
+"Повернути нову геометрію з координатами, перетвореними в іншу систему "
+"просторових координат за допомогою визначеного конвеєра перетворення "
+"координат, що працює в зворотному напрямку."
 
 #. Tag: para
 #, no-c-format
@@ -42894,6 +43146,8 @@ msgid ""
 "Refer to <xref linkend=\"ST_TransformPipeline\"/> for details on writing a "
 "transformation pipeline."
 msgstr ""
+"Детальні відомості про написання конвеєра перетворення див. у <xref linkend="
+"\"ST_TransformPipeline\"/>."
 
 #. Tag: para
 #, no-c-format
@@ -42905,6 +43159,12 @@ msgid ""
 "direction. Using `ST_InverseTransformPipeline()` the pipeline is executed in "
 "the inverse direction."
 msgstr ""
+"SRID вхідної геометрії ігнорується, а SRID вихідної геометрії буде "
+"встановлено на нуль, якщо значення не буде вказано за допомогою "
+"опціонального параметра <varname>to_srid</varname>. При використанні <xref "
+"linkend=\"ST_TransformPipeline\"/> конвеєр виконується в прямому напрямку. "
+"При використанні `ST_InverseTransformPipeline()` конвеєр виконується в "
+"зворотному напрямку."
 
 #. Tag: para
 #, no-c-format
@@ -42914,26 +43174,30 @@ msgid ""
 "correct operations to convert between coordinate systems, and should be "
 "preferred."
 msgstr ""
+"Перетворення за допомогою конвеєрів є спеціалізованою версією <xref linkend="
+"\"ST_Transform\"/>. У більшості випадків `ST_Transform` вибере правильні "
+"операції для перетворення між системами координат, і його слід вважати "
+"кращим варіантом."
 
 #. Tag: para
 #, no-c-format
 msgid "Change WGS 84 long lat to UTM 31N using the EPSG:16031 conversion"
-msgstr ""
+msgstr "Змінити WGS 84 long lat на UTM 31N за допомогою перетворення EPSG:16031"
 
 #. Tag: para
 #, no-c-format
 msgid "GDA2020 example."
-msgstr ""
+msgstr "Приклад GDA2020."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_TransformPipeline\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_TransformPipeline\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Set the SRID on a geometry."
-msgstr ""
+msgstr "Встановити SRID для геометрії."
 
 #. Tag: para
 #, no-c-format
@@ -42941,6 +43205,8 @@ msgid ""
 "Sets the SRID on a geometry to a particular integer value. Useful in "
 "constructing bounding boxes for queries."
 msgstr ""
+"Встановлює SRID для геометрії на певне ціле значення. Корисно при побудові "
+"обмежувальних рамок для запитів."
 
 #. Tag: para
 #, no-c-format
@@ -42950,11 +43216,15 @@ msgid ""
 "is assumed to be in. Use <xref linkend=\"ST_Transform\"/> if you want to "
 "transform the geometry into a new projection."
 msgstr ""
+"Ця функція жодним чином не трансформує координати геометрії — вона просто "
+"встановлює метадані, що визначають просторову систему відліку, в якій, як "
+"передбачається, знаходиться геометрія. Використовуйте <xref linkend="
+"\"ST_Transform\"/>, якщо ви хочете трансформувати геометрію в нову проекцію."
 
 #. Tag: para
 #, no-c-format
 msgid "-- Mark a point as WGS 84 long lat --"
-msgstr ""
+msgstr "-- Позначте точку як WGS 84 long lat --"
 
 #. Tag: para
 #, no-c-format
@@ -42962,6 +43232,8 @@ msgid ""
 "-- Mark a point as WGS 84 long lat and then transform to web mercator "
 "(Spherical Mercator) --"
 msgstr ""
+"-- Позначте точку як WGS 84 long lat, а потім перетворіть її у веб-меркатор ("
+"сферичний меркатор) --"
 
 #. Tag: para
 #, no-c-format
@@ -42969,16 +43241,18 @@ msgid ""
 ", <xref linkend=\"ST_SRID\"/>, <xref linkend=\"ST_Transform\"/>, <xref "
 "linkend=\"UpdateGeometrySRID\"/>"
 msgstr ""
+", <xref linkend=\"ST_SRID\"/>, <xref linkend=\"ST_Transform\"/>, <xref "
+"linkend=\"UpdateGeometrySRID\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Returns the spatial reference identifier for a geometry."
-msgstr ""
+msgstr "Повертає ідентифікатор просторової прив'язки для геометрії."
 
 #. Tag: para
 #, no-c-format
 msgid "&sqlmm_compliant; SQL-MM 3: 5.1.5"
-msgstr ""
+msgstr "&sqlmm_compliant; SQL-MM 3: 5.1.5"
 
 #. Tag: para
 #, no-c-format
@@ -42986,6 +43260,8 @@ msgid ""
 ", <xref linkend=\"ST_SetSRID\"/>, <xref linkend=\"ST_Transform\"/>, <xref "
 "linkend=\"RT_ST_SRID\"/>, <xref linkend=\"TG_ST_SRID\"/>"
 msgstr ""
+", <xref linkend=\"ST_SetSRID\"/>, <xref linkend=\"ST_Transform\"/>, <xref "
+"linkend=\"RT_ST_SRID\"/>, <xref linkend=\"TG_ST_SRID\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -42993,6 +43269,8 @@ msgid ""
 "Return a new geometry with coordinates transformed to a different spatial "
 "reference system."
 msgstr ""
+"Повернути нову геометрію з координатами, перетвореними в іншу систему "
+"просторових координат."
 
 #. Tag: para
 #, no-c-format
@@ -43018,6 +43296,9 @@ msgid ""
 "reference system to another, while ST_SetSRID() simply changes the SRID "
 "identifier of the geometry."
 msgstr ""
+"ST_Transform часто плутають з <xref linkend=\"ST_SetSRID\"/>. ST_Transform "
+"фактично змінює координати геометрії з однієї системи просторових координат "
+"на іншу, тоді як ST_SetSRID() просто змінює ідентифікатор SRID геометрії."
 
 #. Tag: para
 #, no-c-format
@@ -43026,6 +43307,10 @@ msgid ""
 "source and target spatial reference systems. To use a specific conversion "
 "method, use <xref linkend=\"ST_TransformPipeline\"/>."
 msgstr ""
+"ST_Transform автоматично вибирає відповідний конвеєр перетворення, "
+"враховуючи вихідну та цільову просторові системи координат. Щоб "
+"використовувати конкретний метод перетворення, скористайтеся <xref linkend="
+"\"ST_TransformPipeline\"/>."
 
 #. Tag: para
 #, no-c-format
@@ -43034,6 +43319,8 @@ msgid ""
 "linkend=\"PostGIS_Full_Version\"/> to confirm you have PROJ support compiled "
 "in."
 msgstr ""
+"Вимагає компіляції PostGIS з підтримкою PROJ. Використовуйте <xref linkend="
+"\"PostGIS_Full_Version\"/>, щоб підтвердити, що підтримка PROJ скомпільована."
 
 #. Tag: para
 #, no-c-format
@@ -43041,21 +43328,26 @@ msgid ""
 "If using more than one transformation, it is useful to have a functional "
 "index on the commonly used transformations to take advantage of index usage."
 msgstr ""
+"Якщо використовується більше одного перетворення, корисно мати "
+"функціональний індекс для часто використовуваних перетворень, щоб "
+"скористатися перевагами використання індексу."
 
 #. Tag: para
 #, no-c-format
 msgid "Enhanced: 2.3.0 support for direct PROJ.4 text was introduced."
-msgstr ""
+msgstr "Покращено: 2.3.0 додано підтримку прямого тексту PROJ.4."
 
 #. Tag: para
 #, no-c-format
 msgid "&sqlmm_compliant; SQL-MM 3: 5.1.6"
-msgstr ""
+msgstr "&sqlmm_compliant; SQL-MM 3: 5.1.6"
 
 #. Tag: para
 #, no-c-format
 msgid "Change Massachusetts state plane US feet geometry to WGS 84 long lat"
 msgstr ""
+"Змінити геометрію площини штату Массачусетс з американських футів на WGS 84 "
+"довгота-широта"
 
 #. Tag: para
 #, no-c-format
@@ -43065,17 +43357,23 @@ msgid ""
 "that leaves out null geometries which will both conserve space and make your "
 "index smaller and more efficient."
 msgstr ""
+"Приклад створення часткового функціонального індексу. Для таблиць, в яких ви "
+"не впевнені, що всі геометрії будуть заповнені, найкраще використовувати "
+"частковий індекс, який оминає нульові геометрії, що дозволить заощадити "
+"простір і зробити ваш індекс меншим та ефективнішим."
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Examples of using PROJ.4 text to transform with custom spatial references."
 msgstr ""
+"Приклади використання тексту PROJ.4 для перетворення з використанням власних "
+"просторових посилань."
 
 #. Tag: title
 #, no-c-format
 msgid "Configuring transformation behavior"
-msgstr ""
+msgstr "Налаштування поведінки перетворення"
 
 #. Tag: para
 #, no-c-format
@@ -43096,6 +43394,8 @@ msgid ""
 "For example, the proj4text parameter +datum=NAD87 is a shorthand form for "
 "the following +nadgrids parameter:"
 msgstr ""
+"Наприклад, параметр proj4text +datum=NAD87 є скороченою формою для "
+"наступного параметра +nadgrids:"
 
 #. Tag: para
 #, no-c-format
@@ -43104,6 +43404,9 @@ msgid ""
 "the end of the list is reached with no file having been appropriate (ie. "
 "found and overlapping) then an error is issued."
 msgstr ""
+"Префікс @ означає, що помилка не повідомляється, якщо файли відсутні, але "
+"якщо кінець списку досягнуто, а відповідний файл не знайдено (тобто знайдено "
+"і перекривається), то видається помилка."
 
 #. Tag: para
 #, no-c-format
@@ -43112,6 +43415,9 @@ msgid ""
 "present, but that if all files were scanned without a hit a null "
 "transformation is applied you could use:"
 msgstr ""
+"Якщо, навпаки, ви хочете переконатися, що принаймні стандартні файли "
+"присутні, але якщо всі файли були проскановані без результату, "
+"застосовується нульове перетворення, ви можете використовувати:"
 
 #. Tag: para
 #, no-c-format
@@ -43121,6 +43427,11 @@ msgid ""
 "PostGIS so that transformations to SRID 4267 that didn't lie within the "
 "correct range did not throw an ERROR, you would use the following:"
 msgstr ""
+"Файл нульового зсуву сітки є дійсним файлом зсуву сітки, що охоплює весь "
+"світ і не застосовує жодного зсуву. Отже, для повного прикладу, якщо ви "
+"хочете змінити PostGIS так, щоб перетворення до SRID 4267, які не лежать у "
+"правильному діапазоні, не викликали помилку ERROR, ви повинні використати "
+"наступне:"
 
 #. Tag: para
 #, no-c-format
@@ -43128,6 +43439,8 @@ msgid ""
 ", <xref linkend=\"ST_SetSRID\"/>, <xref linkend=\"ST_SRID\"/>, <xref "
 "linkend=\"UpdateGeometrySRID\"/>, <xref linkend=\"ST_TransformPipeline\"/>"
 msgstr ""
+", <xref linkend=\"ST_SetSRID\"/>, <xref linkend=\"ST_SRID\"/>, <xref linkend="
+"\"UpdateGeometrySRID\"/>, <xref linkend=\"ST_TransformPipeline\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -43136,6 +43449,9 @@ msgid ""
 "different spatial reference system using a defined coordinate transformation "
 "pipeline.</refpurpose>"
 msgstr ""
+"<refpurpose>Повернути нову геометрію з координатами, перетвореними в іншу "
+"систему просторових координат за допомогою визначеного конвеєра перетворення "
+"координат.</refpurpose>"
 
 #. Tag: para
 #, no-c-format
@@ -43144,6 +43460,9 @@ msgid ""
 "spatial reference system using a defined coordinate transformation pipeline."
 "</para>"
 msgstr ""
+"<para>Повернути нову геометрію з координатами, перетвореними в іншу систему "
+"просторових координат за допомогою визначеного конвеєра перетворення "
+"координат.</para>"
 
 #. Tag: para
 #, no-c-format
@@ -43151,6 +43470,8 @@ msgid ""
 "Transformation pipelines are defined using any of the following string "
 "formats:"
 msgstr ""
+"Трубопроводи трансформації визначаються за допомогою будь-якого з наступних "
+"форматів рядків:"
 
 #. Tag: para
 #, no-c-format
@@ -43159,6 +43480,10 @@ msgid ""
 "that a simple <varname>EPSG:CODE</varname> string does not uniquely identify "
 "a coordinate operation: the same EPSG code can be used for a CRS definition."
 msgstr ""
+"<varname>urn:ogc:def:coordinateOperation:AUTHORITY::CODE</varname>. Зверніть "
+"увагу, що простий рядок <varname>EPSG:CODE</varname> не ідентифікує "
+"координатну операцію однозначно: той самий код EPSG може використовуватися "
+"для визначення CRS."
 
 #. Tag: para
 #, no-c-format
@@ -43168,6 +43493,10 @@ msgid ""
 "caller will need to add an additional pipeline step, or remove "
 "<varname>axisswap</varname> steps."
 msgstr ""
+"Рядок конвеєра PROJ у форматі: <varname>+proj=pipeline ...</varname>. "
+"Автоматична нормалізація осей не застосовуватиметься, і за необхідності "
+"викликаюча сторона повинна буде додати додатковий крок конвеєра або видалити "
+"кроки <varname>axisswap</varname>."
 
 #. Tag: para
 #, no-c-format
@@ -43176,6 +43505,8 @@ msgid ""
 "coordinateOperation,coordinateOperation:EPSG::3895,coordinateOperation:"
 "EPSG::1618</varname>."
 msgstr ""
+"З'єднані операції у формі: <varname>urn:ogc:def:coordinateOperation,coordinat"
+"eOperation:EPSG::3895,coordinateOperation:EPSG::1618</varname>."
 
 #. Tag: para
 #, no-c-format
@@ -43187,16 +43518,22 @@ msgid ""
 "linkend=\"ST_InverseTransformPipeline\"/> the pipeline is executed in the "
 "inverse direction."
 msgstr ""
+"SRID вхідної геометрії ігнорується, а SRID вихідної геометрії буде "
+"встановлено на нуль, якщо значення не буде вказано за допомогою "
+"опціонального параметра <varname>to_srid</varname>. При використанні "
+"`ST_TransformPipeline()` конвеєр виконується в прямому напрямку. При "
+"використанні <xref linkend=\"ST_InverseTransformPipeline\"/> конвеєр "
+"виконується в зворотному напрямку."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_InverseTransformPipeline\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_InverseTransformPipeline\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Return the list of SRS codes associated with the given authority."
-msgstr ""
+msgstr "Повернути список кодів SRS, пов'язаних із зазначеним органом."
 
 #. Tag: para
 #, no-c-format
@@ -43204,27 +43541,30 @@ msgid ""
 "Returns a set of all <varname>auth_srid</varname> for the given "
 "<varname>auth_name</varname>."
 msgstr ""
+"Повертає набір усіх <varname>auth_srid</varname> для заданого "
+"<varname>auth_name</varname>."
 
 #. Tag: para
 #, no-c-format
 msgid "Proj version 6+"
-msgstr ""
+msgstr "Версія Proj 6+"
 
 #. Tag: para
 #, no-c-format
 msgid "List the first ten codes associated with the EPSG authority."
-msgstr ""
+msgstr "Перелічіть перші десять кодів, пов'язаних з органом EPSG."
 
 #. Tag: para
 #, no-c-format
 msgid ""
 ", <xref linkend=\"postgis_srs_all\"/>, <xref linkend=\"postgis_srs_search\"/>"
 msgstr ""
+", <xref linkend=\"postgis_srs_all\"/>, <xref linkend=\"postgis_srs_search\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Return a metadata record for the requested authority and srid."
-msgstr ""
+msgstr "Повернути запис метаданих для запитуваного органу та srid."
 
 #. Tag: para
 #, no-c-format
@@ -43236,11 +43576,17 @@ msgid ""
 "corners of the area of usage, <varname>point_sw</varname> and "
 "<varname>point_ne</varname>."
 msgstr ""
+"Повертає запис метаданих для запитуваного <varname>auth_srid</varname> для "
+"заданого <varname>auth_name</varname>. Запис буде містити "
+"<varname>auth_name</varname>, <varname>auth_srid</varname>, <varname>srname</"
+"varname>, <varname>srtext</varname>, <varname>proj4text</varname> та кути "
+"області використання, <varname>point_sw</varname> і "
+"<varname>point_ne</varname>."
 
 #. Tag: para
 #, no-c-format
 msgid "Get the metadata for EPSG:3005."
-msgstr ""
+msgstr "Отримати метадані для EPSG:3005."
 
 #. Tag: refpurpose
 #, no-c-format
@@ -43248,11 +43594,13 @@ msgid ""
 "Return metadata records for every spatial reference system in the underlying "
 "Proj database."
 msgstr ""
+"Повернути записи метаданих для кожної системи просторових координат у "
+"базовій базі даних Proj."
 
 #. Tag: funcdef
 #, no-c-format
 msgid "setof record <function>postgis_srs_all</function>"
-msgstr ""
+msgstr "набір записів <function>postgis_srs_all</function>"
 
 #. Tag: para
 #, no-c-format
@@ -43263,17 +43611,23 @@ msgid ""
 "<varname>proj4text</varname>, and the corners of the area of usage, "
 "<varname>point_sw</varname> and <varname>point_ne</varname>."
 msgstr ""
+"Повертає набір усіх записів метаданих у базовій базі даних Proj. Записи "
+"матимуть <varname>auth_name</varname>, <varname>auth_srid</varname>, "
+"<varname>srname</varname>, <varname>srtext</varname>, <varname>proj4text</"
+"varname> та кути області використання, <varname>point_sw</varname> і "
+"<varname>point_ne</varname>."
 
 #. Tag: para
 #, no-c-format
 msgid "Get the first 10 metadata records from the Proj database."
-msgstr ""
+msgstr "Отримайте перші 10 записів метаданих з бази даних Proj."
 
 #. Tag: para
 #, no-c-format
 msgid ""
 ", <xref linkend=\"postgis_srs\"/>, <xref linkend=\"postgis_srs_search\"/>"
 msgstr ""
+", <xref linkend=\"postgis_srs\"/>, <xref linkend=\"postgis_srs_search\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -43281,6 +43635,8 @@ msgid ""
 "Return metadata records for projected coordinate systems that have areas of "
 "usage that fully contain the bounds parameter."
 msgstr ""
+"Повернути записи метаданих для проектованих систем координат, області "
+"використання яких повністю містять параметр меж."
 
 #. Tag: para
 #, no-c-format
@@ -43292,6 +43648,12 @@ msgid ""
 "varname>, and the corners of the area of usage, <varname>point_sw</varname> "
 "and <varname>point_ne</varname>."
 msgstr ""
+"Повертає набір записів метаданих для проекційних систем координат, області "
+"використання яких повністю містять параметр меж. Кожен запис матиме "
+"<varname>auth_name</varname>, <varname>auth_srid</varname>, <varname>srname</"
+"varname>, <varname>srtext</varname>, <varname>proj4text</varname> та кути "
+"області використання, <varname>point_sw</varname> і "
+"<varname>point_ne</varname>."
 
 #. Tag: para
 #, no-c-format
@@ -43299,11 +43661,14 @@ msgid ""
 "The search only looks for projected coordinate systems, and is intended for "
 "users to explore the possible systems that work for the extent of their data."
 msgstr ""
+"Пошук шукає тільки проекційні системи координат і призначений для того, щоб "
+"користувачі могли вивчити можливі системи, які підходять для обсягу їхніх "
+"даних."
 
 #. Tag: para
 #, no-c-format
 msgid "Search for projected coordinate systems in Louisiana."
-msgstr ""
+msgstr "Пошук проекційних систем координат у Луїзіані."
 
 #. Tag: para
 #, no-c-format
@@ -43311,16 +43676,18 @@ msgid ""
 "Scan a table for max extent and find projected coordinate systems that might "
 "suit."
 msgstr ""
+"Проскануйте таблицю для максимального охоплення та знайдіть відповідні "
+"системи координат."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"postgis_srs_all\"/>, <xref linkend=\"postgis_srs\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"postgis_srs_all\"/>, <xref linkend=\"postgis_srs\"/>"
 
 #. Tag: title
 #, no-c-format
 msgid "Trajectory Functions"
-msgstr ""
+msgstr "Функції траєкторії"
 
 #. Tag: para
 #, no-c-format
@@ -43330,11 +43697,15 @@ msgid ""
 "temporal data can be modeled by using relative times (such as the epoch) as "
 "the measure values."
 msgstr ""
+"Ці функції підтримують роботу з траєкторіями. Траєкторія — це лінійна "
+"геометрія зі зростаючими значеннями (значення M) на кожній координаті. "
+"Просторово-часові дані можна моделювати, використовуючи відносні часи ("
+"наприклад, епоху) як значення вимірювань."
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Tests if the geometry is a valid trajectory."
-msgstr ""
+msgstr "Перевіряє, чи є геометрія дійсною траєкторією."
 
 #. Tag: para
 #, no-c-format
@@ -43343,6 +43714,9 @@ msgid ""
 "represented as a <varname>LINESTRING</varname> with measures (M values). The "
 "measure values must increase from each vertex to the next."
 msgstr ""
+"Перевіряє, чи геометрія кодує дійсну траєкторію. Дійсна траєкторія "
+"представлена як <varname>LINESTRING</varname> з вимірами (значеннями M). "
+"Значення вимірів повинні збільшуватися від кожної вершини до наступної."
 
 #. Tag: para
 #, no-c-format
@@ -43350,11 +43724,13 @@ msgid ""
 "Valid trajectories are expected as input to spatio-temporal functions like "
 "<xref linkend=\"ST_ClosestPointOfApproach\"/>"
 msgstr ""
+"Очікуються дійсні траєкторії як вхідні дані для просторово-часових функцій, "
+"таких як <xref linkend=\"ST_ClosestPointOfApproach\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Returns a measure at the closest point of approach of two trajectories."
-msgstr ""
+msgstr "Повертає міру в найближчій точці зближення двох траєкторій."
 
 #. Tag: para
 #, no-c-format
@@ -43362,6 +43738,8 @@ msgid ""
 "Returns the smallest measure at which points interpolated along the given "
 "trajectories are the least distance apart."
 msgstr ""
+"Повертає найменшу величину, при якій точки, інтерпольовані вздовж заданих "
+"траєкторій, знаходяться на найменшій відстані одна від одної."
 
 #. Tag: para
 #, no-c-format
@@ -43370,6 +43748,9 @@ msgid ""
 "linkend=\"ST_IsValidTrajectory\"/>. Null is returned if the trajectories do "
 "not overlap in their M ranges."
 msgstr ""
+"Вхідні дані повинні бути дійсними траєкторіями, перевіреними за допомогою "
+"<xref linkend=\"ST_IsValidTrajectory\"/>. Якщо траєкторії не перетинаються в "
+"діапазонах M, повертається значення Null."
 
 #. Tag: para
 #, no-c-format
@@ -43377,6 +43758,8 @@ msgid ""
 "To obtain the actual points at the computed measure use <xref "
 "linkend=\"ST_LocateAlong\"/> ."
 msgstr ""
+"Щоб отримати фактичні точки за обчисленим виміром, використовуйте <xref "
+"linkend=\"ST_LocateAlong\"/>."
 
 #. Tag: para
 #, no-c-format
@@ -43384,13 +43767,15 @@ msgid ""
 ", <xref linkend=\"ST_DistanceCPA\"/>, <xref linkend=\"ST_LocateAlong\"/>, "
 "<xref linkend=\"ST_AddMeasure\"/>"
 msgstr ""
+", <xref linkend=\"ST_DistanceCPA\"/>, <xref linkend=\"ST_LocateAlong\"/>, "
+"<xref linkend=\"ST_AddMeasure\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid ""
 "Returns the distance between the closest point of approach of two "
 "trajectories."
-msgstr ""
+msgstr "Повертає відстань між найближчою точкою зближення двох траєкторій."
 
 #. Tag: para
 #, no-c-format
@@ -43398,6 +43783,8 @@ msgid ""
 "Returns the distance (in 2D) between two trajectories at their closest point "
 "of approach."
 msgstr ""
+"Повертає відстань (у 2D) між двома траєкторіями в точці їх найближчого "
+"зближення."
 
 #. Tag: para
 #, no-c-format
@@ -43405,6 +43792,8 @@ msgid ""
 ", <xref linkend=\"ST_ClosestPointOfApproach\"/>, <xref "
 "linkend=\"ST_AddMeasure\"/>, <xref linkend=\"geometry_distance_cpa\"/>"
 msgstr ""
+", <xref linkend=\"ST_ClosestPointOfApproach\"/>, <xref linkend="
+"\"ST_AddMeasure\"/>, <xref linkend=\"geometry_distance_cpa\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -43412,6 +43801,8 @@ msgid ""
 "Tests if the closest point of approach of two trajectories is within the "
 "specified distance."
 msgstr ""
+"Перевіряє, чи найближча точка зближення двох траєкторій знаходиться в межах "
+"заданої відстані."
 
 #. Tag: para
 #, no-c-format
@@ -43419,6 +43810,8 @@ msgid ""
 "Tests whether two moving objects have ever been closer than the specified "
 "distance."
 msgstr ""
+"Перевіряє, чи два рухомі об'єкти коли-небудь були ближче, ніж зазначена "
+"відстань."
 
 #. Tag: para
 #, no-c-format
@@ -43427,6 +43820,9 @@ msgid ""
 "linkend=\"ST_IsValidTrajectory\"/>. False is returned if the trajectories do "
 "not overlap in their M ranges."
 msgstr ""
+"Вхідні дані повинні бути дійсними траєкторіями, перевіреними за допомогою "
+"<xref linkend=\"ST_IsValidTrajectory\"/>. Якщо траєкторії не перетинаються в "
+"діапазонах M, повертається значення False."
 
 #. Tag: para
 #, no-c-format
@@ -43434,11 +43830,13 @@ msgid ""
 ", <xref linkend=\"ST_ClosestPointOfApproach\"/>, <xref "
 "linkend=\"ST_DistanceCPA\"/>, <xref linkend=\"geometry_distance_cpa\"/>"
 msgstr ""
+", <xref linkend=\"ST_ClosestPointOfApproach\"/>, <xref linkend="
+"\"ST_DistanceCPA\"/>, <xref linkend=\"geometry_distance_cpa\"/>"
 
 #. Tag: title
 #, no-c-format
 msgid "Affine Transformations"
-msgstr ""
+msgstr "Афінні перетворення"
 
 #. Tag: para
 #, no-c-format
@@ -43447,11 +43845,14 @@ msgid ""
 "xlink:href=\"https://en.wikipedia.org/wiki/Affine_transformation\">affine "
 "transformations</link>."
 msgstr ""
+"Ці функції змінюють положення та форму геометрій за допомогою <link "
+"xlink:href=\"https://en.wikipedia.org/wiki/Affine_transformation\">афінних "
+"перетворень</link>."
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Apply a 3D affine transformation to a geometry."
-msgstr ""
+msgstr "Застосувати афінне перетворення 3D до геометрії."
 
 #. Tag: para
 #, no-c-format
@@ -43459,6 +43860,8 @@ msgid ""
 "Applies a 3D affine transformation to the geometry to do things like "
 "translate, rotate, scale in one step."
 msgstr ""
+"Застосовує 3D афінне перетворення до геометрії, щоб виконати такі дії, як "
+"перенесення, обертання, масштабування за один крок."
 
 #. Tag: para
 #, no-c-format
@@ -43474,6 +43877,17 @@ msgid ""
 "z' = g*x + h*y + i*z + zoff</programlisting> All of the translate / scale "
 "functions below are expressed via such an affine transformation."
 msgstr ""
+"Версія 1: Виклик <programlisting>ST_Affine(geom, a, b, c, d, e, f, g, h, i, "
+"xoff, yoff, zoff) </programlisting>представляє матрицю перетворення "
+"<programlisting>/ a  b  c  xoff \\\n"
+"| d  e  f  yoff |\n"
+"| g  h  i  zoff |\n"
+"\\ 0  0  0     1 /</programlisting> і вершини перетворюються наступним чином:"
+"  <programlisting>x' = a*x + b*y + c*z + xoff\n"
+"y' = d*x + e*y + f*z + yoff\n"
+"z' = g*x + h*y + i*z + zoff</programlisting> Всі функції перетворення/"
+"масштабування, наведені нижче, виражаються за допомогою такого афінного "
+"перетворення."
 
 #. Tag: para
 #, no-c-format
@@ -43489,11 +43903,21 @@ msgid ""
 "y' = d*x + e*y + yoff\n"
 "z' = z </programlisting> This method is a subcase of the 3D method above."
 msgstr ""
+"Версія 2: Застосовує 2D афінне перетворення до геометрії. Виклик "
+"<programlisting>ST_Affine(geom, a, b, d, e, xoff, yoff)</programlisting> "
+"представляє матрицю перетворення.  <programlisting>/  a  b  0  xoff  \\"
+"       /  a  b  xoff  \\\n"
+"|  d  e  0  yoff  | rsp.  |  d  e  yoff  |\n"
+"|  0  0  1     0  |       \\  0  0     1  /\n"
+"\\  0  0  0     1  /</programlisting> і вершини трансформуються наступним "
+"чином: <programlisting>x' = a*x + b*y + xoff\n"
+"y' = d*x + e*y + yoff\n"
+"z' = z </programlisting>Цей метод є підвидом вищезазначеного 3D-методу."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 1.1.2. Name changed from Affine to ST_Affine in 1.2.2"
-msgstr ""
+msgstr "Доступність: 1.1.2. Назва змінена з Affine на ST_Affine у версії 1.2.2"
 
 #. Tag: para
 #, no-c-format
@@ -43501,11 +43925,13 @@ msgid ""
 ", <xref linkend=\"ST_Scale\"/>, <xref linkend=\"ST_Translate\"/>, <xref "
 "linkend=\"ST_TransScale\"/>"
 msgstr ""
+", <xref linkend=\"ST_Scale\"/>, <xref linkend=\"ST_Translate\"/>, <xref "
+"linkend=\"ST_TransScale\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry about an origin point."
-msgstr ""
+msgstr "Обертає геометрію навколо точки початку координат."
 
 #. Tag: para
 #, no-c-format
@@ -43515,6 +43941,10 @@ msgid ""
 "coordinates. If the origin is not specified, the geometry is rotated about "
 "POINT(0 0)."
 msgstr ""
+"Обертає геометрію rotRadians проти годинникової стрілки навколо точки "
+"початку координат. Початок обертання можна вказати як геометрію POINT або як "
+"координати x та y. Якщо початок координат не вказано, геометрія обертається "
+"навколо POINT(0 0)."
 
 #. Tag: para
 #, no-c-format
@@ -43522,11 +43952,12 @@ msgid ""
 "Enhanced: 2.0.0 additional parameters for specifying the origin of rotation "
 "were added."
 msgstr ""
+"Покращено: 2.0.0 додано додаткові параметри для визначення початку обертання."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 1.1.2. Name changed from Rotate to ST_Rotate in 1.2.2"
-msgstr ""
+msgstr "Доступність: 1.1.2. Назва змінена з Rotate на ST_Rotate у версії 1.2.2"
 
 #. Tag: para
 #, no-c-format
@@ -43534,16 +43965,18 @@ msgid ""
 ", <xref linkend=\"ST_RotateX\"/>, <xref linkend=\"ST_RotateY\"/>, <xref "
 "linkend=\"ST_RotateZ\"/>"
 msgstr ""
+", <xref linkend=\"ST_RotateX\"/>, <xref linkend=\"ST_RotateY\"/>, <xref "
+"linkend=\"ST_RotateZ\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry about the X axis."
-msgstr ""
+msgstr "Обертає геометрію навколо осі X."
 
 #. Tag: para
 #, no-c-format
 msgid "Rotates a geometry geomA - rotRadians about the X axis."
-msgstr ""
+msgstr "Обертає геометрію geomA - rotRadians навколо осі X."
 
 #. Tag: para
 #, no-c-format
@@ -43552,26 +43985,30 @@ msgid ""
 "<code>ST_Affine(geomA, 1, 0, 0, 0, cos(rotRadians), -sin(rotRadians), 0, "
 "sin(rotRadians), cos(rotRadians), 0, 0, 0)</code>."
 msgstr ""
+"<code>ST_RotateX(geomA, rotRadians)</code> є скороченим варіантом "
+"<code>ST_Affine(geomA, 1, 0, 0, 0, cos(rotRadians), -sin(rotRadians), 0, "
+"sin(rotRadians), cos(rotRadians), 0, 0, 0)</code>."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 1.1.2. Name changed from RotateX to ST_RotateX in 1.2.2"
 msgstr ""
+"Доступність: 1.1.2. Назва змінена з RotateX на ST_RotateX у версії 1.2.2"
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_RotateY\"/>, <xref linkend=\"ST_RotateZ\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_RotateY\"/>, <xref linkend=\"ST_RotateZ\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry about the Y axis."
-msgstr ""
+msgstr "Обертає геометрію навколо осі Y."
 
 #. Tag: para
 #, no-c-format
 msgid "Rotates a geometry geomA - rotRadians about the y axis."
-msgstr ""
+msgstr "Обертає геометрію geomA - rotRadians навколо осі y."
 
 #. Tag: para
 #, no-c-format
@@ -43580,31 +44017,35 @@ msgid ""
 "<code>ST_Affine(geomA, cos(rotRadians), 0, sin(rotRadians), 0, 1, 0, -"
 "sin(rotRadians), 0, cos(rotRadians), 0, 0, 0)</code>."
 msgstr ""
+"<code>ST_RotateY(geomA, rotRadians)</code> є скороченим варіантом "
+"<code>ST_Affine(geomA, cos(rotRadians), 0, sin(rotRadians), 0, 1, 0, "
+"-sin(rotRadians), 0, cos(rotRadians), 0, 0, 0)</code>."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 1.1.2. Name changed from RotateY to ST_RotateY in 1.2.2"
 msgstr ""
+"Доступність: 1.1.2. Назва змінена з RotateY на ST_RotateY у версії 1.2.2."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_RotateX\"/>, <xref linkend=\"ST_RotateZ\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_RotateX\"/>, <xref linkend=\"ST_RotateZ\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Rotates a geometry about the Z axis."
-msgstr ""
+msgstr "Обертає геометрію навколо осі Z."
 
 #. Tag: para
 #, no-c-format
 msgid "Rotates a geometry geomA - rotRadians about the Z axis."
-msgstr ""
+msgstr "Обертає геометрію geomA - rotRadians навколо осі Z."
 
 #. Tag: para
 #, no-c-format
 msgid "This is a synonym for ST_Rotate"
-msgstr ""
+msgstr "Це синонім ST_Rotate"
 
 #. Tag: para
 #, no-c-format
@@ -43613,21 +44054,25 @@ msgid ""
 "ST_Affine(geomA, cos(rotRadians), -sin(rotRadians), 0, sin(rotRadians), "
 "cos(rotRadians), 0, 0, 0, 1, 0, 0, 0)</code>."
 msgstr ""
+"<code>ST_RotateZ(geomA, rotRadians)</code> є скороченим варіантом "
+"<code>SELECT ST_Affine(geomA, cos(rotRadians), -sin(rotRadians), 0, "
+"sin(rotRadians), cos(rotRadians), 0, 0, 0, 1, 0, 0, 0)</code>."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 1.1.2. Name changed from RotateZ to ST_RotateZ in 1.2.2"
 msgstr ""
+"Доступність: 1.1.2. Назва змінена з RotateZ на ST_RotateZ у версії 1.2.2"
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_RotateX\"/>, <xref linkend=\"ST_RotateY\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_RotateX\"/>, <xref linkend=\"ST_RotateY\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Scales a geometry by given factors."
-msgstr ""
+msgstr "Масштабує геометрію за заданими коефіцієнтами."
 
 #. Tag: para
 #, no-c-format
@@ -43635,6 +44080,8 @@ msgid ""
 "Scales the geometry to a new size by multiplying the ordinates with the "
 "corresponding factor parameters."
 msgstr ""
+"Масштабує геометрію до нового розміру, помножуючи ординати на відповідні "
+"параметри коефіцієнтів."
 
 #. Tag: para
 #, no-c-format
@@ -43644,6 +44091,11 @@ msgid ""
 "supported dimensions. Missing dimensions in the <varname>factor</varname> "
 "point are equivalent to no scaling the corresponding dimension."
 msgstr ""
+"Версія, що приймає геометрію як параметр <varname>factor</varname>, дозволяє "
+"передавати 2d, 3dm, 3dz або 4d точку для встановлення коефіцієнта "
+"масштабування для всіх підтримуваних вимірів. Відсутні виміри в точці "
+"<varname>factor</varname> еквівалентні відсутності масштабування "
+"відповідного виміру."
 
 #. Tag: para
 #, no-c-format
@@ -43654,11 +44106,16 @@ msgid ""
 "place relative to the actual origin, so all coordinates are just multiplied "
 "by the scale factor."
 msgstr ""
+"Варіант з трьома геометріями дозволяє передавати «хибну точку відліку» для "
+"масштабування. Це дозволяє здійснювати «масштабування на місці», наприклад, "
+"використовуючи центроїд геометрії як хибну точку відліку. Без хибної точки "
+"відліку масштабування відбувається відносно фактичної точки відліку, тому "
+"всі координати просто множаться на коефіцієнт масштабування."
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 1.1.0."
-msgstr ""
+msgstr "Доступність: 1.1.0."
 
 #. Tag: para
 #, no-c-format
@@ -43666,6 +44123,8 @@ msgid ""
 "Enhanced: 2.2.0 support for scaling all dimension (<varname>factor</varname> "
 "parameter) was introduced."
 msgstr ""
+"Покращено: 2.2.0 додано підтримку масштабування всіх розмірів (параметр "
+"<varname>factor</varname>)."
 
 #. Tag: para
 #, no-c-format
@@ -43673,16 +44132,18 @@ msgid ""
 "Enhanced: 2.5.0 support for scaling relative to a local origin "
 "(<varname>origin</varname> parameter) was introduced."
 msgstr ""
+"Покращено: 2.5.0 додано підтримку масштабування відносно локального початку "
+"координат (параметр <varname>origin</varname>)."
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_TransScale\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_TransScale\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Translates a geometry by given offsets."
-msgstr ""
+msgstr "Перетворює геометрію за заданими зміщеннями."
 
 #. Tag: para
 #, no-c-format
@@ -43691,36 +44152,40 @@ msgid ""
 "delta z units. Units are based on the units defined in spatial reference "
 "(SRID) for this geometry."
 msgstr ""
+"Повертає нову геометрію, координати якої зміщені на величину delta x, delta "
+"y, delta z одиниць. Одиниці виміру базуються на одиницях, визначених у "
+"просторовій системі координат (SRID) для цієї геометрії."
 
 #. Tag: para
 #, no-c-format
 msgid "Move a point 1 degree longitude"
-msgstr ""
+msgstr "Перемістити точку на 1 градус довготи"
 
 #. Tag: para
 #, no-c-format
 msgid "Move a linestring 1 degree longitude and 1/2 degree latitude"
-msgstr ""
+msgstr "Перемістіть лінію на 1 градус довготи та 1/2 градуса широти"
 
 #. Tag: para
 #, no-c-format
 msgid "Move a 3d point"
-msgstr ""
+msgstr "Перемістити 3D-точку"
 
 #. Tag: para
 #, no-c-format
 msgid "Move a curve and a point"
-msgstr ""
+msgstr "Переміщення кривої та точки"
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_AsText\"/>, <xref linkend=\"ST_GeomFromText\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_AsText\"/>, <xref linkend=\"ST_GeomFromText\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Translates and scales a geometry by given offsets and factors."
 msgstr ""
+"Перетворює та масштабує геометрію за заданими зміщеннями та коефіцієнтами."
 
 #. Tag: para
 #, no-c-format
@@ -43728,6 +44193,8 @@ msgid ""
 "Translates the geometry using the deltaX and deltaY args, then scales it "
 "using the XFactor, YFactor args, working in 2D only."
 msgstr ""
+"Перетворює геометрію за допомогою аргументів deltaX і deltaY, а потім "
+"масштабує її за допомогою аргументів XFactor і YFactor, працюючи тільки в 2D."
 
 #. Tag: para
 #, no-c-format
@@ -43736,11 +44203,14 @@ msgid ""
 "hand for <code>ST_Affine(geomA, XFactor, 0, 0, 0, YFactor, 0, 0, 0, 1, "
 "deltaX*XFactor, deltaY*YFactor, 0)</code>."
 msgstr ""
+"<code>ST_TransScale(geomA, deltaX, deltaY, XFactor, YFactor)</code> є "
+"скороченим варіантом <code>ST_Affine(geomA, XFactor, 0, 0, 0, YFactor, 0, 0, "
+"0, 1, deltaX*XFactor, deltaY*YFactor, 0)</code>."
 
 #. Tag: title
 #, no-c-format
 msgid "Troubleshooting Functions"
-msgstr ""
+msgstr "Функції усунення несправностей"
 
 #. Tag: para
 #, no-c-format
@@ -43749,11 +44219,14 @@ msgid ""
 "data. They are only needed if the geometry data is corrupted in some way, "
 "which should never happen under normal circumstances."
 msgstr ""
+"Ці функції є утилітами для усунення несправностей та відновлення "
+"геометричних даних. Вони потрібні лише у випадку, якщо геометричні дані "
+"якимось чином пошкоджені, що за звичайних обставин не повинно траплятися."
 
 #. Tag: title
 #, no-c-format
 msgid "PostGIS Geometry/Geography/Box Data Types"
-msgstr ""
+msgstr "Типи даних PostGIS Geometry/Geography/Box"
 
 #. Tag: para
 #, no-c-format
@@ -43761,6 +44234,8 @@ msgid ""
 "This section lists the custom PostgreSQL data types installed by PostGIS to "
 "represent spatial data."
 msgstr ""
+"У цьому розділі перелічено власні типи даних PostgreSQL, встановлені PostGIS "
+"для представлення просторових даних."
 
 #. Tag: para
 #, no-c-format
@@ -43774,6 +44249,14 @@ msgid ""
 "automatic conversion of a function argument to a type supported by the "
 "function."
 msgstr ""
+"Кожен тип даних описує свою поведінку при перетворенні типів. <link "
+"xlink:href=\"https://www.postgresql.org/docs/current/sql-expressions.html"
+"#SQL-SYNTAX-TYPE-CASTS\">Перетворення типів</link> перетворює значення "
+"одного типу даних в інший тип. PostgreSQL дозволяє визначати поведінку "
+"перетворення для власних типів, а також функції, що використовуються для "
+"перетворення значень типів. Перетворення можуть мати <emphasis role=\"bold\""
+">автоматичну</emphasis> поведінку, що дозволяє автоматично перетворювати "
+"аргумент функції на тип, який підтримується функцією."
 
 #. Tag: para
 #, no-c-format
