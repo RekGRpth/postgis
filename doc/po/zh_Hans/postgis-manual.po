@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-13 16:23+0000\n"
-"PO-Revision-Date: 2025-07-28 08:47+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-12-26 07:47+0000\n"
+"Last-Translator: Wangdapeng <wangdapeng20191008@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://weblate.osgeo.org/projects/"
 "postgis/postgis-manual/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -54,6 +54,11 @@ msgid ""
 "You can also use the more cross-platform approach of setting the "
 "corresponding <xref linkend=\"PostGIS_GUC\"/>."
 msgstr ""
+"Out-of-db 栅格（就是放在数据库外部的 raster）和所有 raster "
+"驱动默认都是禁用的。要重新启用它们，需要在服务器环境里设置环境变量 "
+"<varname>POSTGIS_GDAL_ENABLED_DRIVERS</varname> 和 "
+"<varname>POSTGIS_ENABLE_OUTDB_RASTERS</varname>。你也可以采用更跨平台的方式，"
+"直接设置对应的 <xref linkend=\"PostGIS_GUC\"/>。"
 
 #. Tag: para
 #, no-c-format
@@ -93,6 +98,10 @@ msgid ""
 "<replaceable>CLUSTER</replaceable>/environment</filename> where the "
 "placeholders refer to the PostgreSQL major version and cluster name."
 msgstr ""
+"设置环境变量的方式会因操作系统而异。如果是在 Ubuntu 或 Debian 上通过 apt-"
+"postgresql 安装的 PostgreSQL，推荐的方式是编辑<filename>/etc/postgresql/<repl"
+"aceable>MAJOR</replaceable>/<replaceable>CLUSTER</replaceable>/environment</"
+"filename> 文件，其中占位符分别表示 PostgreSQL 的主版本号和集群名称。"
 
 #. Tag: para
 #, no-c-format
@@ -131,7 +140,8 @@ msgstr "使用扩展（EXTENSION）启用空间数据库"
 msgid ""
 "If you have compiled and installed the extensions/postgis modules, you can "
 "turn a database into a spatial one using the EXTENSION mechanism."
-msgstr ""
+msgstr "如果你已经编译并安装好了 extensions/postgis 模块，就可以通过 EXTENSION "
+"机制把一个普通数据库变成空间数据库。"
 
 #. Tag: para
 #, no-c-format
@@ -273,7 +283,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Soft upgrade using extensions"
-msgstr ""
+msgstr "使用 EXTENSION 软升级"
 
 #. Tag: para
 #, no-c-format
@@ -282,6 +292,8 @@ msgid ""
 "upgrade using extensions as well. Doing a minor upgrade with extensions is "
 "fairly painless."
 msgstr ""
+"如果你最初是用 EXTENSION 的方式安装 PostGIS，那升级的时候也必须继续用 "
+"EXTENSION 的方式。用 EXTENSION 做小版本升级一般都比较省心，过程也挺简单。"
 
 #. Tag: para
 #, no-c-format
@@ -289,6 +301,8 @@ msgid ""
 "Use the <xref linkend=\"PostGIS_Extensions_Upgrade\"/> function to upgrade "
 "to the latest version you have installed."
 msgstr ""
+"使用 <xref linkend=\"PostGIS_Extensions_Upgrade\"/> 函数可以把 PostGIS "
+"升级到你当前已安装的最新版本。"
 
 #. Tag: para
 #, no-c-format
@@ -299,6 +313,10 @@ msgid ""
 "<varname>postgis_raster</varname> objects are folded back into the main "
 "extension."
 msgstr ""
+"如果你要升级的数据库还在跑 PostGIS 2.5，先执行一次 <command>ALTER "
+"EXTENSION</command>，然后再调用 "
+"<function>postgis_extensions_upgrade()</function>，这样可以把旧的 "
+"<varname>postgis_raster</varname> 遗留对象合并回主扩展，避免残留在外面。"
 
 #. Tag: para
 #, no-c-format
@@ -369,7 +387,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Soft upgrade without extensions"
-msgstr ""
+msgstr "不使用 EXTENSION 软升级"
 
 #. Tag: para
 #, no-c-format
@@ -379,6 +397,9 @@ msgid ""
 "linkend=\"hard_upgrade\">HARD UPGRADE</link> into a database created with "
 "extensions and migrate your data there."
 msgstr ""
+"扩展是 PostGIS 官方支持的安装方式。如果你现在还依赖非打包安装，"
+"那就需要执行一次 <link linkend=\"hard_upgrade\">HARD "
+"UPGRADE</link>，在一个用扩展方式创建的新库里完成升级，然后把数据迁移过去。"
 
 #. Tag: title
 #, no-c-format
@@ -620,6 +641,9 @@ msgid ""
 "<code>postgresql.conf</code> or <code>postgresql.auto.conf</code> by using "
 "the <code>ALTER SYSTEM</code> command."
 msgstr ""
+"可以通过 <code>ALTER SYSTEM</code> 命令在服务器层面设置 PostgreSQL 配置，"
+"这样就不用去改 <code>postgresql.conf</code> 或 <code>postgresql.auto.conf</"
+"code> 。"
 
 #. Tag: para
 #, no-c-format
@@ -658,6 +682,8 @@ msgid ""
 "they are in an inherited hierarchy and avoids paying the planner penalty "
 "otherwise."
 msgstr ""
+"这一般用在分区表场景。默认值 \"partition\" 的含义是：只有当表位于继承层级结构"
+"里时，优化器才会去做约束检查；否则就不分析，避免白白增加优化器的开销。"
 
 #. Tag: link
 #, no-c-format
@@ -667,7 +693,7 @@ msgstr "共享缓冲区"
 #. Tag: para
 #, no-c-format
 msgid "Default: ~128MB"
-msgstr ""
+msgstr "Default: ~128MB"
 
 #. Tag: para
 #, no-c-format
@@ -686,6 +712,9 @@ msgid ""
 "and therefore also bounds how many workers can participate in parallel "
 "queries."
 msgstr ""
+"<link xlink:href=\"https://www.postgresql.org/docs/current/static/runtime-"
+"config-resource.html#GUC-MAX-WORKER-PROCESSES\">max_worker_processes</link> "
+"用来控制服务器可用的后台进程数量上限，限制能参与并行查询的工作进程数量。"
 
 #. Tag: para
 #, no-c-format
@@ -782,6 +811,12 @@ msgid ""
 "sure to bump up <code>max_worker_processes</code> to at least as high as "
 "this number."
 msgstr ""
+"PostgreSQL / PostGIS "
+"的并行查询机制会根据这个设置来决定一个执行计划最多能申请多少个并行工作进程。"
+"只要把它设成大于 0，像 <code>ST_Intersects</code> "
+"这类关系函数的就能利用多个进程来跑，速度有机会提升到原来的两倍以上。"
+"如果你的机器 CPU 富余，建议把这个值调到你拥有的处理器数量。同时要把 "
+"<code>max_worker_processes</code> 也一起调高，至少不小于这个数。"
 
 #. Tag: para
 #, no-c-format
@@ -1385,7 +1420,7 @@ msgstr "邮政类型输入令牌"
 #. Tag: para
 #, no-c-format
 msgid "(28). A 5 digit number. Identifies a ZIP code"
-msgstr ""
+msgstr "(28). 一个5位数字，用来标识 ZIP Code"
 
 #. Tag: para
 #, no-c-format
@@ -1510,6 +1545,8 @@ msgid ""
 "(token number \"13\"). (SADS elements \"ZIP CODE\" , \"PLUS 4\" ). This "
 "attribute is used for both the US ZIP and the Canadian postal codes."
 msgstr ""
+"(token number \"13\"). (SADS elements \"ZIP CODE\" , \"PLUS 4\" ). "
+"这个属性同时用于美国 ZIP 和 加拿大邮政编码。"
 
 #. Tag: para
 #, no-c-format
@@ -1974,6 +2011,8 @@ msgid ""
 "located in the <varname>extras/history_table</varname> directory of the "
 "PostGIS source tree."
 msgstr ""
+"<varname>history_table</varname> 扩展是用 plpgsql 写的，位于PostGIS源码的 "
+"<varname>extras/history_table</varname> 目录下。"
 
 #. Tag: para
 #, no-c-format
@@ -2126,6 +2165,9 @@ msgid ""
 "suffixes, states, various control tables for managing data load, and "
 "skeleton base tables from which all the TIGER-loaded tables inherit."
 msgstr ""
+"这个脚本会创建一个名为 <varname>tiger</varname> 的 schema，用来存放所有 "
+"TIGER 相关的函数、可复用的查找数据、用于管理数据加载的控制表，以及所有 TIGER "
+"加载表继承的基础骨架表。"
 
 #. Tag: para
 #, no-c-format
@@ -2139,6 +2181,13 @@ msgid ""
 "<varname>faces</varname>, <varname>edges</varname>, etc located in the "
 "<varname>tiger</varname> schema."
 msgstr ""
+"会创建另一个名为 <varname>tiger_data</varname> 的 schema，用来存放加载器从 "
+"Census 站点下载并导入数据库的各州普查数据。在当前模型下，每一批州的数据表都会"
+"带上州代码前缀，比如 <varname>ma_addr</varname>、<varname>ma_edges</varname> "
+"等，同时通过约束保证这些表里只存放对应州的数据。每张这类表都会继承自 "
+"<varname>tiger</varname> schema 下的基础表 "
+"<varname>addr</varname>、<varname>faces</varname>、<varname>edges</varname> "
+"等。"
 
 #. Tag: para
 #, no-c-format
@@ -2149,6 +2198,10 @@ msgid ""
 "different schema for each state, as long as all the tables inherit from the "
 "tables in the <varname>tiger</varname> schema."
 msgstr ""
+"所有地理编码函数只会引用那些基础表，所以数据所在的 schema 并不必须叫做 "
+"<varname>tiger_data</varname>，数据也完全可以继续拆分到其他 schema —— "
+"比如给每个州单独一个 schema。只要这些表都继承自 <varname>tiger</varname> "
+"schema 里的基础表，就不会有问题。"
 
 #. Tag: para
 #, no-c-format
@@ -2171,6 +2224,12 @@ msgid ""
 "have data from tiger_2010 and want to replace with tiger_2015, refer to "
 "<xref linkend=\"upgrade_tiger_geocoder\"/>"
 msgstr ""
+"如果你在用 TIGER Geocoder (tiger_2010)，可以使用 extras/tiger 目录下的 "
+"upgrade_geocoder.bat / .sh 脚本来升级相关脚本。<varname>tiger_2010</varname> "
+"和 <varname>tiger_2011+</varname> 之间的一个主要变化是：<varname>county</"
+"varname> 和 <varname>state</varname> "
+"表不再按州拆分。如果你已经有数据并且想替换为tiger_2015，请参考 <xref linkend="
+"\"upgrade_tiger_geocoder\"/>"
 
 #. Tag: para
 #, no-c-format
@@ -2178,6 +2237,8 @@ msgid ""
 "You can install the TIGER Geocoder with the PostgreSQL extension model. "
 "Refer to <xref linkend=\"install_tiger_geocoder_extension\"/> for details."
 msgstr ""
+"你可以用 PostgreSQL 的扩展方式安装 TIGER Geocoder，具体步骤请参考 <xref "
+"linkend=\"install_tiger_geocoder_extension\"/>。"
 
 #. Tag: para
 #, no-c-format
@@ -2214,7 +2275,8 @@ msgstr ""
 msgid ""
 "The <varname>reverse_geocode</varname> function is useful for deriving the "
 "street address and cross streets of a GPS location."
-msgstr ""
+msgstr "<varname>reverse_geocode</varname> 函数可用于从 GPS "
+"坐标反查出街道地址以及附近的交叉路口信息。"
 
 #. Tag: para
 #, no-c-format
@@ -2256,7 +2318,8 @@ msgstr ""
 msgid ""
 "There are a couple other open source geocoders for PostGIS, that unlike the "
 "TIGER Geocoder have the advantage of multi-country geocoding support"
-msgstr ""
+msgstr "还有其他几个开源的 PostGIS 地理编码器，不同于 TIGER "
+"Geocoder，它们的优势是支持多国家的地理编码"
 
 #. Tag: para
 #, no-c-format
@@ -2270,6 +2333,13 @@ msgid ""
 "interface like the TIGER Geocoder, or if a good deal of the logic is "
 "implemented in the web interface."
 msgstr ""
+"<link xlink:href=\"http://wiki.openstreetmap.org/wiki/Nominatim\">Nominatim</"
+"link> 使用 OpenStreetMap 的地名词典格式数据，需要配合 osm2pgsql 来加载数据，"
+"同时依赖 PostgreSQL 和 PostGIS。它被封装成一个 Web Service 接口，"
+"设计上就是面向 Web 调用的。和 TIGER Geocoder "
+"一样，它也同时具备正向地理编码和反向地理编码的能力。从现有文档来看，"
+"还不清楚它是否像 TIGER Geocoder 那样提供纯 SQL 接口，"
+"还是有相当一部分逻辑落在了 Web 层。"
 
 #. Tag: para
 #, no-c-format
@@ -2282,6 +2352,12 @@ msgid ""
 "cross-platform and also has a reverse geocoder among some other neat "
 "features."
 msgstr ""
+"<link xlink:href=\"https://www.gisgraphy.com/\">GIS Graphy</link> 也可以配合 "
+"PostGIS 使用，和 Nominatim 一样基于 OpenStreetMap (OSM) "
+"数据，并整合了其他数据源。它自带 OSM 数据加载工具，和 Nominatim "
+"类似，不局限于美国，具备多国家地理编码能力。整体运行方式也是 Web Service，"
+"依赖 Java 1.5、Servlet "
+"应用、Solr，跨平台可部署，并且也提供反向地理编码等一些不错的扩展功能。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -2729,6 +2805,8 @@ msgid ""
 "scripts, rerun it on the states you have already processed to get these "
 "additional tables."
 msgstr ""
+"这个逻辑已经包含在内了，但如果你之前是用旧版脚本安装的 TIGER "
+"Geocoder，建议对已经处理过的那些州重新跑一遍脚本，以生成这些新增的表。"
 
 #. Tag: para
 #, no-c-format
@@ -2885,13 +2963,16 @@ msgid ""
 "when enabled, zcta5 data is loaded as a single table called zcta5_all as "
 "part of the nation script load."
 msgstr ""
+"Enhanced: 2.4.1 修复了 ZIP Code 5 分析区（zcta5）的加载步骤；启用后，zcta5 "
+"数据会在全国级别脚本加载过程中被导入为单表zcta5_all。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "If you want ZIP Code 5 tabulation area (zcta5) to be included in your nation "
 "script load, do the following:"
-msgstr ""
+msgstr "如果你希望在全国级别的脚本加载过程中把 ZIP Code 5 "
+"分析区（zcta5）一起导入进去，按下面步骤操作即可："
 
 #. Tag: para
 #, no-c-format
@@ -3114,7 +3195,7 @@ msgstr ""
 msgid ""
 "<varname>zip4</varname> last 4 digits of a 9 digit ZIP Code. Availability: "
 "PostGIS 2.4.0."
-msgstr ""
+msgstr "<varname>zip4</varname> 9 位 ZIP Code 中的后 4 位。可用版本：PostGIS 2.4.0。"
 
 #. Tag: para
 #, no-c-format
@@ -3639,6 +3720,9 @@ msgid ""
 "functions, fixed known usability issues, documented the features and "
 "functions, added new functionality, and improved SQL-MM compliance."
 msgstr ""
+"PostGIS 的 topology 模块其实早就存在了，过去并不总在官方文档里。经过一次大范"
+"围清理后，废弃函数被移除、已知的易用性问题得到修复、功能和接口都补上了文档说"
+"明，同时还加入了新特性，并进一步提升了对 SQL-MM 标准的兼容度。"
 
 #. Tag: para
 #, no-c-format
@@ -3670,11 +3754,14 @@ msgid ""
 "without-topology configure option at build time as described in <xref "
 "linkend=\"postgis_installation\"/>"
 msgstr ""
+"Topology 支持默认是启用的，如果在编译时指定 --without-topology "
+"这个配置选项，就可以关闭该功能，具体可参考 <xref linkend="
+"\"postgis_installation\"/>"
 
 #. Tag: title
 #, no-c-format
 msgid "Topology Primitive Tables"
-msgstr ""
+msgstr "拓扑基础表"
 
 #. Tag: para
 #, no-c-format
@@ -3690,6 +3777,14 @@ msgid ""
 "therefore appear twice—once for each orientation—when it belongs to two "
 "faces."
 msgstr ""
+"任意拓扑结构的核心原始要素会存放在 "
+"<varname>edge_data</varname>、<varname>node</varname> 和 <varname>face</"
+"varname> 这几个表中，它们位于由 <xref linkend=\"CreateTopology\"/> 创建的 "
+"schema 里。<varname>edge_data</varname> 表中的每一行代表一条有向边：记录了从 "
+"<varname>start_node</varname> 指向 <varname>end_node</varname> 的有向曲线，以"
+"及该方向左侧相邻的面（<varname>left_face</varname>）和右侧相邻的面（<varname>"
+"right_face</varname>）的标识。当一段几何线段属于两个面时，它可能会出现两次——"
+"分别对应两种方向。"
 
 #. Tag: para
 #, no-c-format
@@ -3701,6 +3796,11 @@ msgid ""
 "the stored orientation has to be followed as-is or reversed when traversing. "
 "Formally, the following rules hold for every edge <varname>e</varname>:"
 msgstr ""
+"<varname>next_left_edge</varname> 和 <varname>next_right_edge</varname> 两个"
+"列用来补全有向边的方向信息，描述了沿着某个面的边界继续走下去的路径。它们存的"
+"是带符号整数，绝对值代表下一条有向边的 "
+"ID，符号用来指示遍历时是按记录方向走还是反向走。简单说，对任意边 "
+"<varname>e</varname>，都有如下规则："
 
 #. Tag: para
 #, no-c-format
@@ -3712,6 +3812,11 @@ msgid ""
 "negative the referenced edge must be followed backwards so that the shared "
 "face remains on the walker’s left."
 msgstr ""
+"<varname>abs(next_left_edge)</varname> 的绝对值是继续沿着 <varname>e</"
+"varname> 左侧那个面的边界走时，会到达的下一条边的 ID。如果这个值是正数，"
+"表示从 <varname>e</varname> 的终点节点出发，沿着被引用边记录的方向继续前进；"
+"如果是负数，则意味着遍历那条被引用边时需要反向走，这样才能保证共享的那个面始"
+"终保持在行进方向的左侧。"
 
 #. Tag: para
 #, no-c-format
@@ -3723,6 +3828,10 @@ msgid ""
 "instructs to traverse the referenced edge in reverse, starting from its end "
 "node, so that the right-hand face is preserved."
 msgstr ""
+"<varname>abs(next_right_edge)</varname> 的绝对值同理用于沿着 <varname>e</"
+"varname> 右侧那个面的边界继续遍历。如果值是正数，表示从 <varname>e</varname> "
+"的终点节点出发，按被引用边记录的方向前进；如果是负数，则需要从那条被引用边的"
+"终点节点反向走，这样才能确保右侧的那个面始终保持在行进方向的右侧。"
 
 #. Tag: para
 #, no-c-format
@@ -3733,6 +3842,10 @@ msgid ""
 "<varname>abs_next_right_edge</varname> columns exposed by the <varname>edge</"
 "varname> view are convenience projections of these absolute values."
 msgstr ""
+"值为 0 表示该边在对应那一侧是悬空的（比如一条孤立的边，它的相邻面就是通用面 "
+"<varname>0</varname>）。<varname>edge</varname> 视图里提供的 "
+"<varname>abs_next_left_edge</varname> 和 <varname>abs_next_right_edge</"
+"varname> 列，则是对这些绝对值做的便捷投影，方便直接使用。"
 
 #. Tag: para
 #, no-c-format
@@ -3750,6 +3863,17 @@ msgid ""
 "linkend=\"TopologyPolygonize\"/>) may intentionally leave the fields unset, "
 "which is why the documentation flags their behaviour explicitly."
 msgstr ""
+"这种表示法属于双向连接边表的一种变体，被大量拓扑例程所利用。像 <xref linkend="
+"\"GetRingEdges\"/>、<xref linkend=\"ValidateTopology\"/> "
+"这类函数依赖这一结构来重建面的边界、诊断拓扑不一致问题——"
+"因此在校验时才会出现类似 “invalid next_left_edge” 或 “invalid "
+"next_right_edge” 这样的提示。构造函数（例如 <xref linkend=\"AddEdge\"/>）"
+"会为 <varname>next_*</varname> "
+"这些属性做初始化，默认是指向自身的简单引用；而编辑类操作（如 <xref linkend="
+"\"ST_AddEdgeModFace\"/>、<xref linkend=\"ST_RemEdgeModFace\""
+"/>）会在边插入或删除时即时更新这些链接。某些批量操作（例如 <xref linkend="
+"\"TopologyPolygonize\""
+"/>）可能会有意不设置这些字段，所以在文档里也会特别标注它们的行为。"
 
 #. Tag: title
 #, no-c-format
@@ -4211,7 +4335,8 @@ msgstr ""
 msgid ""
 "Fixes topogeometry corruption caused by upgrade to postgis_topology 3.6.0 "
 "and higher"
-msgstr ""
+msgstr "修复由升级到 postgis_topology 3.6.0 及以上版本引起的 topogeometry "
+"数据损坏问题"
 
 #. Tag: para
 #, no-c-format
@@ -4221,16 +4346,19 @@ msgid ""
 "topogeometries created before the upgrade. This function fixes this "
 "corruption in affected tables."
 msgstr ""
+"从 PostGIS topology 版本 <3.6.0 升级到 >3.6.0+ 时，topogeometry "
+"列的定义发生了变化，导致升级前创建的 topogeometry "
+"数据出现损坏。这个函数用来修复受影响表中的这些损坏问题。"
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 3.6.1"
-msgstr ""
+msgstr "可用性：3.6.1"
 
 #. Tag: para
 #, no-c-format
 msgid "Fix all topology columns"
-msgstr ""
+msgstr "修复所有 topology 列"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -4800,6 +4928,14 @@ msgid ""
 "relation (topogeo_id column from int4 to int8, element_id from int4 to int8) "
 "- topology (useslargeids column set to true)"
 msgstr ""
+"接受一个拓扑名称，并将其升级为支持大 ID（int8）的模式，适用于拓扑 ID "
+"和各种基础要素 ID。升级内容包括：将 face 表的 face_id 和 face_id_seq 从 int4 "
+"调整为 int8；将 node 表的 node_id、containing_face 以及 node_id_seq 从 int4 "
+"调整为 int8；将 edge_data 表中的 "
+"edge_id、start_node、end_node、left_face、right_face、next_left_edge、"
+"next_right_edge 以及序列 edge_data_edge_id_seq 全部从 int4 调整为 int8；将 "
+"relation 表中的 topogeo_id 和 element_id 从 int4 调整为 int8；最后在 "
+"topology 表中把 useslargeids 标记为 true，表示启用大 ID 支持"
 
 #. Tag: title
 #, no-c-format
@@ -4928,7 +5064,7 @@ msgstr "这与 SQL/MM <xref linkend=\"ST_InitTopoGeo\"/> 类似，但具有更�
 #. Tag: para
 #, no-c-format
 msgid "Enhanced: 2.0 added support for <varname>hasZ</varname>."
-msgstr ""
+msgstr "Enhanced: 2.0 新增对 <varname>hasZ</varname> 的支持。"
 
 #. Tag: para
 #, no-c-format
@@ -4936,6 +5072,8 @@ msgid ""
 "Enhanced: 3.6.0 added <varname>topoid</varname> and <varname>usesLargeIDs</"
 "varname> parameters."
 msgstr ""
+"Enhanced: 3.6.0 新增 <varname>topoid</varname> 和 <varname>usesLargeIDs</"
+"varname> 参数。"
 
 #. Tag: para
 #, no-c-format
@@ -5110,6 +5248,8 @@ msgid ""
 "identifiers forming it up (negative identifies mean the edge goes in the "
 "opposite direction of the input linestring)."
 msgstr ""
+"向已有拓扑中添加一条 linestring，并返回一组组成该线的有符号 edge 标识符；"
+"其中负数表示该 edge 的方向与输入的 linestring 相反。"
 
 #. Tag: para
 #, no-c-format
@@ -5117,14 +5257,16 @@ msgid ""
 "The given line will snap to existing nodes or edges within given tolerance. "
 "Existing edges and faces may be split by the line. New nodes and faces may "
 "be added, in addition to new edges."
-msgstr ""
+msgstr "给定的线会在指定容差范围内自动贴靠到已有的节点或边上；现有的边和面可能会被这"
+"条线切分。除了新增边之外，过程中还可能会新增节点和面。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "The returned edge identifiers may be either existing edges or newly created "
 "edges as needed to fully represent the input line as closely as possible."
-msgstr ""
+msgstr "返回的 edge 标识符可能是已有的，也可能是新创建的，具体取决于为了尽可能贴近表"
+"示输入线所需的实际情况。"
 
 #. Tag: para
 #, no-c-format
@@ -5133,6 +5275,8 @@ msgid ""
 "uncovered or resulting from split of existing edges) may be limited by the "
 "<varname>max_edges</varname> parameter."
 msgstr ""
+"新创建的 edge 数量（无论是覆盖原本没有覆盖的空间，还是由切分现有边产生）"
+"都可能会受到 <varname>max_edges</varname> 参数的限制。"
 
 #. Tag: para
 #, no-c-format
@@ -5153,7 +5297,7 @@ msgstr "增强：3.2.0 版本新增了返回符号化标识符的功能。"
 msgid ""
 "Enhanced: 3.7.0 added support for limiting the number of new edges created "
 "in the topology."
-msgstr ""
+msgstr "Enhanced: 3.7.0 增加对限制拓扑中新建 edge 数量的支持。"
 
 #. Tag: para
 #, no-c-format
@@ -6607,6 +6751,9 @@ msgid ""
 "geometry to existing primitives. The special value -1 (default) means use "
 "the topology precision as tolerance."
 msgstr ""
+"当提供 <varname>tolerance</varname> "
+"时，会用它来将输入几何贴靠到已有的基础要素上。特殊值 "
+"-1（默认）表示使用拓扑的精度作为容差。"
 
 #. Tag: para
 #, no-c-format
@@ -6640,7 +6787,8 @@ msgstr "增强：2.1.0添加了采用现有TopoGeometry的版本。"
 msgid ""
 "Changed: 3.7.0 changes meaning of tolerance 0 to really mean 0 and -1 (new "
 "default) to request using the topology precision."
-msgstr ""
+msgstr "Changed: 3.7.0 将 tolerance 为 0 的含义改为真正表示 0，而 "
+"-1（新的默认值）表示使用拓扑精度。"
 
 #. Tag: para
 #, no-c-format
@@ -7673,6 +7821,15 @@ msgid ""
 "xlink:href=\"https://gitlab.com/sfcgal/SFCGAL/\">https://gitlab.com/sfcgal/"
 "SFCGAL/</link>."
 msgstr ""
+"SFCGAL 需要 1.4.1 或更高版本，若要完整使用全部功能则需要 2.1+。SFCGAL 可为 "
+"PostGIS 提供额外的 2D / 3D 高级分析函数（参见 <xref linkend="
+"\"reference_sfcgal\"/>），并且在某些 2D 函数（例如 ST_Intersection、ST_Area "
+"等同时由两个后端提供的函数）上，可以选择使用 SFCGAL 来替代 GEOS。若已安装 "
+"SFCGAL，PostgreSQL 配置变量 <code>postgis.backend</code> "
+"可用于控制使用哪个后端（默认是 GEOS）。注意：SFCGAL 1.2 至少需要 CGAL 4.3 和 "
+"Boost 1.54（参考 <link xlink:href=\"https://sfcgal.org\">https://sfcgal.org</"
+"link> 和 <link xlink:href=\"https://gitlab.com/sfcgal/SFCGAL/\""
+">https://gitlab.com/sfcgal/SFCGAL/</link>）。"
 
 #. Tag: para
 #, no-c-format
@@ -7749,6 +7906,9 @@ msgid ""
 "xlink:href=\"http://www.graphicsmagick.org/\"> http://www.graphicsmagick."
 "org/ </link> ."
 msgstr ""
+"生成文档中使用的图片需要安装 GraphicsMagick（命令行工具为 <filename>gm "
+"convert</filename>）。可从 <link xlink:href=\"http://www.graphicsmagick.org/"
+"\">http://www.graphicsmagick.org/</link> 获取。"
 
 #. Tag: title
 #, no-c-format
@@ -7944,12 +8104,12 @@ msgstr "在没有栅格功能的情况下进行编译。"
 #. Tag: para
 #, no-c-format
 msgid "Disables tiger geocoder support."
-msgstr ""
+msgstr "禁用 tiger geocoder 支持。"
 
 #. Tag: para
 #, no-c-format
 msgid "Compile without topology support."
-msgstr ""
+msgstr "不编译 topology 支持。"
 
 #. Tag: para
 #, no-c-format
@@ -8044,6 +8204,11 @@ msgid ""
 "so no need to make comments if installing from the tar ball. Comments are "
 "also included as part of the CREATE EXTENSION install."
 msgstr ""
+"所有函数的注释都是根据文档自动生成的。如果你之后想把这些注释安装到自己的空间"
+"数据库里，需要运行依赖 docbook 的命令来导入注释。不过，如果是从 tar.gz "
+"包安装，doc 目录里已经包含了 postgis_comments.sql "
+"等注释文件，就不需要再额外生成了；另外，通过 CREATE EXTENSION "
+"安装时，这些注释也会一并包含在内。"
 
 #. Tag: para
 #, no-c-format
@@ -8056,6 +8221,12 @@ msgid ""
 "<filename>raster_cheatsheet.html</filename>, <filename>postgis_cheatsheet."
 "html</filename>"
 msgstr ""
+"<command>make cheatsheets</command> 目标会生成 HTML "
+"格式的速查表，适合快速查阅或教学讲义使用。这一步需要 xsltproc 来构建，并会在 "
+"doc 目录下生成 4 个文件：<filename>topology_cheatsheet."
+"html</filename>、<filename>tiger_geocoder_cheatsheet."
+"html</filename>、<filename>raster_cheatsheet."
+"html</filename>、<filename>postgis_cheatsheet.html</filename>"
 
 #. Tag: para
 #, no-c-format
@@ -8077,7 +8248,7 @@ msgstr "构建和部署PostGIS扩展"
 msgid ""
 "The PostGIS extensions are built and installed automatically when PostgreSQL "
 "extension support is available."
-msgstr ""
+msgstr "当 PostgreSQL 提供扩展支持时，PostGIS 扩展会被自动构建并安装。"
 
 #. Tag: para
 #, no-c-format
@@ -8230,6 +8401,15 @@ msgid ""
 "given version of an extension. These behaviors are built into the current "
 "PostgreSQL extension model."
 msgstr ""
+"扩展表 <varname>spatial_ref_sys</varname>、<varname>layer</varname>、<varname"
+">topology</varname> 不能单独备份。只有在备份对应的 <varname>postgis</"
+"varname> 或 <varname>postgis_topology</varname> "
+"扩展时才会一起备份，而这只会在你备份整个数据库时发生。备份中只会包含那些 "
+"不是 PostGIS 自带的 srid 记录，所以不要修改我们随 PostGIS 一起提供的条目并指"
+"望修改能长期保留——如果发现问题，请提交工单。扩展表的结构永远不会出现在备份里"
+"，因为它们是通过 <code>CREATE EXTENSION</code> "
+"创建的，在同一扩展版本下默认结构是一致的。这些行为属于当前 PostgreSQL "
+"扩展模型的固有机制。"
 
 #. Tag: para
 #, no-c-format
@@ -8299,6 +8479,11 @@ msgid ""
 "<varname>POSTGIS_REGRESS_ROLE_EXT_CREATOR</varname> when the extension "
 "creation role must differ from the database owner."
 msgstr ""
+"沙箱式构建账号（非 PostgreSQL 超级用户）在回归测试周期中，可以通过导出 "
+"<varname>POSTGIS_REGRESS_DB_OWNER</varname> 来委托数据库所有权。测试框架会创"
+"建一个临时的回归测试库，并将其所有者设为指定的角色，同时仍然使用权限更低的账"
+"号进行连接。如果扩展的创建角色需要与数据库所有者不同，可以再配合使用 "
+"<varname>POSTGIS_REGRESS_ROLE_EXT_CREATOR</varname>。"
 
 #. Tag: para
 #, no-c-format
@@ -8308,6 +8493,9 @@ msgid ""
 "superuser, provided the target PostgreSQL instance permits extension "
 "installation by those delegate roles."
 msgstr ""
+"这些变量的作用是：在目标 PostgreSQL 实例允许这些委托角色安装扩展的前提下，让"
+"自动化环境在不把调用账号提升为超级用户的情况下，依然能够走完整的升级路径和扩"
+"展安装流程。"
 
 #. Tag: para
 #, no-c-format
@@ -8437,6 +8625,9 @@ msgid ""
 "configure it for your needs, refer to <xref linkend=\"Address_Standardizer\"/"
 ">."
 msgstr ""
+"<code>address_standardizer</code> 扩展随 PostGIS "
+"一起打包提供。关于它的作用、用途以及如何按需求配置，请参考 <xref linkend="
+"\"Address_Standardizer\"/>。"
 
 #. Tag: para
 #, no-c-format
@@ -8478,6 +8669,8 @@ msgid ""
 "Windows installation packages include the address_standardizer so you can "
 "move straight to the <code>CREATE EXTENSION</code> step."
 msgstr ""
+"Windows 安装包已经自带了 address_standardizer，所以可以直接执行 <code>CREATE "
+"EXTENSION</code> 来安装使用。"
 
 #. Tag: para
 #, no-c-format
@@ -8620,6 +8813,10 @@ msgid ""
 "by default because it takes quite a bit of time to load (20 to 60 minutes), "
 "takes up quite a bit of disk space, and is not used that often."
 msgstr ""
+"Zip code 5 位统计区域 <varname>zcta5</varname> 的加载步骤会使用当前的 ZCTA "
+"数据，并且在启用的情况下会作为 <xref linkend=\"Loader_Generate_Nation_Script"
+"\"/> 的一部分执行。它默认是关闭的，因为加载过程耗时较长（大约 20 到 60 "
+"分钟）、占用磁盘空间较大，而且并不是经常会用到。"
 
 #. Tag: para
 #, no-c-format
@@ -9276,12 +9473,12 @@ msgstr "几何处理，PostgreSQL GiST，常见纠错"
 #. Tag: term
 #, no-c-format
 msgid "<term>Laurențiu Nicola</term>"
-msgstr ""
+msgstr "<term>Laurențiu Nicola</term>"
 
 #. Tag: para
 #, no-c-format
 msgid "Bug fixes, maintenance, stability, and performance"
-msgstr ""
+msgstr "Bug fixes、维护、稳定性和性能"
 
 #. Tag: title
 #, no-c-format
@@ -9617,7 +9814,7 @@ msgstr "David Techer"
 #. Tag: member
 #, no-c-format
 msgid "Denys Kovshun"
-msgstr ""
+msgstr "Denys Kovshun"
 
 #. Tag: member
 #, no-c-format
@@ -9807,7 +10004,7 @@ msgstr "Kris Jurka"
 #. Tag: member
 #, no-c-format
 msgid "<member>Laurențiu Nicola</member>"
-msgstr ""
+msgstr "<member>Laurențiu Nicola</member>"
 
 #. Tag: member
 #, no-c-format
@@ -10364,6 +10561,9 @@ msgid ""
 "past. We used <link xlink:href=\"http://www.pledgebank.com\">PledgeBank</"
 "link> and we got two successful campaigns out of it."
 msgstr ""
+"PostGIS 过去也尝试过通过社区众筹来推动新功能开发。我们当时用了 <link "
+"xlink:href=\"http://www.pledgebank.com\""
+">PledgeBank</link>，并成功发起过两次众筹活动。"
 
 #. Tag: para
 #, no-c-format
@@ -10459,6 +10659,11 @@ msgid ""
 "toast.html\">the PostgreSQL Documentation for TOAST</link> for more "
 "information)."
 msgstr ""
+"当前的 PostgreSQL 版本在查询优化器上对 TOAST 表存在一些弱点。TOAST 表可以理解"
+"为一种用于存放“大块数据”的“扩展空间”，专门用来存储那些无法放入普通数据页的大"
+"型字段（比如很长的文本、图片，或者顶点数量特别多的复杂几何对象等）。"
+"详情可参考 <link xlink:href=\"http://www.postgresql.org/docs/current/static/"
+"storage-toast.html\">PostgreSQL 官方文档关于 TOAST 的说明</link>。"
 
 #. Tag: para
 #, no-c-format
@@ -11162,6 +11367,9 @@ msgid ""
 "dimensionality, or coordinate components so that spatial expressions can "
 "interrogate complex objects in a controlled way."
 msgstr ""
+"这些函数不会修改几何对象本身，只是用来暴露现有几何的结构信息。它们能提供诸如"
+"几何类型、维度、坐标分量等元数据，方便空间表达式以一种可控的方式去查询和分析"
+"复杂对象。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -11676,6 +11884,9 @@ msgid ""
 "linkend=\"ST_Dump\"/> to extract polygon elements from polygonal geometries: "
 "<code>ST_DumpRings( (ST_Dump(geom)).geom )</code>"
 msgstr ""
+"这只能用于 POLYGON，不能用于 MULTIPOLYGON。如果是多面类几何，可以先用 <xref "
+"linkend=\"ST_Dump\"/> 抽取出各个面，再对这些面执行，例如：<code>ST_DumpRings("
+" (ST_Dump(geom)).geom )</code>"
 
 #. Tag: para
 #, no-c-format
@@ -11685,12 +11896,12 @@ msgstr "可用性：需要 PostGIS 1.1.3 PostgreSQL 7.3 或更高版本。"
 #. Tag: para
 #, no-c-format
 msgid "Extracting all rings as polygons."
-msgstr ""
+msgstr "将所有环提取为 polygon。"
 
 #. Tag: para
 #, no-c-format
 msgid "Extracting shell and holes from a polygon."
-msgstr ""
+msgstr "从 polygon 中提取外壳（shell）和洞（holes）。"
 
 #. Tag: para
 #, no-c-format
@@ -13390,6 +13601,9 @@ msgid ""
 "linkend=\"ST_ZMin\"/>, <xref linkend=\"ST_ZMax\"/>, <xref "
 "linkend=\"ST_MMin\"/>, <xref linkend=\"ST_MMax\"/>"
 msgstr ""
+", <xref linkend=\"ST_YMin\"/>, <xref linkend=\"ST_YMax\"/>, <xref linkend="
+"\"ST_ZMin\"/>, <xref linkend=\"ST_ZMax\"/>, <xref linkend=\"ST_MMin\"/>, "
+"<xref linkend=\"ST_MMax\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -13434,6 +13648,9 @@ msgid ""
 "linkend=\"ST_ZMin\"/>, <xref linkend=\"ST_ZMax\"/>, <xref "
 "linkend=\"ST_MMin\"/>, <xref linkend=\"ST_MMax\"/>"
 msgstr ""
+", <xref linkend=\"ST_XMax\"/>, <xref linkend=\"ST_YMin\"/>, <xref linkend="
+"\"ST_ZMin\"/>, <xref linkend=\"ST_ZMax\"/>, <xref linkend=\"ST_MMin\"/>, "
+"<xref linkend=\"ST_MMax\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -13456,6 +13673,9 @@ msgid ""
 "linkend=\"ST_ZMax\"/>, <xref linkend=\"ST_MMin\"/>, <xref "
 "linkend=\"ST_MMax\"/>"
 msgstr ""
+", <xref linkend=\"ST_XMin\"/>, <xref linkend=\"ST_XMax\"/>, <xref linkend="
+"\"ST_YMax\"/>, <xref linkend=\"ST_ZMin\"/>, <xref linkend=\"ST_ZMax\"/>, "
+"<xref linkend=\"ST_MMin\"/>, <xref linkend=\"ST_MMax\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -13478,6 +13698,9 @@ msgid ""
 "linkend=\"ST_ZMin\"/>, <xref linkend=\"ST_MMin\"/>, <xref "
 "linkend=\"ST_MMax\"/>"
 msgstr ""
+", <xref linkend=\"ST_XMin\"/>, <xref linkend=\"ST_XMax\"/>, <xref linkend="
+"\"ST_YMin\"/>, <xref linkend=\"ST_YMax\"/>, <xref linkend=\"ST_ZMin\"/>, "
+"<xref linkend=\"ST_MMin\"/>, <xref linkend=\"ST_MMax\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -13500,17 +13723,21 @@ msgid ""
 "linkend=\"ST_YMax\"/>, <xref linkend=\"ST_ZMax\"/>, <xref "
 "linkend=\"ST_MMin\"/>, <xref linkend=\"ST_MMax\"/>"
 msgstr ""
+", <xref linkend=\"ST_GeomFromText\"/>, <xref linkend=\"ST_XMin\"/>, <xref "
+"linkend=\"ST_XMax\"/>, <xref linkend=\"ST_YMin\"/>, <xref linkend=\"ST_YMax\""
+"/>, <xref linkend=\"ST_ZMax\"/>, <xref linkend=\"ST_MMin\"/>, <xref linkend="
+"\"ST_MMax\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Returns the M minima of a geometry."
-msgstr ""
+msgstr "返回几何对象的 M 维最小值。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Returns the M minima of a geometry, or null of the geometry lacks M values."
-msgstr ""
+msgstr "返回几何对象的 M 维最小值；如果该几何没有 M 值则返回 NULL。"
 
 #. Tag: para
 #, no-c-format
@@ -13519,6 +13746,9 @@ msgid ""
 "linkend=\"ST_YMax\"/>, <xref linkend=\"ST_ZMin\"/>, <xref "
 "linkend=\"ST_ZMax\"/>, <xref linkend=\"ST_MMax\"/>"
 msgstr ""
+", <xref linkend=\"ST_XMax\"/>, <xref linkend=\"ST_YMin\"/>, <xref linkend="
+"\"ST_YMax\"/>, <xref linkend=\"ST_ZMin\"/>, <xref linkend=\"ST_ZMax\"/>, "
+"<xref linkend=\"ST_MMax\"/>"
 
 #. Tag: para
 #, no-c-format
@@ -13527,6 +13757,9 @@ msgid ""
 "linkend=\"ST_YMax\"/>, <xref linkend=\"ST_ZMin\"/>, <xref "
 "linkend=\"ST_ZMax\"/>, <xref linkend=\"ST_MMin\"/>"
 msgstr ""
+", <xref linkend=\"ST_XMax\"/>, <xref linkend=\"ST_YMin\"/>, <xref linkend="
+"\"ST_YMax\"/>, <xref linkend=\"ST_ZMin\"/>, <xref linkend=\"ST_ZMax\"/>, "
+"<xref linkend=\"ST_MMin\"/>"
 
 #. Tag: title
 #, no-c-format
@@ -13884,6 +14117,8 @@ msgid ""
 "primitives, coordinate sequences, or existing geometries into well-formed "
 "spatial objects that can participate in subsequent analysis."
 msgstr ""
+"这些函数用于构造新的 geometry 或 geography 值。它们通过组装基本要素、坐标序列"
+"或已有几何来生成结构完整的空间对象，以便后续参与空间分析与处理。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -14116,13 +14351,17 @@ msgid ""
 "appear in the collection. <xref linkend=\"ST_RemoveRepeatedPoints\"/> can be "
 "used to collapse repeated points from the output LineString."
 msgstr ""
+"输入 LineString 开头重复的节点会被折叠成单个点；Point 和 MultiPoint "
+"输入中的重复点不会被折叠。MultiLineString "
+"的各个子线段会按照它们在集合中的顺序处理。若需要对输出的 LineString "
+"折叠重复点，可使用 <xref linkend=\"ST_RemoveRepeatedPoints\"/>。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Availability: 3.7.0 - Support for MultiLineString input elements was "
 "introduced"
-msgstr ""
+msgstr "可用性：3.7.0 - 引入了对 MultiLineString 输入要素的支持"
 
 #. Tag: para
 #, no-c-format
@@ -14208,7 +14447,8 @@ msgid ""
 "When ordering within the aggregate is not possible, ordering in a subquery "
 "can be used. However, sometimes the query plan may not respect the order of "
 "the subquery."
-msgstr ""
+msgstr "当在聚合内部无法保证排序时，可以先在子查询中进行排序。不过，有时查询规划器并"
+"不会遵循子查询的排序结果，导致输出顺序依然无法保证。"
 
 #. Tag: para
 #, no-c-format
@@ -15190,24 +15430,25 @@ msgstr ""
 msgid ""
 "A window function which adjusts the edges of a set of valid polygonal "
 "geometries to produce a clean coverage. Cleaning involves:"
-msgstr ""
+msgstr "一个窗口函数，用于调整一组有效的面状几何的边界，使其形成干净的覆盖（clean "
+"coverage）。清理过程包括："
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "snapping vertices and edges to remove small discrepancies and ensure common "
 "edges are identically noded"
-msgstr ""
+msgstr "将顶点和边进行贴靠（snapping），消除微小偏差，确保共有边节点一致、拓扑对齐"
 
 #. Tag: para
 #, no-c-format
 msgid "merging overlaps into a parent polygon"
-msgstr ""
+msgstr "将重叠区域合并到上级父polygon 中"
 
 #. Tag: para
 #, no-c-format
 msgid "merging narrow gaps into adjacent polygons"
-msgstr ""
+msgstr "把狭窄的间隙并入相邻的 polygon 中"
 
 #. Tag: para
 #, no-c-format
@@ -15216,6 +15457,8 @@ msgid ""
 "are merged. Gaps with width &lt;= this distance are merged into an adjacent "
 "polygon."
 msgstr ""
+"<parameter>gapMaximumWidth</parameter> 控制哪些多边形之间的空隙会被合并；"
+"宽度 &lt;= 该值的空隙会被并入相邻的 polygon。"
 
 #. Tag: para
 #, no-c-format
@@ -15224,37 +15467,40 @@ msgid ""
 "edges. The default (-1) automatically determines a snapping distance based "
 "on the input extent. Set to 0.0 to turn off snapping."
 msgstr ""
+"<parameter>snappingDistance</parameter> 控制顶点和边的贴靠（snapping）。"
+"默认值 -1 会根据输入范围自动计算贴靠距离；设置为 0.0 则表示关闭贴靠。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "<parameter>overlapMergeStrategy</parameter> specifies how overlaps are "
 "merged into a parent polygon:"
-msgstr ""
+msgstr "<parameter>overlapMergeStrategy</parameter> 用来指定重叠区域如何合并到父 "
+"polygon 中："
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "<code>MERGE_LONGEST_BORDER</code> - merges into polygon with longest common "
 "border"
-msgstr ""
+msgstr "<code>MERGE_LONGEST_BORDER</code> - 合并到与其共有边最长的 polygon"
 
 #. Tag: para
 #, no-c-format
 msgid "<code>MERGE_MAX_AREA</code> - merges into polygon with maximum area"
-msgstr ""
+msgstr "<code>MERGE_MAX_AREA</code> - 合并到面积最大的 polygon"
 
 #. Tag: para
 #, no-c-format
 msgid "<code>MERGE_MIN_AREA</code> - merges into polygon with minimum area"
-msgstr ""
+msgstr "<code>MERGE_MIN_AREA</code> - 合并到面积最小的 polygon"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "<code>MERGE_MIN_INDEX</code> - merges into polygon with smallest input index "
 "(defined by order of input polygons)"
-msgstr ""
+msgstr "<code>MERGE_MIN_INDEX</code> - 合并到输入索引最小的 polygon（按输入顺序定义）"
 
 #. Tag: para
 #, no-c-format
@@ -15263,6 +15509,8 @@ msgid ""
 "linkend=\"ST_CoverageInvalidEdges\"/> and can be input to coverage "
 "processing functions."
 msgstr ""
+"结果是一个干净的面覆盖（polygonal coverage），能通过 <xref linkend="
+"\"ST_CoverageInvalidEdges\"/> 的校验，并可作为后续覆盖处理函数的输入。"
 
 #. Tag: para
 #, no-c-format
@@ -15275,6 +15523,12 @@ msgid ""
 "linkend=\"ST_MaximumInscribedCircle\"/> on them; the gap width is twice the "
 "computed radius."
 msgstr ""
+"为便于确定合适的最大缝隙宽度，可以先将 <code>gapMaximumWidth => 0</code> "
+"来执行清理，然后使用 <xref linkend=\"ST_CoverageUnion\"/> "
+"对清理后的覆盖进行合并。合并结果中的“洞”对应的就是原始数据中的缝隙。接着，"
+"可以将这些洞提取为 polygon，并对每个 polygon 运行 <xref linkend="
+"\"ST_MaximumInscribedCircle\"/> 来测量它们的最大内切圆；缝隙宽度 = "
+"计算得到的圆半径 × 2。"
 
 #. Tag: para
 #, no-c-format
@@ -15284,17 +15538,17 @@ msgstr "可用性: 3.6.0 - 需要 GEOS &gt;= 3.14.0"
 #. Tag: para
 #, no-c-format
 msgid "Polygons with overlaps and gaps"
-msgstr ""
+msgstr "有重叠和间隙的多边形"
 
 #. Tag: para
 #, no-c-format
 msgid "Invalid coverage edges"
-msgstr ""
+msgstr "无效的覆盖边"
 
 #. Tag: para
 #, no-c-format
 msgid "Clean polygonal coverage, with overlaps and narrow gaps removed"
-msgstr ""
+msgstr "清理后的面覆盖，已移除重叠和狭窄缝隙"
 
 #. Tag: para
 #, no-c-format
@@ -15303,6 +15557,8 @@ msgid ""
 "linkend=\"ST_CoverageSimplify\"/>, <xref "
 "linkend=\"ST_MaximumInscribedCircle\"/>"
 msgstr ""
+", <xref linkend=\"ST_CoverageUnion\"/>, <xref linkend=\"ST_CoverageSimplify\""
+"/>, <xref linkend=\"ST_MaximumInscribedCircle\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -17080,7 +17336,8 @@ msgid ""
 "These routines are reserved for diagnosing and repairing data corruption. "
 "They provide last-resort maintenance operations that are not required during "
 "normal spatial workflows."
-msgstr ""
+msgstr "这些例程用于诊断和修复数据损坏，属于最后手段的维护操作，在正常的空间数据工作"
+"流程中不需要使用。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -18199,6 +18456,10 @@ msgid ""
 "In this case we escape the ' with standard ANSI ', but slashes are not "
 "escaped"
 msgstr ""
+"在 PostgreSQL 中，standard_conforming_strings 默认是 "
+"on。你可以按需在单条查询、数据库级或服务器级修改这个默认值。下面以 "
+"standard_conforming_strings = on 为例：此时我们用标准 ANSI 的方式对 ' "
+"做转义（写成 ''），不再对反斜杠 \\ 做转义"
 
 #. Tag: para
 #, no-c-format
@@ -18872,7 +19133,8 @@ msgid ""
 "support the classic linear referencing workflow of expressing positions as "
 "fractions or measures along routes and of projecting those measures back "
 "into spatial coordinates."
-msgstr ""
+msgstr "这些函数用于在线性要素上测量和定位事件，支持经典的线性参考流程：既可以用比例"
+"或里程来表示在路线上的位置，也可以把这些里程再投影回空间坐标。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -20524,6 +20786,9 @@ msgid ""
 "false</varname>, then the calculation is based on a sphere instead of a "
 "spheroid."
 msgstr ""
+"对于 geography 类型：计算使用反大地测量方法，长度单位是米。所用椭球体由 SRID "
+"指定；如果没有 SRID，则默认使用 WGS84。若 <varname>use_spheroid = "
+"false</varname>，则计算基于球体模型而非椭球体。"
 
 #. Tag: para
 #, no-c-format
@@ -20992,6 +21257,9 @@ msgid ""
 "<varname>use_spheroid = false</varname>, then calculations will approximate "
 "a sphere instead of a spheroid."
 msgstr ""
+"对于 geography 类型，计算基于反大地测量方法进行，周长单位为米。所用椭球由 "
+"SRID 指定；如果未提供 SRID，则默认使用 WGS84。如果 <varname>use_spheroid = "
+"false</varname>，则计算会基于球体近似而非椭球体。"
 
 #. Tag: para
 #, no-c-format
@@ -21199,6 +21467,9 @@ msgid ""
 "follow the same geometric rules as the corresponding functions but are "
 "optimised for use in SQL expressions and index-supported filtering."
 msgstr ""
+"这些条目用于说明 PostGIS 定义的空间运算符。运算符作为函数目录的补充，以精简的"
+"符号形式表达包围盒交互和空间关系判断。它们的语义与对应函数一致，但在 SQL "
+"表达式和索引过滤中做了优化，更适合直接用于查询条件中。"
 
 #. Tag: title
 #, no-c-format
@@ -21283,7 +21554,7 @@ msgstr "该操作数旨在由 BRIN 索引内部使用，而不是由用户使用
 #, no-c-format
 msgid ""
 "Availability: 2.3.0 support for Block Range INdexes (BRIN) was introduced."
-msgstr ""
+msgstr "可用性：2.3.0 - 引入了对 BRIN的支持。"
 
 #. Tag: para
 #, no-c-format
@@ -22095,6 +22366,9 @@ msgid ""
 "nearest-neighbor result sets with true KNN distance search for geometries, "
 "and distance on the sphere for geographies."
 msgstr ""
+"<varname>&lt;-&gt;</varname> 运算符返回两个几何对象之间的 二维距离。用于 "
+"ORDER BY 时，可以借助索引实现最近邻排序：对 geometry 执行真实的 KNN "
+"距离搜索，对 geography 返回球面距离。"
 
 #. Tag: para
 #, no-c-format
@@ -22134,13 +22408,16 @@ msgid ""
 "and geography. Note for geography KNN is based on sphere rather than "
 "spheroid."
 msgstr ""
+"Enhanced: 2.2.0 -- 支持 geometry 和 geography 的真实 KNN 行为。注意 "
+"geography 的 KNN 基于球体而非椭球体。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Changed: 2.2.0 -- Old hybrid-syntax workarounds may be slower once true KNN "
 "is available. See examples below."
-msgstr ""
+msgstr "Changed: 2.2.0 -- 在提供真实 KNN "
+"之后，旧的混合语法变通方式可能会更慢。参见下方示例。"
 
 #. Tag: para
 #, no-c-format
@@ -22148,7 +22425,8 @@ msgid ""
 "Availability: 2.0.0 -- Weak KNN provides nearest neighbors based on geometry "
 "centroid distances instead of true distances. Exact results for points, "
 "inexact for all other types."
-msgstr ""
+msgstr "可用性：2.0.0 -- 弱 KNN 基于几何对象质心距离来找最近邻，而非真实距离。对点来"
+"说结果是准确的，对其他类型则是近似的。"
 
 #. Tag: para
 #, no-c-format
@@ -22170,6 +22448,8 @@ msgid ""
 "find the true nearest neighbors. First a CTE query using the index-assisted "
 "KNN, then an exact query to get correct ordering:"
 msgstr ""
+"当查询计划无法直接给出精确距离时，可以使用混合查询来获取真正的最近邻。"
+"做法是先用 CTE 利用索引辅助的 KNN 得到候选集，再做一次精确排序，流程如下："
 
 #. Tag: para
 #, no-c-format
@@ -22193,6 +22473,9 @@ msgid ""
 "same as <xref linkend=\"ST_DistanceCPA\"/> but as an operator it can be used "
 "for doing nearest neighbor searches using an N-dimensional index."
 msgstr ""
+"<varname>|=|</varname> 运算符返回两个轨迹的 3D 距离（参见 <xref linkend="
+"\"ST_IsValidTrajectory\"/>）。它的作用等同于 <xref linkend=\"ST_DistanceCPA\""
+"/>，但作为运算符可以结合 N 维索引用于最近邻搜索。"
 
 #. Tag: para
 #, no-c-format
@@ -22218,7 +22501,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 2.2.0."
-msgstr ""
+msgstr "可用性：2.2.0。"
 
 #. Tag: para
 #, no-c-format
@@ -22242,6 +22525,9 @@ msgid ""
 "Useful for doing nearest neighbor <emphasis role=\"strong\">approximate</"
 "emphasis> distance ordering."
 msgstr ""
+"<varname>&lt;#&gt;</varname> 运算符返回两个浮点包围盒之间的距离。"
+"适用于执行最近邻的 <emphasis role=\"strong\">approximate</emphasis> "
+"距离排序。"
 
 #. Tag: para
 #, no-c-format
@@ -22266,7 +22552,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 2.0.0."
-msgstr ""
+msgstr "可用性：2.0.0。"
 
 #. Tag: para
 #, no-c-format
@@ -22542,6 +22828,9 @@ msgid ""
 "default. If your GUI tools require the old behavior, then SET "
 "<code>bytea_output='escape'</code> in your database."
 msgstr ""
+"PostgreSQL 默认以十六进制编码输出 <varname>bytea</varname>。如果你的 GUI "
+"工具仍然需要旧的输出方式，可以在数据库中执行：<code>SET "
+"bytea_output='escape'</code>。"
 
 #. Tag: para
 #, no-c-format
@@ -22861,6 +23150,10 @@ msgid ""
 "function> raises a warning in that case because PostgreSQL <type>jsonb</"
 "type> keeps only the last value for duplicate keys."
 msgstr ""
+"当输入记录中包含重复的列名时，生成的 “properties” "
+"对象也会出现重复的键。在这种情况下，<function>ST_AsGeoJSON</function> "
+"会发出警告，因为 PostgreSQL 的 <type>jsonb</type> "
+"对于重复键只会保留最后一个值。"
 
 #. Tag: para
 #, no-c-format
@@ -22932,7 +23225,7 @@ msgstr "更改：3.5.0 允许指定包含要素 ID 的列"
 #. Tag: para
 #, no-c-format
 msgid "Changed: 3.7.0 added warning about duplicate keys"
-msgstr ""
+msgstr "Changed: 3.7.0 -- 增加了关于重复键的警告"
 
 #. Tag: para
 #, no-c-format
@@ -23640,9 +23933,9 @@ msgid ""
 "org/TR/SVG/paths.html#PathDataBNF\">http://www.w3.org/TR/SVG/paths."
 "html#PathDataBNF</link>"
 msgstr ""
-"可用性：1.2.2。 可用性：1.4.0 PostGIS 1.4.0 中更改为在绝对路径中包含 L 命令以"
-"符合<link xlink:href=\"http://www.w3.org/TR/SVG/paths.html#PathDataBNF\"> "
-"http://www.w3.org/TR/SVG/paths.html#PathDataBNF</link>"
+"可用性：1.2.2. 可用性：1.4.0 PostGIS 1.4.0 中更改为在绝对路径中包含 L "
+"命令以符合<link xlink:href=\"http://www.w3.org/TR/SVG/paths.html#"
+"PathDataBNF\"> http://www.w3.org/TR/SVG/paths.html#PathDataBNF</link>"
 
 #. Tag: para
 #, no-c-format
@@ -23806,6 +24099,10 @@ msgid ""
 "the x/y axis. By default, <code>ST_AsX3D</code> outputs in database form "
 "(long,lat or X,Y), but the X3D default of lat/lon, y/x may be preferred."
 msgstr ""
+"options 参数是一个位字段，用于控制是否使用 X3D 的 GeoCoordinates "
+"节点来表示坐标，以及是否进行 x/y 轴翻转。默认情况下，<code>ST_AsX3D</code> "
+"按数据库方式输出（long,lat 或 X,Y），但如果需要，也可以采用 X3D 默认的 lat/"
+"lon、y/x 输出形式。"
 
 #. Tag: para
 #, no-c-format
@@ -24623,6 +24920,11 @@ msgid ""
 "linkend=\"ST_Segmentize\"/> to add geodesic vertices, then cast to geometry "
 "before subdivision."
 msgstr ""
+"将细分后的 geometry 转成 geography 时，得到的 geography 可能和原始的不一样。"
+"细分操作是在平面（geometry）空间里加点的，如果这些新点落在边界上，会改变地理"
+"空间的表示——因为在 geography 中，边被解释为测地线。为了尽量减少这种偏差，"
+"建议先对 geography 使用 <xref linkend=\"ST_Segmentize\"/> "
+"做测地线加密（添加地理空间下的顶点），再转成 geometry 后进行细分。"
 
 #. Tag: para
 #, no-c-format
@@ -24668,6 +24970,10 @@ msgid ""
 "impact of changes to the geography representation of a geometry when "
 "subdividing."
 msgstr ""
+"<emphasis role=\"bold\">示例： </emphasis> 使用 ST_Segmentize(geography, "
+"distance) 对较长的 geography 线进行加密，然后用 ST_Subdivide "
+"将加密后的线拆分成每段包含 8 个顶点的子线。通过先加密，可在细分时降低 "
+"geometry 转 geography 时表示变化带来的影响。"
 
 #. Tag: para
 #, no-c-format
@@ -25052,6 +25358,9 @@ msgid ""
 "does not affect POINT or POLYGON geometries. By default end caps are square "
 "when 'left' or 'right' are specified."
 msgstr ""
+"'side=both|left|right' :默认是 both。left 或 right 会对 geometry "
+"做单侧缓冲，缓冲方向以线的走向为参照。此选项仅适用于 LINESTRING，对 POINT 或 "
+"POLYGON 无效。当指定 left 或 right 时，线段末端默认使用方形端帽。"
 
 #. Tag: para
 #, no-c-format
@@ -25965,17 +26274,17 @@ msgstr "此函数剥离 M 维度。"
 #. Tag: title
 #, no-c-format
 msgid "Cardinality 2"
-msgstr ""
+msgstr "次数2"
 
 #. Tag: para
 #, no-c-format
 msgid "Nodes with cardinality 2 are merged away."
-msgstr ""
+msgstr "次数 2 的节点会被合并移除。"
 
 #. Tag: title
 #, no-c-format
 msgid "Cardinality 3 or More"
-msgstr ""
+msgstr "次数3以上"
 
 #. Tag: para
 #, no-c-format
@@ -25985,7 +26294,7 @@ msgstr "在交点的度数大于2时，线段不会合并。"
 #. Tag: title
 #, no-c-format
 msgid "Non-Touching Lines"
-msgstr ""
+msgstr "不相交的线"
 
 #. Tag: para
 #, no-c-format
@@ -25997,7 +26306,7 @@ msgstr "如果由于不接触线而无法合并，则返回原始 MultiLineStrin
 #. Tag: title
 #, no-c-format
 msgid "Directed Parameter"
-msgstr ""
+msgstr "有向参数"
 
 #. Tag: para
 #, no-c-format
@@ -26007,7 +26316,7 @@ msgstr "如果directed = TRUE，则不合并具有相反方向的线。"
 #. Tag: title
 #, no-c-format
 msgid "Z-dimension Handling"
-msgstr ""
+msgstr "Z 维度处理"
 
 #. Tag: para
 #, no-c-format
@@ -26238,7 +26547,7 @@ msgstr "计算包含几何图形的最小圆的中心点和半径。 返回包�
 #. Tag: para
 #, no-c-format
 msgid "Availability - 2.3.0"
-msgstr "可用性-2.3.0"
+msgstr "可用性 - 2.3.0"
 
 #. Tag: para
 #, no-c-format
@@ -29069,7 +29378,7 @@ msgstr "返回在 Spatial_ref_sys 表中定义的栅格对象的空间参考标�
 #. Tag: para
 #, no-c-format
 msgid "Non-georeferenced rasters and geometries use SRID 0."
-msgstr ""
+msgstr "未做地理参考的 raster 和 geometry 使用 SRID 0。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -30864,6 +31173,11 @@ msgid ""
 "and set it to <varname>libproj.dll</varname>. You'll have to restart your "
 "PostgreSQL service/daemon after this change."
 msgstr ""
+"如果发现坐标转换功能异常，可能需要设置环境变量 PROJSO，指向 PostGIS "
+"使用的投影库文件名。例如在 Windows 中，可以在 “控制面板 -&gt; 系统 -&gt; "
+"环境变量” 中新增系统变量 <varname>PROJSO</varname>，将其值设为 "
+"<varname>libproj.dll</varname>。设置完成后需要重启 PostgreSQL "
+"服务/守护进程使其生效。"
 
 #. Tag: para
 #, no-c-format
@@ -32721,14 +33035,14 @@ msgstr "多个栅格，多个波段"
 #. Tag: para
 #, no-c-format
 msgid "Complete example of tiles of a coverage with neighborhood."
-msgstr ""
+msgstr "完整示例：带邻域的覆盖示例。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Example like the prior one for tiles of a coverage with neighborhood but "
 "using only basic SQL features."
-msgstr ""
+msgstr "示例：与前一个带邻域的覆盖 tile 示例类似，但只使用基础 SQL 特性来实现。"
 
 #. Tag: title
 #, no-c-format
@@ -33759,7 +34073,8 @@ msgstr ""
 msgid ""
 "The new raster will have the same georeference, width, and height as the "
 "original raster. Bands not designated are returned unchanged."
-msgstr ""
+msgstr "新生成的 raster 将与原始 raster "
+"具有相同的地理参考、宽度和高度。未指定的波段保持原样返回，不做更改。"
 
 #. Tag: para
 #, no-c-format
@@ -34238,7 +34553,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Complete example of tiles of a coverage."
-msgstr ""
+msgstr "覆盖切片的完整示例。"
 
 #. Tag: para
 #, no-c-format
@@ -34791,7 +35106,8 @@ msgstr "改变 3.3.0，禁用验证和修复以提高性能。 可能会导致�
 msgid ""
 "Changed 3.7.0, the polygonization honours PostgreSQL interrupts so "
 "cancellations and statement timeouts halt processing promptly."
-msgstr ""
+msgstr "Changed: 3.7.0 - 多边形化过程已支持 PostgreSQL "
+"中断，因此取消操作和语句超时会立即终止处理。"
 
 #. Tag: para
 #, no-c-format
@@ -34925,7 +35241,7 @@ msgstr "更改：2.1.0 在之前的版本中有时会返回多边形，更改为
 msgid ""
 "Calculates the fraction of each raster cell that is covered by a given "
 "geometry."
-msgstr ""
+msgstr "计算给定 geometry 覆盖到每个 raster 像元的比例。"
 
 #. Tag: para
 #, no-c-format
@@ -34939,11 +35255,15 @@ msgid ""
 "that is covered by the geometry. For linestrings, the value returned for "
 "each cell is the length contained in the cell."
 msgstr ""
+"计算给定 geometry 覆盖每个 raster 像元的比例。第一个参数是 "
+"raster，定义用于计算的网格几何；第二个参数是 "
+"geometry，与网格叠加并据此为每个像元赋值：对 Polygon 返回像元面积中被 "
+"geometry 覆盖的比例，对 LineString 返回线在像元中所占的长度。"
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 3.6.0 Requires GEOS 3.14 or higher."
-msgstr ""
+msgstr "可用性：3.6.0 -- 需要 GEOS 3.14 或更高版本。"
 
 #. Tag: title
 #, no-c-format
@@ -38928,6 +39248,10 @@ msgid ""
 "parameter> specifies the type of buffer to create: 0: Rounded buffer "
 "(default) 1: Flat buffer 2: Square buffer"
 msgstr ""
+"生成以输入几何 <parameter>geom</parameter> 为中心、半径为 <parameter>radius</"
+"parameter> 的 3D 缓冲区，在三维空间中构建体积缓冲表示。<parameter>segments</"
+"parameter> 用于逼近曲面弧段，最少为 4；<parameter>buffer_type</parameter> "
+"用于指定缓冲类型：0 为圆角（默认）、1 为平面、2 为方形"
 
 #. Tag: para
 #, no-c-format
@@ -39203,7 +39527,7 @@ msgstr ""
 msgid ""
 "Reduces the complexity of a geometry while preserving essential features and "
 "Z/M values."
-msgstr ""
+msgstr "在保留几何对象关键特征以及 Z/M 值的前提下，降低其复杂度。"
 
 #. Tag: para
 #, no-c-format
@@ -39211,7 +39535,9 @@ msgid ""
 "Simplifies a geometry using SFCGAL's simplification algorithm, which reduces "
 "the number of points or vertices while preserving the essential features of "
 "the geometry. This function preserves Z and M values during simplification."
-msgstr ""
+msgstr "使用 SFCGAL "
+"的简化算法对几何进行简化，在保留几何关键特征的前提下减少点或顶点数量，"
+"并在简化过程中保留 Z 和 M 值。"
 
 #. Tag: para
 #, no-c-format
@@ -39222,13 +39548,17 @@ msgid ""
 "handling to preserve Z and M coordinates. When topology is preserved and "
 "geometries intersect, Z and M values are interpolated at intersection points."
 msgstr ""
+"该算法基于约束三角剖分，使用 <link xlink:href=\"https://doc.cgal.org/latest/"
+"Polyline_simplification_2/index.html\">CGAL Polyline Simplification 2</link> "
+"库，并额外处理以保留 Z、M 坐标。当要求保持拓扑且几何间存在相交时，"
+"会在相交点对 Z 和 M 值进行插值处理。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "This function works well with 3D terrain-like geometries (2.5D) but is not "
 "designed for vertical surfaces like walls."
-msgstr ""
+msgstr "此函数适用于 类地形的 3D（2.5D）几何，但并不适合处理如墙体等垂直表面。"
 
 #. Tag: para
 #, no-c-format
@@ -39243,7 +39573,7 @@ msgstr "参数"
 #. Tag: para
 #, no-c-format
 msgid "Input geometry"
-msgstr ""
+msgstr "输入几何"
 
 #. Tag: parameter
 #, no-c-format
@@ -39255,12 +39585,13 @@ msgstr "threshold"
 msgid ""
 "Maximum distance threshold (in geometry unit) for simplification. The higher "
 "this value, the more simplified the resulting geometry will be."
-msgstr ""
+msgstr "最大距离阈值（以几何单位计），用于控制简化程度。值越大，输出几何被简化得就越"
+"多。"
 
 #. Tag: parameter
 #, no-c-format
 msgid "preserveTopology"
-msgstr ""
+msgstr "preserveTopology"
 
 #. Tag: para
 #, no-c-format
@@ -39269,41 +39600,43 @@ msgid ""
 "preserved. When geometries intersect in this mode, Z and M values at "
 "intersection points are interpolated. The default value is false."
 msgstr ""
+"如果设为 true，函数会确保几何的拓扑结构被保留；在此模式下，当几何发生相交时，"
+"相交点的 Z 和 M 值会进行插值处理。默认值为 false。"
 
 #. Tag: title
 #, no-c-format
 msgid "Return Value"
-msgstr ""
+msgstr "返回值"
 
 #. Tag: para
 #, no-c-format
 msgid "Returns a simplified geometry with preserved Z and M values."
-msgstr ""
+msgstr "返回一个保留了 Z 和 M 值的简化几何对象。"
 
 #. Tag: para
 #, no-c-format
 msgid "Originals geometries"
-msgstr ""
+msgstr "原始几何"
 
 #. Tag: para
 #, no-c-format
 msgid "Simplification with 0.5 and topology preserved"
-msgstr ""
+msgstr "以 0.5 进行简化，并保持拓扑"
 
 #. Tag: para
 #, no-c-format
 msgid "Simplification with 0.5 without topology preservation"
-msgstr ""
+msgstr "以 0.5 进行简化"
 
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_SimplifyPreserveTopology\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_SimplifyPreserveTopology\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes a 3D Alpha-wrapping strictly enclosing a geometry."
-msgstr ""
+msgstr "计算一个严格包围给定几何的 3D Alpha 包络。"
 
 #. Tag: para
 #, no-c-format
@@ -39314,6 +39647,10 @@ msgid ""
 "the input. It can be seen as an extension or refinement of an <link "
 "linkend=\"CG_AlphaShape\">alpha-shape</link>."
 msgstr ""
+"计算几何中点的 <link xlink:href=\"https://doc.cgal.org/latest/Alpha_wrap_3/"
+"index.html\">3D Alpha Wrapping</link>。Alpha wrapping "
+"是一种封闭且可定向的曲面网格，能严格包住输入点集合，可视为 <link linkend="
+"\"CG_AlphaShape\">alpha-shape</link> 的扩展或细化。"
 
 #. Tag: para
 #, no-c-format
@@ -39323,6 +39660,8 @@ msgid ""
 "relative_alpha values result in simpler outputs, but they are less accurate "
 "representations of the original input."
 msgstr ""
+"<varname>relative_alpha</varname> 参数控制输出中包含的特征，可以取值范围为 0 "
+"到正无穷。值越小，输出越简化，但对原始输入的表示就越不精确。"
 
 #. Tag: para
 #, no-c-format
@@ -39332,6 +39671,8 @@ msgid ""
 "set to 0, its value is automatically determined based on the relative_alpha "
 "parameter."
 msgstr ""
+"<varname>relative_offset</varname> 参数控制结果的紧密程度，取值范围为 0 "
+"到正无穷。如果设置为 0，其值会根据relative_alpha自动计算。"
 
 #. Tag: para
 #, no-c-format
@@ -39339,13 +39680,16 @@ msgid ""
 "Alpha wrapping of a MultiPoint (same example As <xref "
 "linkend=\"CG_OptimalAlphaShape\"/>)"
 msgstr ""
+"MultiPoint 的 Alpha Wrapping（与 <xref linkend=\"CG_OptimalAlphaShape\"/> "
+"示例相同）"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Alpha wrapping of a MultiPoint (same example as <xref "
 "linkend=\"ST_ConcaveHull\"/>)"
-msgstr ""
+msgstr "MultiPoint 的 Alpha Wrapping（与 <xref linkend=\"ST_ConcaveHull\"/> "
+"示例相同）"
 
 #. Tag: para
 #, no-c-format
@@ -39354,6 +39698,8 @@ msgid ""
 "and 20. A value of 5 results in a coarse output. Increasing the parameter up "
 "to 20 significantly improves the precision and granularity of the result."
 msgstr ""
+"<varname>relative_alpha</varname> 参数取值为 5、10 和 20 时的效果：值为 5 "
+"会产生较粗糙的输出，增大到 20 后，结果的精度和细节颗粒度会显著提升。"
 
 #. Tag: title
 #, no-c-format
@@ -40854,7 +41200,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Availability: 2.0 version taking flags."
-msgstr "有效性：2.0 版本正在接受标记。"
+msgstr "可用性：2.0 版本正在接受标记。"
 
 #. Tag: para
 #, no-c-format
@@ -40926,6 +41272,9 @@ msgid ""
 "output from the linework. The requirement that no vertices are lost can "
 "generate complex collections as outputs."
 msgstr ""
+"“linework” 是默认算法，其处理流程是：先提取所有线，再对这些线进行节点化（nodi"
+"ng），然后基于这些线生成有效的几何输出。为了保证不丢失任何顶点，输出结果可能"
+"会形成复杂的几何集合。"
 
 #. Tag: para
 #, no-c-format
@@ -40934,14 +41283,15 @@ msgid ""
 "exterior rings, building new geometry by unioning exterior rings, and then "
 "differencing all interior rings. The results tend to be more intuitive, "
 "where collapsed lines are discarded in the output."
-msgstr ""
+msgstr "“structure” 是一种算法，它会区分内环和外环：先对外环做并集构建新几何，再用所"
+"有内环做差。结果通常更直观，折叠的线会在输出中被丢弃。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "The \"keepcollapsed\" key is only valid for the \"structure\" algorithm, and "
 "takes a value of \"true\" or \"false\"."
-msgstr ""
+msgstr "“keepcollapsed” 选项仅对 structure 算法有效，取值为 true 或 false。"
 
 #. Tag: para
 #, no-c-format
@@ -40949,14 +41299,15 @@ msgid ""
 "Keep collapsed of \"false\" is the default, and means that geometry "
 "components that collapse to a lower dimensionality, for example a one-point "
 "linestring will be dropped."
-msgstr ""
+msgstr "“keepcollapsed” 默认为 false，表示当几何组件被折叠为低维度时（"
+"例如只有一个点的 LineString），该组件会被丢弃。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Keep collapsed of \"true\" means geometry components that collapse to a "
 "lower dimensionality will be retained."
-msgstr ""
+msgstr "“keepcollapsed” 设置为 true 表示即使几何组件被折叠为低维度，也会被保留。"
 
 #. Tag: para
 #, no-c-format
@@ -41448,12 +41799,12 @@ msgstr "发行说明"
 #. Tag: title
 #, no-c-format
 msgid "PostGIS 3.6.0rc2"
-msgstr ""
+msgstr "PostGIS 3.6.0rc2"
 
 #. Tag: para
 #, no-c-format
 msgid "2025/08/25"
-msgstr ""
+msgstr "2025/08/25"
 
 #. Tag: para
 #, no-c-format
@@ -41462,6 +41813,9 @@ msgid ""
 "6.1+. To take advantage of all features, GEOS 3.14+ is needed. To take "
 "advantage of all SFCGAL features, SFCGAL 2.2+ is needed."
 msgstr ""
+"该版本要求 PostgreSQL 12–18beta3、GEOS 3.8 或更高版本，以及 Proj 6."
+"1+。若要使用全部功能，需要 GEOS 3.14+；若要使用 SFCGAL 的全部功能，则需要 "
+"SFCGAL 2.2+。"
 
 #. Tag: para
 #, no-c-format
@@ -41476,17 +41830,17 @@ msgstr "Teramoto Ikuhiro (Japanese Team)"
 #. Tag: para
 #, no-c-format
 msgid "Daniel Nylander (Swedish Team)"
-msgstr ""
+msgstr "Daniel Nylander (Swedish Team)"
 
 #. Tag: para
 #, no-c-format
 msgid "Dapeng Wang, Zuo Chenwei from HighGo (Chinese Team)"
-msgstr ""
+msgstr "Dapeng Wang, Zuo Chenwei from HighGo (Chinese Team)"
 
 #. Tag: para
 #, no-c-format
 msgid "Denys Kovshun (Ukrainian Team)"
-msgstr ""
+msgstr "Denys Kovshun (Ukrainian Team)"
 
 #. Tag: title
 #, no-c-format
@@ -41500,6 +41854,8 @@ msgid ""
 "link>, make ST_TileEnvelope clips envelopes to tile plane extent (Paul "
 "Ramsey)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5799\">#5799</link> "
+"，使 ST_TileEnvelope 将信封裁剪到 tile 平面范围（Paul Ramsey）"
 
 #. Tag: para
 #, no-c-format
@@ -41507,6 +41863,8 @@ msgid ""
 "<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5829\">#5829</"
 "link>, remove constraint checking from geometry_columns view (Paul Ramsey)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5829\">#5829</link> "
+"，从 geometry_columns 视图中移除约束检查（Paul Ramsey）"
 
 #. Tag: para
 #, no-c-format
@@ -41516,6 +41874,10 @@ msgid ""
 "pulls/255\">GT-255</link>, [topology] Support for upgrading domains (Ayo "
 "Adesugba, U.S. Census Bureau)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/3373\""
+">#3373</link>、<link xlink:href=\"https://git.osgeo.org/gitea/postgis/"
+"postgis/pulls/255\">GT-255</link>、[topology] 支持升级域（Ayo Adesugba，U.S. "
+"Census Bureau）"
 
 #. Tag: para
 #, no-c-format
@@ -41525,6 +41887,9 @@ msgid ""
 "PolyhedralSurface as unitary geometries, use ST_NumPatches/ST_PatchN for "
 "patch access (Loïc Bartoletti)"
 msgstr ""
+"<link xlink:href=\"https://git.osgeo.org/gitea/postgis/postgis/pulls/252\""
+">GT-252</link>， ST_NumGeometries/ST_GeometryN 将 TIN 和 PolyhedralSurface "
+"视为单一几何体，如需访问补片请使用 ST_NumPatches/ST_PatchN（Loïc Bartoletti）"
 
 #. Tag: para
 #, no-c-format
@@ -41534,6 +41899,10 @@ msgid ""
 "pulls/242\">GT-242</link>, [topology] Support for bigint (Ayo Adesugba, U.S. "
 "Census Bureau)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/3110\""
+">#3110</link>、<link xlink:href=\"https://git.osgeo.org/gitea/postgis/"
+"postgis/pulls/242\">GT-242</link>、[topology] 支持 bigint（Ayo Adesugba，"
+"U.S. Census Bureau）"
 
 #. Tag: para
 #, no-c-format
@@ -41545,11 +41914,17 @@ msgid ""
 "extension@ for PG &gt;= 16 to schema qualify dependent extensions, switch to "
 "use typmod for tiger tables (Regina Obe)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5359\""
+">#5359</link>、<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/"
+"5897\">#5897</link>、<link xlink:href=\"https://git.osgeo.org/gitea/postgis/"
+"postgis/pulls/260\">GT-260</link> [tiger_geocoder] 对 PG &gt;= 16 使用 "
+"@extschema:extension@ 来为依赖扩展指定 schema，并改用 typmod 处理 tiger 表（"
+"Regina Obe）"
 
 #. Tag: title
 #, no-c-format
 msgid "Removed / Deprecate signatures"
-msgstr ""
+msgstr "移除 / 弃用的函数签名"
 
 #. Tag: para
 #, no-c-format
@@ -41558,11 +41933,14 @@ msgid ""
 "Drop st_approxquantile(raster, double precision), wasn't usable as it "
 "triggered is not unique error when used (Regina Obe)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5498\">#5498</link> "
+"删除 `st_approxquantile(raster, double precision)`，因使用时会触发 is not "
+"unique 错误而不可用（Regina Obe）"
 
 #. Tag: title
 #, no-c-format
 msgid "New Features"
-msgstr ""
+msgstr "新特性"
 
 #. Tag: para
 #, no-c-format
@@ -41570,6 +41948,8 @@ msgid ""
 "<link xlink:href=\"https://github.com/postgis/postgis/pull/803\">GH-803</"
 "link>, [sfcgal] ADD CG_Simplify function (Loïc Bartoletti)"
 msgstr ""
+"<link xlink:href=\"https://github.com/postgis/postgis/pull/803\""
+">GH-803</link>，[sfcgal] 新增 CG_Simplify 函数（Loïc Bartoletti）"
 
 #. Tag: para
 #, no-c-format
@@ -41577,6 +41957,9 @@ msgid ""
 "<link xlink:href=\"https://github.com/postgis/postgis/pull/805\">GH-805</"
 "link>, [sfcgal] Add M support for SFCGAL &gt;= 1.5.0 (Loïc Bartoletti)"
 msgstr ""
+"<link xlink:href=\"https://github.com/postgis/postgis/pull/805\""
+">GH-805</link>，[sfcgal] 为 SFCGAL &gt;= 1.5.0 添加 M 维支持（Loïc "
+"Bartoletti）"
 
 #. Tag: para
 #, no-c-format
@@ -41584,6 +41967,8 @@ msgid ""
 "<link xlink:href=\"https://github.com/postgis/postgis/pull/801\">GH-801</"
 "link>, [sfcgal] ADD CG_3DAlphaWrapping function (Jean Felder)"
 msgstr ""
+"<link xlink:href=\"https://github.com/postgis/postgis/pull/801\""
+">GH-801</link>，[sfcgal] 新增 CG_3DAlphaWrapping 函数（Jean Felder）"
 
 #. Tag: para
 #, no-c-format
@@ -41591,6 +41976,8 @@ msgid ""
 "<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5894\">#5894</"
 "link>, [topology] TotalTopologySize (Sandro Santilli)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5894\">#5894</"
+"link>, [topology] TotalTopologySize (Sandro Santilli)"
 
 #. Tag: para
 #, no-c-format
@@ -41599,6 +41986,9 @@ msgid ""
 "link>, [topology] ValidateTopologyPrecision, MakeTopologyPrecise (Sandro "
 "Santilli)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5890\">#5890</"
+"link>, [topology] ValidateTopologyPrecision, MakeTopologyPrecise (Sandro "
+"Santilli)"
 
 #. Tag: para
 #, no-c-format
@@ -41607,6 +41997,9 @@ msgid ""
 "link>, [topology] Add --drop-topology switch to pgtopo_import (Sandro "
 "Santilli)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5861\""
+">#5861</link>，[topology] 为 pgtopo_import 添加 --drop-topology 选项（Sandro "
+"Santilli）"
 
 #. Tag: para
 #, no-c-format
@@ -41614,6 +42007,8 @@ msgid ""
 "<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/1247\">#1247</"
 "link>, [raster] ST_AsRasterAgg (Sandro Santilli)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/1247\">#1247</"
+"link>, [raster] ST_AsRasterAgg (Sandro Santilli)"
 
 #. Tag: para
 #, no-c-format
@@ -41623,6 +42018,10 @@ msgid ""
 "pulls/223\">GT-223</link> Export circ_tree_distance_tree_internal for "
 "mobilitydb use (Maxime Schoemans)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5784\""
+">#5784</link>、<link xlink:href=\"https://git.osgeo.org/gitea/postgis/"
+"postgis/pulls/223\">GT-223</link> 为 MobilityDB 导出 "
+"circ_tree_distance_tree_internal（Maxime Schoemans）"
 
 #. Tag: para
 #, no-c-format
@@ -41632,6 +42031,9 @@ msgid ""
 "Rotate, Buffer 3D and Straight Skeleton Partition) from SFCGAL 2 (Loïc "
 "Bartoletti)"
 msgstr ""
+"<link xlink:href=\"https://git.osgeo.org/gitea/postgis/postgis/pulls/228\""
+">GT-228</link>、[sfcgal] 从 SFCGAL 2 添加新函数（Scale、Translate、Rotate、"
+"Buffer 3D 和 Straight Skeleton Partition）（Loïc Bartoletti）"
 
 #. Tag: para
 #, no-c-format
@@ -41639,6 +42041,8 @@ msgid ""
 "[raster] New GUC postgis.gdal_cpl_debug, enables GDAL debugging messages and "
 "routes them into the PostgreSQL logging system. (Paul Ramsey)"
 msgstr ""
+"[raster] 新增 GUC postgis.gdal_cpl_debug，用于开启 GDAL 调试信息，"
+"并将其输出到 PostgreSQL 日志系统。（Paul Ramsey）"
 
 #. Tag: para
 #, no-c-format
@@ -41668,12 +42072,15 @@ msgid ""
 "pulls/242\">GT-242</link> [topology] Support for bigint (Ayo Adesugba, U.S. "
 "Census Bureau)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/3110\">#3110</"
+"link>, <link xlink:href=\"https://git.osgeo.org/gitea/postgis/postgis/pulls/"
+"242\">GT-242</link> [topology] 对bigint支持(Ayo Adesugba, U.S. Census Bureau)"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "[raster] Add ST_ReclassExact to quickly remap values in raster (Paul Ramsey)"
-msgstr ""
+msgstr "[raster] 新增 ST_ReclassExact，用于快速重映射 raster 中的值（Paul Ramsey）"
 
 #. Tag: title
 #, no-c-format
@@ -42826,6 +43233,10 @@ msgid ""
 "custom geodetic spatial reference system as described in <xref "
 "linkend=\"user-spatial-ref-sys\"/>."
 msgstr ""
+"与 geometry 类型类似，geography 数据也通过空间参考系统标识符（SRID）关联到空"
+"间参考系统。<varname>spatial_ref_sys</varname> "
+"表中定义的任何大地测量（基于经纬度）的空间参考系统都可以使用，也可以按 <xref "
+"linkend=\"user-spatial-ref-sys\"/> 所述添加自定义的大地测量空间参考系统。"
 
 #. Tag: para
 #, no-c-format
@@ -44890,6 +45301,14 @@ msgid ""
 "href=\"https://www.postgresql.org/docs/current/brin.html\">PostgreSQL "
 "manual</link>."
 msgstr ""
+"BRIN 代表 Block Range Index，是 PostgreSQL 提供的一种通用索引方法。BRIN "
+"是一种 <emphasis>有损</emphasis> 索引，这意味着需要二次检查以确认记录是否符合"
+"搜索条件（所有空间索引都是如此）。它提供了更快的索引创建速度和更小的索引尺寸"
+"，同时读取性能仍然合理。BRIN 的主要用途是为与表内物理位置相关的列建立索引，以"
+"支持超大表的高效查询。除了空间索引，BRIN "
+"还可以加速各种属性数据结构（整数、数组等）的搜索。更多信息请参见 <link "
+"xlink:href=\"https://www.postgresql.org/docs/current/brin.html\">PostgreSQL "
+"manual</link>。"
 
 #. Tag: para
 #, no-c-format
@@ -47348,6 +47767,9 @@ msgid ""
 "input vertices must fall already on the specified grid, see <xref "
 "linkend=\"ST_ReducePrecision\"/>."
 msgstr ""
+"如果提供了可选参数 <code>gridSize</code>（需要 GEOS 3.9.0 或更高版本），则所"
+"有结果顶点都会落在指定网格上。为了保证操作结果可预测，所有输入顶点必须已经位"
+"于该网格上，详见 <xref linkend=\"ST_ReducePrecision\"/>。"
 
 #. Tag: para
 #, no-c-format
