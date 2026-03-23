@@ -47,6 +47,20 @@
 #include "rtpostgis.h"
 #include "rtpg_internal.h"
 
+/*
+ * pg_fallthrough indicates that the fall through from the previous case is
+ * intentional.
+ */
+#if !(defined(pg_fallthrough))
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L) || (defined(__cplusplus) && __cplusplus >= 201703L)
+#define pg_fallthrough [[fallthrough]]
+#elif __has_attribute(fallthrough)
+#define pg_fallthrough __attribute__((fallthrough))
+#else
+#define pg_fallthrough
+#endif
+#endif
+
 /* n-raster MapAlgebra */
 Datum RASTER_nMapAlgebra(PG_FUNCTION_ARGS);
 Datum RASTER_nMapAlgebraExpr(PG_FUNCTION_ARGS);
