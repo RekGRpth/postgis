@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-13 16:23+0000\n"
-"PO-Revision-Date: 2026-03-24 05:27+0000\n"
+"PO-Revision-Date: 2026-03-31 10:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -1145,6 +1145,11 @@ msgid ""
 "(TIGER)</link> database. If you want to experiment with PostGIS topology and "
 "need some data."
 msgstr ""
+"トポロジーベースのGISデータベースの例に<link xlink:href=\"https://"
+"www.census.gov/geo/maps-data/data/tiger.html\">US Census Topologically "
+"Integrated Geographic Encoding and Referencing System (TIGER)</link>"
+"データベースがあります。PostGISトポロジーの実験でデータが必要となる場合に使っ"
+"て下さい。"
 
 #. Tag: para
 #, no-c-format
@@ -2399,6 +2404,10 @@ msgid ""
 "This safeguards adjacent topological relationships by preventing precision "
 "snapping from removing primitives altogether."
 msgstr ""
+"最小エッジ範囲より大きい<varname>gridSize</varname>を使うと、エッジが空"
+"ジオメトリに縮退するのでなく例外が発生します。これにより、精密なスナップ処理"
+"の際にプリミティブを完全に削除しないようにすることで、隣接するトポロジー関係"
+"を保護します。"
 
 #. Tag: para
 #, no-c-format
@@ -2666,7 +2675,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_InitTopoGeo\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_InitTopoGeo\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -5688,6 +5697,13 @@ msgid ""
 "www.graphicsmagick.org/ </link> and ImageMagick from <link "
 "xlink:href=\"https://imagemagick.org/\"> https://imagemagick.org/ </link> ."
 msgstr ""
+"GraphicsMagick (<filename>gm convert</filename>)は文書で使われる画像の生成に"
+"必要です。GraphicsMagickがない場合には、ImageMagick (<filename>convert</"
+"filename>または<filename>magick convert</filename>)で同じようなコマンドライン"
+"構文が使えます。GraphicsMagickは<link xlink:href=\"http://"
+"www.graphicsmagick.org/\"> http://www.graphicsmagick.org/ </link>にあり、"
+"ImageMagickは<link xlink:href=\"https://imagemagick.org/\"> https://"
+"imagemagick.org/ </link>にあります。"
 
 #. Tag: title
 #, no-c-format
@@ -6004,6 +6020,11 @@ msgid ""
 "<filename>raster_cheatsheet.html</filename>, "
 "<filename>postgis_cheatsheet.html</filename>"
 msgstr ""
+"<command>make cheatsheets</command>ターゲットで、HTMLのチートシートが生成され"
+"ます。クイックリファレンスまたは学習用資料に適しています。これを作るには"
+"xsltprocが必要です。docフォルダーに <filename>topology_cheatsheet.html</"
+"filename>、<filename>raster_cheatsheet.html</filename>、 <filename>"
+"postgis_cheatsheet.html</filename>の4ファイルが生成されます。"
 
 #. Tag: para
 #, no-c-format
@@ -6560,6 +6581,8 @@ msgid ""
 "documentation, alignment of PostGIS with PostgreSQL releases, X3D support, "
 "management functions."
 msgstr ""
+"CIとウェブサイトメンテナンス、Windows製品版と実験版のビルド、文書作成、"
+"PostGISとPostgreSQLとのリリース整合、X3D対応、管理関数。"
 
 #. Tag: term
 #, no-c-format
@@ -11360,6 +11383,9 @@ msgid ""
 "clustering input geometries into connected sets using the relate pattern to "
 "determine whether the geometries are connected."
 msgstr ""
+"ジオメトリーが接続するかどうかを判定する空間関係パターンを使って、入力"
+"ジオメトリーを接続されたジオメトリ集合にクラスタリングして、クラスター識別子"
+"を返すウィンドウ関数です。"
 
 #. Tag: para
 #, no-c-format
@@ -11370,11 +11396,16 @@ msgid ""
 "possible to build a cluster of all objects that touch at boundaries, but "
 "exclude those that merely overlap."
 msgstr ""
+"交差するジオメトリの接続されたクラスターを構築するウィンドウ関数です。"
+"ジオメトリーは、クラスターの他のメンバーとのDE9IM空間関係行列が対で合致する場"
+"合には、クラスターに追加されます。この関数によって、境界同士が接触するすべて"
+"のオブジェクトのクラスターを構築できますが、単にオーバーラップするものは除外"
+"されます。"
 
 #. Tag: para
 #, no-c-format
 msgid "Availability: 3.7.0"
-msgstr ""
+msgstr "Availability: 3.7.0"
 
 #. Tag: para
 #, no-c-format
@@ -11384,11 +11415,15 @@ msgid ""
 "linkend=\"ST_ClusterRelateWin\"/> can be clustered into three groups that "
 "connect only via their end points."
 msgstr ""
+"このラインストリングのコレクションは <xref "
+"linkend=\"ST_ClusterIntersectingWin\"/>を使って単一のクラスターを形成しますが"
+"、 <xref linkend=\"ST_ClusterRelateWin\"/>を使うと、端点でのみ接続する三つの"
+"グループにクラスタリングできます。"
 
 #. Tag: para
 #, no-c-format
 msgid "Connected and overlapping linestrings"
-msgstr ""
+msgstr "接続されオーバーラップしているラインストリング"
 
 #. Tag: para
 #, no-c-format
@@ -11396,6 +11431,8 @@ msgid ""
 ", <xref linkend=\"ST_ClusterIntersectingWin\"/>, <xref "
 "linkend=\"ST_ClusterWithinWin\"/>"
 msgstr ""
+", <xref linkend=\"ST_ClusterIntersectingWin\"/>, <xref "
+"linkend=\"ST_ClusterWithinWin\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -40335,6 +40372,14 @@ msgid ""
 "tries to upgrade extensions postgis, postgis_raster, postgis_sfcgal, and "
 "postgis_topology."
 msgstr ""
+"指定されたバージョンまたは最新バージョンへのPostGISエクステンションの"
+"パッケージ化とアップグレードを行います。そのデータベースにインストールした"
+"エクステンションだけが必要に応じてパッケージ化とアップグレードとを実行されま"
+"す。完全なPostGISバージョンを報告し、その後、ビルドコンフィギュレーション情報"
+"を報告します。PostGISエクステンションごとに行う複数のCREATE EXTENSION .. "
+"FROM unpackagedおよびALTER EXTENSION .. UPDATEの短縮形です。現在は、postgis, "
+"postgis_raster, postgis_sfcgal, postgis_topologyの四つのエクステンションの"
+"アップグレードのみを試みます。"
 
 #. Tag: para
 #, no-c-format
