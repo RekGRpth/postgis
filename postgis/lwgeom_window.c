@@ -982,6 +982,7 @@ Datum ST_CoverageUnion(PG_FUNCTION_ARGS)
 	GEOSGeometry *geos = NULL;
 	GEOSGeometry *geos_result = NULL;
 	uint32 ngeoms = 0;
+	int srid = SRID_UNKNOWN;
 
 	ArrayType *array = PG_GETARG_ARRAYTYPE_P(0);
 	uint32 nelems = ArrayGetNItems(ARR_NDIM(array), ARR_DIMS(array));
@@ -1006,6 +1007,10 @@ Datum ST_CoverageUnion(PG_FUNCTION_ARGS)
 		gser = (GSERIALIZED *)DatumGetPointer(value);
 		if (gserialized_is_empty(gser)) continue;
 
+		/* Get SRID from first non-null element */
+		if (srid == SRID_UNKNOWN)
+			srid = gserialized_get_srid(gser);
+
 		/* Omit unconvertible */
 		geos = POSTGIS2GEOS(gser);
 		if (!geos) continue;
@@ -1015,7 +1020,9 @@ Datum ST_CoverageUnion(PG_FUNCTION_ARGS)
 	array_free_iterator(iterator);
 
 	if (ngeoms == 0)
+	{
 		PG_RETURN_NULL();
+	}
 
 	geos = GEOSGeom_createCollection(
 		GEOS_GEOMETRYCOLLECTION,
@@ -1027,6 +1034,8 @@ Datum ST_CoverageUnion(PG_FUNCTION_ARGS)
 		HANDLE_GEOS_ERROR("Geometry could not be converted");
 	}
 
+	GEOSSetSRID(geos, srid);
+
 	geos_result = GEOSCoverageUnion(geos);
 	GEOSGeom_destroy(geos);
 	if (!geos_result)
@@ -1036,4 +1045,227 @@ Datum ST_CoverageUnion(PG_FUNCTION_ARGS)
 	GEOSGeom_destroy(geos_result);
 
 	PG_RETURN_POINTER(result);
+}
+
+
+/**********************************************************************
+ * ST_CoverageEdges(geometry, edgetype)
+ * ST_CoverageEdges(geometry[], edgetype)
+ *
+ */
+
+Datum ST_CoverageEdges(PG_FUNCTION_ARGS);
+PG_FUNCTION_INFO_V1(ST_CoverageEdges);
+Datum ST_CoverageEdges(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_GEOS_VERSION < 31500
+	lwpgerror("The GEOS version this PostGIS binary "
+	          "was compiled against (%d) doesn't support "
+	          "'ST_CoverageEdges' function (3.15.0+ required)",
+	          POSTGIS_GEOS_VERSION);
+	PG_RETURN_NULL();
+#else
+	GSERIALIZED *result = NULL;
+	GSERIALIZED *gser = PG_GETARG_GSERIALIZED_P(0);
+	int edgetype = PG_GETARG_INT32(1);
+	GEOSGeometry *geos = NULL;
+	GEOSGeometry *geos_result = NULL;
+
+	if (gserialized_is_empty(gser))
+		PG_RETURN_NULL();
+
+	initGEOS(lwpgnotice, lwgeom_geos_error);
+
+	geos = POSTGIS2GEOS(gser);
+	if (!geos)
+		HANDLE_GEOS_ERROR("Geometry could not be converted");
+
+	geos_result = GEOSCoverageEdges(geos, edgetype);
+	GEOSGeom_destroy(geos);
+	if (!geos_result)
+		HANDLE_GEOS_ERROR("Error computing coverage edges");
+
+	result = GEOS2POSTGIS(geos_result, LW_FALSE);
+	GEOSGeom_destroy(geos_result);
+
+	PG_RETURN_POINTER(result);
+#endif
+}
+
+Datum ST_CoverageEdges_array(PG_FUNCTION_ARGS);
+PG_FUNCTION_INFO_V1(ST_CoverageEdges_array);
+Datum ST_CoverageEdges_array(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_GEOS_VERSION < 31500
+	lwpgerror("The GEOS version this PostGIS binary "
+	          "was compiled against (%d) doesn't support "
+	          "'ST_CoverageEdges' function (3.15.0+ required)",
+	          POSTGIS_GEOS_VERSION);
+	PG_RETURN_NULL();
+#else
+	GSERIALIZED *result = NULL;
+	int edgetype = PG_GETARG_INT32(1);
+
+	Datum value;
+	bool isnull;
+
+	GEOSGeometry **geoms = NULL;
+	GEOSGeometry *geos = NULL;
+	GEOSGeometry *geos_result = NULL;
+	uint32 ngeoms = 0;
+	int srid = SRID_UNKNOWN;
+
+	ArrayType *array = PG_GETARG_ARRAYTYPE_P(0);
+	uint32 nelems = ArrayGetNItems(ARR_NDIM(array), ARR_DIMS(array));
+	ArrayIterator iterator = array_create_iterator(array, 0, NULL);
+
+	/* Return null on 0-elements input array */
+	if (nelems == 0)
+		PG_RETURN_NULL();
+
+	/* Convert all geometries into GEOSGeometry array */
+	geoms = palloc(sizeof(GEOSGeometry *) * nelems);
+
+	initGEOS(lwpgnotice, lwgeom_geos_error);
+
+	while (array_iterate(iterator, &value, &isnull))
+	{
+		GSERIALIZED *gser;
+		/* Omit nulls */
+		if (isnull) continue;
+
+		/* Omit empty */
+		gser = (GSERIALIZED *)DatumGetPointer(value);
+		if (gserialized_is_empty(gser)) continue;
+
+		/* Get SRID from first non-null element */
+		if (srid == SRID_UNKNOWN)
+			srid = gserialized_get_srid(gser);
+
+		/* Omit unconvertible */
+		geos = POSTGIS2GEOS(gser);
+		if (!geos) continue;
+
+		geoms[ngeoms++] = geos;
+	}
+	array_free_iterator(iterator);
+
+	if (ngeoms == 0)
+	{
+		PG_RETURN_NULL();
+	}
+
+	geos = GEOSGeom_createCollection(
+		GEOS_GEOMETRYCOLLECTION,
+		geoms, ngeoms);
+
+	if (!geos)
+	{
+		coverage_destroy_geoms(geoms, ngeoms);
+		HANDLE_GEOS_ERROR("Geometry could not be converted");
+	}
+
+	GEOSSetSRID(geos, srid);
+
+	geos_result = GEOSCoverageEdges(geos, edgetype);
+	GEOSGeom_destroy(geos);
+	if (!geos_result)
+		HANDLE_GEOS_ERROR("Error computing coverage edges");
+
+	result = GEOS2POSTGIS(geos_result, LW_FALSE);
+	GEOSGeom_destroy(geos_result);
+
+	PG_RETURN_POINTER(result);
+#endif
+}
+
+
+extern Datum ST_MinimumSpanningTree(PG_FUNCTION_ARGS);
+PG_FUNCTION_INFO_V1(ST_MinimumSpanningTree);
+Datum ST_MinimumSpanningTree(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_GEOS_VERSION < 31500
+	lwpgerror("The GEOS version this PostGIS binary "
+	          "was compiled against (%d) doesn't support "
+	          "'ST_MinimumSpanningTree' function (3.15.0+ required)",
+	          POSTGIS_GEOS_VERSION);
+	PG_RETURN_NULL();
+#else
+
+	WindowObject win_obj = PG_WINDOW_OBJECT();
+	uint32_t row = WinGetCurrentPosition(win_obj);
+	uint32_t ngeoms = WinGetPartitionRowCount(win_obj);
+	cluster_context* context = fetch_cluster_context(win_obj, ngeoms);
+
+	if (row == 0) /* beginning of the partition; do all of the work now */
+	{
+		uint32_t i;
+		GEOSGeometry** geoms = palloc(ngeoms * sizeof(GEOSGeometry*));
+		size_t* cluster_ids;
+
+		context->is_error = LW_TRUE; /* until proven otherwise */
+
+		initGEOS(lwpgnotice, lwgeom_geos_error);
+
+		for (i = 0; i < ngeoms; i++)
+		{
+			bool geom_is_null;
+			geoms[i] = read_geos_from_partition(win_obj, i, &geom_is_null);
+
+			if (!geoms[i])
+			{
+				lwpgerror("Error reading geometry.");
+				PG_RETURN_NULL();
+			}
+
+			context->clusters[i].is_null = geom_is_null;
+			/* If read_geos_from_partition returned a value (even empty) for a
+			   non-null input, we keep it. If it was null, is_null is true. */
+		}
+
+		/* Call GEOS */
+		/* Note: GEOSMinimumSpanningTree signature assumed:
+		   size_t* GEOSMinimumSpanningTree(GEOSGeometry* const* geoms, size_t ngeoms);
+		*/
+		cluster_ids = GEOSMinimumSpanningTree(geoms, ngeoms);
+
+		if (cluster_ids)
+		{
+			context->is_error = LW_FALSE;
+			for (i = 0; i < ngeoms; i++)
+			{
+				context->clusters[i].cluster_id = (uint32_t)cluster_ids[i];
+			}
+			/* Release the array returned by GEOS */
+			GEOSFree(cluster_ids);
+		}
+		else
+		{
+			/* Usually GEOS functions return NULL on error, but also check for context error */
+			/* However, if ngeoms is 0, it might return NULL but that's handled by loop */
+			/* If GEOS failed, we error out */
+			if (ngeoms > 0)
+				lwpgerror("GEOSMinimumSpanningTree failed");
+			else
+				context->is_error = LW_FALSE; /* Empty set is fine */
+		}
+
+		for (i = 0; i < ngeoms; i++)
+		{
+			if (geoms[i]) GEOSGeom_destroy(geoms[i]);
+		}
+		pfree(geoms);
+
+		if (context->is_error)
+		{
+			lwpgerror("Error during MST clustering");
+			PG_RETURN_NULL();
+		}
+	}
+
+	if (context->clusters[row].is_null)
+		PG_RETURN_NULL();
+
+	PG_RETURN_INT32(context->clusters[row].cluster_id);
+#endif
 }
