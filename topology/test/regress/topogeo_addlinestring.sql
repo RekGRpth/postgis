@@ -605,3 +605,51 @@ SELECT NULL FROM topology.TopoGeo_addLinestring('t6023',
 SELECT 't6023.2', 'errors', (array_agg(v.error))[1] FROM topology.ValidateTopology('t6023') v;
 SELECT NULL FROM topology.DropTopology ('t6023');
 
+
+-- See https://trac.osgeo.org/postgis/ticket/6062
+SELECT NULL FROM topology.CreateTopology ('t6062');
+SELECT NULL FROM topology.TopoGeo_addLinestring('t6062',
+  'LINESTRING(
+    5.973578257284919 58.622743904549445,
+    5.973578005845366 58.62274394695048,
+    5.973576069859005 58.62274529095248,
+    5.973578257284919 58.622743904549445
+  )');
+SELECT NULL FROM topology.TopoGeo_addLinestring('t6062',
+  'LINESTRING(
+    5.973580960523165 58.62274253029128,
+    5.973580707924141 58.622742572683244,
+    5.973578257284919 58.622743904549445
+  )');
+SELECT 't6062.1', 'error', * FROM topology.ValidateTopology('t6062') v;
+SELECT 't6062.edges', count(*) > 0 FROM topology.TopoGeo_addLinestring('t6062',
+  'LINESTRING(
+    5.973601239818134 58.62273178092448,
+    5.973509954104754 58.62277915982141
+  )', 1e-7)
+ORDER BY 2;
+SELECT 't6062.2', 'error', * FROM topology.ValidateTopology('t6062') v;
+SELECT NULL FROM topology.DropTopology ('t6062');
+
+-- See https://trac.osgeo.org/postgis/ticket/6064
+set client_min_messages to WARNING;
+SELECT NULL FROM topology.CreateTopology ('t6064');
+SELECT 't6064.1', count(*) > 0 FROM topology.TopoGeo_addLinestring('t6064',
+'LINESTRING(
+  17.42207545158684 69.11091383590066,
+  17.422075702665087 69.11091383235977,
+  17.579930758184094 69.12294910230447
+  , 17.622976580401446 69.12848944101118
+)');
+
+SELECT 't6064.check.intermediate', * FROM topology.ValidateTopology('t6064');
+set client_min_messages to DEBUG;
+SELECT 't6064.2', count(*) > 0 FROM topology.TopoGeo_addLinestring('t6064',
+'LINESTRING(
+  17.42207545158653 69.11091383590062,
+  17.42207570266477 69.11091383235974,
+  17.622976580401076 69.12848944101118
+)');
+set client_min_messages to WARNING;
+SELECT 't6064.check.final', * FROM topology.ValidateTopology('t6064');
+SELECT NULL FROM topology.DropTopology ('t6064');
