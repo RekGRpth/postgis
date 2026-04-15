@@ -1878,18 +1878,23 @@ _lwt_GetInteriorEdgePoint(const LWLINE* edge, POINT2D* ip)
   return 1;
 }
 
+/*
+ * @param isccw will be set to 1 if the ring is CounterClockwise, 0 otherwise
+ * @param ringbox if not null will be set to the bounding box of the ring
+ *
+ */
 static LWPOLY *
-_lwt_MakeRingShell(LWT_TOPOLOGY *topo, LWT_ELEMID *signed_edge_ids, uint64_t num_signed_edge_ids)
+_lwt_MakeRingShell(LWT_TOPOLOGY *topo, LWT_ELEMID *signed_edge_ids, uint64_t num_signed_edge_ids, int *isccw, GBOX *ringbox)
 {
   LWT_ELEMID *edge_ids;
-  uint64_t numedges, i, j;
+  uint64_t numedges, j, i;
   LWT_ISO_EDGE *ring_edges;
 
   /* Construct a polygon using edges of the ring */
   numedges = 0;
   edge_ids = lwalloc(sizeof(LWT_ELEMID)*num_signed_edge_ids);
   for (i=0; i<num_signed_edge_ids; ++i) {
-    int absid = llabs(signed_edge_ids[i]);
+    LWT_ELEMID absid = llabs(signed_edge_ids[i]);
     int found = 0;
     /* Do not add the same edge twice */
     for (j=0; j<numedges; ++j) {
@@ -1898,7 +1903,9 @@ _lwt_MakeRingShell(LWT_TOPOLOGY *topo, LWT_ELEMID *signed_edge_ids, uint64_t num
         break;
       }
     }
-    if ( ! found ) edge_ids[numedges++] = absid;
+    if ( ! found ) {
+      edge_ids[numedges++] = absid;
+    }
   }
   i = numedges;
   ring_edges = lwt_be_getEdgeById(topo, edge_ids, &i,
@@ -1918,19 +1925,36 @@ _lwt_MakeRingShell(LWT_TOPOLOGY *topo, LWT_ELEMID *signed_edge_ids, uint64_t num
     return NULL;
   }
 
+  /* Compute BBOX */
+  if ( ringbox )
+  {
+    for ( i=0; i<numedges; ++i )
+    {
+      GBOX edgebox;
+      if ( LW_SUCCESS != ptarray_calculate_gbox_cartesian(ring_edges[i].geom->points, &edgebox) )
+      {
+        lwerror("Could not calculate bounding box of edge %" LWTFMT_ELEMID, ring_edges[i].edge_id);
+        return NULL;
+      }
+      if ( 0 == i ) gbox_duplicate(&edgebox, ringbox);
+      else gbox_merge(&edgebox, ringbox);
+    }
+  }
+
   /* Should now build a polygon with those edges, in the order
    * given by GetRingEdges.
    */
-  POINTARRAY *pa = NULL;
+  POINTARRAY *full_ring_pa = NULL;
   for ( i=0; i<num_signed_edge_ids; ++i )
   {
     LWT_ELEMID eid = signed_edge_ids[i];
     LWDEBUGF(2, "Edge %" PRIu64 " in ring is edge %" LWTFMT_ELEMID, i, eid);
     LWT_ISO_EDGE *edge = NULL;
     POINTARRAY *epa;
+    LWT_ELEMID abseid = llabs(eid);
     for ( j=0; j<numedges; ++j )
     {
-      if ( ring_edges[j].edge_id == llabs(eid) )
+      if ( ring_edges[j].edge_id == abseid )
       {
         edge = &(ring_edges[j]);
         break;
@@ -1943,10 +1967,10 @@ _lwt_MakeRingShell(LWT_TOPOLOGY *topo, LWT_ELEMID *signed_edge_ids, uint64_t num
       return NULL;
     }
 
-    if ( pa == NULL )
+    if ( full_ring_pa == NULL )
     {
-      pa = ptarray_clone_deep(edge->geom->points);
-      if ( eid < 0 ) ptarray_reverse_in_place(pa);
+      full_ring_pa = ptarray_clone_deep(edge->geom->points);
+      if ( eid < 0 ) ptarray_reverse_in_place(full_ring_pa);
     }
     else
     {
@@ -1954,24 +1978,36 @@ _lwt_MakeRingShell(LWT_TOPOLOGY *topo, LWT_ELEMID *signed_edge_ids, uint64_t num
       {
         epa = ptarray_clone_deep(edge->geom->points);
         ptarray_reverse_in_place(epa);
-        ptarray_append_ptarray(pa, epa, 0);
+        ptarray_append_ptarray(full_ring_pa, epa, 0);
         ptarray_free(epa);
       }
       else
       {
         /* avoid a clone here */
-        ptarray_append_ptarray(pa, edge->geom->points, 0);
+        ptarray_append_ptarray(full_ring_pa, edge->geom->points, 0);
       }
     }
   }
   _lwt_release_edges(ring_edges, numedges);
+
+  if ( ! ptarray_is_closed_2d(full_ring_pa) )
+  {
+    lwerror("Corrupted topology: ring of edge %" LWTFMT_ELEMID
+            " is geometrically not-closed", signed_edge_ids[0]);
+    return NULL;
+  }
+
   POINTARRAY **points = lwalloc(sizeof(POINTARRAY*));
-  points[0] = pa;
+  points[0] = full_ring_pa;
 
   /* NOTE: the ring may very well have collapsed components,
    *       which would make it topologically invalid
    */
   LWPOLY* shell = lwpoly_construct(0, 0, 1, points);
+
+  /* TODO: skip if all edges were dangling ? */
+  *isccw = ptarray_isccw(shell->rings[0]);
+
   return shell;
 }
 
@@ -2035,28 +2071,21 @@ _lwt_AddFaceSplit( LWT_TOPOLOGY* topo,
    * NOTE: this possibly includes dangling edges
    *
    */
+  int isccw = 0;
+  GBOX ringbox;
   LWPOLY *shell = _lwt_MakeRingShell(topo, signed_edge_ids,
-                                     num_signed_edge_ids);
+                                     num_signed_edge_ids, &isccw, &ringbox);
   if ( ! shell ) {
     lwfree( signed_edge_ids );
     /* ring_edges should be NULL */
     lwerror("Could not create ring shell: %s", lwt_be_lastErrorMessage(topo->be_iface));
     return -2;
   }
-  const POINTARRAY *pa = shell->rings[0];
-  if ( ! ptarray_is_closed_2d(pa) )
-  {
-    lwpoly_free(shell);
-    lwfree( signed_edge_ids );
-    lwerror("Corrupted topology: ring of edge %" LWTFMT_ELEMID
-            " is geometrically not-closed", sedge);
-    return -2;
-  }
-
-  int isccw = ptarray_isccw(pa);
   LWDEBUGF(1, "Ring of edge %" LWTFMT_ELEMID " is %sclockwise",
               sedge, isccw ? "counter" : "");
-  const GBOX* shellbox = lwgeom_get_bbox(lwpoly_as_lwgeom(shell));
+
+  const GBOX* shellbox = &ringbox;
+  const POINTARRAY *pa = shell->rings[0];
 
   if ( face == 0 )
   {
@@ -3583,26 +3612,8 @@ lwt_ChangeEdgeGeom(LWT_TOPOLOGY* topo, LWT_ELEMID edge_id, LWLINE *geom)
     }
     LWDEBUGF(1, "getRingEdges returned %" PRIu64 " edges", num_signed_edge_ids);
 
-    shell = _lwt_MakeRingShell(topo, signed_edge_ids, num_signed_edge_ids);
-    if ( ! shell ) {
-      lwfree( signed_edge_ids );
-      /* ring_edges should be NULL */
-      lwerror("Could not create ring shell: %s", lwt_be_lastErrorMessage(topo->be_iface));
-      return -1;
-    }
-
-    const POINTARRAY *pa = shell->rings[0];
-    if ( ! ptarray_is_closed_2d(pa) )
-    {
-      lwpoly_free(shell);
-      lwfree( signed_edge_ids );
-      lwerror("Corrupted topology: ring of edge %" LWTFMT_ELEMID
-              " is geometrically not-closed", edge_id);
-      return -1;
-    }
-
-    leftRingIsCCW = ptarray_isccw(pa);
-    lwpoly_free(shell);
+    shell = _lwt_MakeRingShell(topo, signed_edge_ids, num_signed_edge_ids, &leftRingIsCCW, NULL);
+    lwpoly_free(shell); /* TODO: don't build it at all */
     lwfree( signed_edge_ids );
 
     LWDEBUGF(1, "Ring of edge %" LWTFMT_ELEMID " is %sclockwise", edge_id, leftRingIsCCW ? "counter" : "");
@@ -3687,26 +3698,8 @@ lwt_ChangeEdgeGeom(LWT_TOPOLOGY* topo, LWT_ELEMID edge_id, LWLINE *geom)
     }
     LWDEBUGF(1, "getRingEdges returned %" PRIu64 " edges", num_signed_edge_ids);
 
-    shell = _lwt_MakeRingShell(topo, signed_edge_ids, num_signed_edge_ids);
-    if ( ! shell ) {
-      lwfree( signed_edge_ids );
-      /* ring_edges should be NULL */
-      lwerror("Could not create ring shell: %s", lwt_be_lastErrorMessage(topo->be_iface));
-      return -1;
-    }
-
-    const POINTARRAY *pa = shell->rings[0];
-    if ( ! ptarray_is_closed_2d(pa) )
-    {
-      lwpoly_free(shell);
-      lwfree( signed_edge_ids );
-      lwerror("Corrupted topology: ring of edge %" LWTFMT_ELEMID
-              " is geometrically not-closed", edge_id);
-      return -1;
-    }
-
-    isCCW = ptarray_isccw(pa);
-    lwpoly_free(shell);
+    shell = _lwt_MakeRingShell(topo, signed_edge_ids, num_signed_edge_ids, &isCCW, NULL);
+    lwpoly_free(shell); /* TODO: don't build it at all */
     lwfree( signed_edge_ids );
 
     if ( isCCW != leftRingIsCCW )
