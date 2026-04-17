@@ -3,7 +3,7 @@
  * PostGIS - Spatial Types for PostgreSQL
  * http://postgis.net
  *
- * Copyright (C) 2015-2024 Sandro Santilli <strk@kbt.io>
+ * Copyright (C) 2015-2026 Sandro Santilli <strk@kbt.io>
  *
  * This is free software; you can redistribute and/or modify it under
  * the terms of the GNU General Public Licence. See the COPYING file.
@@ -5818,4 +5818,44 @@ Datum TopoGeo_LoadGeometry(PG_FUNCTION_ARGS)
   SPI_finish();
 
   PG_RETURN_VOID();
+}
+
+/*  TopoGeo_LoadGeometry(atopology, geom, tolerance) */
+Datum TopoRingIsCCW(PG_FUNCTION_ARGS);
+PG_FUNCTION_INFO_V1(TopoRingIsCCW);
+Datum TopoRingIsCCW(PG_FUNCTION_ARGS)
+{
+  GSERIALIZED *geom;
+  LWGEOM *lwgeom;
+  int isCCW;
+  const POINTARRAY *pa;
+
+  geom = PG_GETARG_GSERIALIZED_P(0);
+  lwgeom = lwgeom_from_gserialized(geom);
+
+  if ( lwgeom_is_empty(lwgeom) )
+  {
+    PG_RETURN_BOOL(false);
+  }
+
+  if (lwgeom->type == POLYGONTYPE)
+  {
+    pa = ((const LWPOLY *)lwgeom)->rings[0];
+  }
+  else if (lwgeom->type == LINETYPE)
+  {
+    pa = ((const LWLINE *)lwgeom)->points;
+  }
+  else
+  {
+    lwpgerror("Unsupported geometry type passed to TopoRingIsCCW");
+    PG_RETURN_NULL();
+  }
+
+  isCCW = lwt_IsTopoRingCCW(pa);
+  lwgeom_free(lwgeom);
+
+  PG_FREE_IF_COPY(geom, 0);
+
+  PG_RETURN_BOOL(isCCW);
 }

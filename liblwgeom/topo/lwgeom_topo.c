@@ -18,7 +18,7 @@
  *
  **********************************************************************
  *
- * Copyright (C) 2015-2024 Sandro Santilli <strk@kbt.io>
+ * Copyright (C) 2015-2026 Sandro Santilli <strk@kbt.io>
  * Copyright (C) 2025 Darafei Praliaskouski <me@komzpa.net>
  *
  **********************************************************************/
@@ -34,6 +34,8 @@
 #include "lwt_node_edges.h"
 #include "lwt_edgeend_star.h"
 #include "lwgeom_geos.h"
+
+#include <gmp.h>
 
 #include <inttypes.h>
 
@@ -1878,6 +1880,48 @@ _lwt_GetInteriorEdgePoint(const LWLINE* edge, POINT2D* ip)
   return 1;
 }
 
+int
+lwt_IsTopoRingCCW(const POINTARRAY *pa)
+{
+  const POINT2D *P1;
+  const POINT2D *P2;
+  const POINT2D *P3;
+  mpf_t sum;
+  mpf_t tmp;
+  double x0, x, y1, y2;
+  uint32_t i;
+  int ret;
+
+  if (! pa || pa->npoints < 3 )
+    return 0;
+
+  mpf_init2(sum, 64);
+  mpf_init2(tmp, 64);
+  mpf_set_d(sum, 0.0);
+
+  P1 = getPoint2d_cp(pa, 0);
+  P2 = getPoint2d_cp(pa, 1);
+  x0 = P1->x;
+  for ( i = 2; i < pa->npoints; i++ )
+  {
+    P3 = getPoint2d_cp(pa, i);
+    x = P2->x - x0;
+    y1 = P3->y;
+    y2 = P1->y;
+    mpf_set_d(tmp, x * (y2-y1));
+    mpf_add(sum, sum, tmp);
+    P1 = P2;
+    P2 = P3;
+  }
+
+  ret = mpf_cmp_ui(sum, 0) < 0;
+
+  mpf_clear(tmp);
+  mpf_clear(sum);
+
+  return ret;
+}
+
 /*
  * @param isccw will be set to 1 if the ring is CounterClockwise, 0 otherwise
  * @param ringbox if not null will be set to the bounding box of the ring
@@ -1997,6 +2041,8 @@ _lwt_MakeRingShell(LWT_TOPOLOGY *topo, LWT_ELEMID *signed_edge_ids, uint64_t num
     return NULL;
   }
 
+  *isccw = lwt_IsTopoRingCCW(full_ring_pa);
+
   POINTARRAY **points = lwalloc(sizeof(POINTARRAY*));
   points[0] = full_ring_pa;
 
@@ -2004,9 +2050,6 @@ _lwt_MakeRingShell(LWT_TOPOLOGY *topo, LWT_ELEMID *signed_edge_ids, uint64_t num
    *       which would make it topologically invalid
    */
   LWPOLY* shell = lwpoly_construct(0, 0, 1, points);
-
-  /* TODO: skip if all edges were dangling ? */
-  *isccw = ptarray_isccw(shell->rings[0]);
 
   return shell;
 }
