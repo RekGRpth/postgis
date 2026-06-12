@@ -86,6 +86,12 @@ Datum sfcgal_convexhull3D(PG_FUNCTION_ARGS);
 Datum sfcgal_alphashape(PG_FUNCTION_ARGS);
 Datum sfcgal_optimalalphashape(PG_FUNCTION_ARGS);
 Datum sfcgal_simplify(PG_FUNCTION_ARGS);
+Datum sfcgal_generate_flat_roof(PG_FUNCTION_ARGS);
+Datum sfcgal_generate_hipped_roof(PG_FUNCTION_ARGS);
+Datum sfcgal_generate_gable_roof(PG_FUNCTION_ARGS);
+Datum sfcgal_generate_skillion_roof(PG_FUNCTION_ARGS);
+Datum sfcgal_generate_roof(PG_FUNCTION_ARGS);
+Datum sfcgal_polygon_repair(PG_FUNCTION_ARGS);
 
 GSERIALIZED *geometry_serialize(LWGEOM *lwgeom);
 char *text_to_cstring(const text *textptr);
@@ -444,16 +450,33 @@ sfcgal_approximate_medial_axis(PG_FUNCTION_ARGS)
 	GSERIALIZED *input, *output;
 	sfcgal_geometry_t *geom;
 	sfcgal_geometry_t *result;
+	bool projected = false;
 	srid_t srid;
 
 	sfcgal_postgis_init();
 
 	input = PG_GETARG_GSERIALIZED_P(0);
 	srid = gserialized_get_srid(input);
+
+	if (PG_NARGS() > 1 && !PG_ARGISNULL(1))
+		projected = PG_GETARG_BOOL(1);
+
 	geom = POSTGIS2SFCGALGeometry(input);
 	PG_FREE_IF_COPY(input, 0);
 
+#if POSTGIS_SFCGAL_VERSION >= 20300
+	if (projected)
+		result = sfcgal_geometry_projected_medial_axis(geom);
+	else
+		result = sfcgal_geometry_approximate_medial_axis(geom);
+#else
+	if (projected)
+		lwpgnotice(
+		    "CG_ApproximateMedialAxis with projected=true requires SFCGAL 2.3.0+, "
+		    "falling back to non-projected result.");
 	result = sfcgal_geometry_approximate_medial_axis(geom);
+#endif
+
 	sfcgal_geometry_delete(geom);
 
 	output = SFCGALGeometry2POSTGIS(result, 0, srid);
@@ -1853,6 +1876,321 @@ sfcgal_alphawrapping_3d(PG_FUNCTION_ARGS)
 
 	output = SFCGALGeometry2POSTGIS(result, 1, srid); // force 3d output
 	sfcgal_geometry_delete(result);
+	PG_RETURN_POINTER(output);
+#endif
+}
+
+PG_FUNCTION_INFO_V1(sfcgal_generate_flat_roof);
+Datum
+sfcgal_generate_flat_roof(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_SFCGAL_VERSION < 20300
+	lwpgerror(
+	    "The SFCGAL version this PostGIS binary was compiled against (%d) doesn't support "
+	    "'sfcgal_geometry_generate_flat_roof' function (requires SFCGAL 2.3.0+)",
+	    POSTGIS_SFCGAL_VERSION);
+	PG_RETURN_NULL();
+#else
+	GSERIALIZED *input, *output;
+	sfcgal_geometry_t *geom, *result;
+	double height;
+	srid_t srid;
+
+	sfcgal_postgis_init();
+
+	input = PG_GETARG_GSERIALIZED_P(0);
+	if (gserialized_get_type(input) != POLYGONTYPE)
+	{
+		PG_FREE_IF_COPY(input, 0);
+		lwpgerror("CG_GenerateFlatRoof: input geometry must be a Polygon");
+		PG_RETURN_NULL();
+	}
+	height = PG_GETARG_FLOAT8(1);
+	srid = gserialized_get_srid(input);
+	geom = POSTGIS2SFCGALGeometry(input);
+	PG_FREE_IF_COPY(input, 0);
+
+	result = sfcgal_geometry_generate_flat_roof(geom, height);
+	sfcgal_geometry_delete(geom);
+
+	output = SFCGALGeometry2POSTGIS(result, 1, srid);
+	sfcgal_geometry_delete(result);
+
+	PG_RETURN_POINTER(output);
+#endif
+}
+
+PG_FUNCTION_INFO_V1(sfcgal_generate_hipped_roof);
+Datum
+sfcgal_generate_hipped_roof(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_SFCGAL_VERSION < 20300
+	lwpgerror(
+	    "The SFCGAL version this PostGIS binary was compiled against (%d) doesn't support "
+	    "'sfcgal_geometry_generate_hipped_roof' function (requires SFCGAL 2.3.0+)",
+	    POSTGIS_SFCGAL_VERSION);
+	PG_RETURN_NULL();
+#else
+	GSERIALIZED *input, *output;
+	sfcgal_geometry_t *geom, *result;
+	double height;
+	srid_t srid;
+
+	sfcgal_postgis_init();
+
+	input = PG_GETARG_GSERIALIZED_P(0);
+	if (gserialized_get_type(input) != POLYGONTYPE)
+	{
+		PG_FREE_IF_COPY(input, 0);
+		lwpgerror("CG_GenerateHippedRoof: input geometry must be a Polygon");
+		PG_RETURN_NULL();
+	}
+	height = PG_GETARG_FLOAT8(1);
+	srid = gserialized_get_srid(input);
+	geom = POSTGIS2SFCGALGeometry(input);
+	PG_FREE_IF_COPY(input, 0);
+
+	result = sfcgal_geometry_generate_hipped_roof(geom, height);
+	sfcgal_geometry_delete(geom);
+
+	output = SFCGALGeometry2POSTGIS(result, 1, srid);
+	sfcgal_geometry_delete(result);
+
+	PG_RETURN_POINTER(output);
+#endif
+}
+
+PG_FUNCTION_INFO_V1(sfcgal_generate_gable_roof);
+Datum
+sfcgal_generate_gable_roof(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_SFCGAL_VERSION < 20300
+	lwpgerror(
+	    "The SFCGAL version this PostGIS binary was compiled against (%d) doesn't support "
+	    "'sfcgal_geometry_generate_gable_roof' function (requires SFCGAL 2.3.0+)",
+	    POSTGIS_SFCGAL_VERSION);
+	PG_RETURN_NULL();
+#else
+	GSERIALIZED *input, *output;
+	sfcgal_geometry_t *geom, *result;
+	double height;
+	double slope_angle;
+	srid_t srid;
+
+	sfcgal_postgis_init();
+
+	input = PG_GETARG_GSERIALIZED_P(0);
+	if (gserialized_get_type(input) != POLYGONTYPE)
+	{
+		PG_FREE_IF_COPY(input, 0);
+		lwpgerror("CG_GenerateGableRoof: input geometry must be a Polygon");
+		PG_RETURN_NULL();
+	}
+	height = PG_GETARG_FLOAT8(1);
+	slope_angle = PG_GETARG_FLOAT8(2);
+	srid = gserialized_get_srid(input);
+	geom = POSTGIS2SFCGALGeometry(input);
+	PG_FREE_IF_COPY(input, 0);
+
+	result = sfcgal_geometry_generate_gable_roof(geom, height, slope_angle);
+	sfcgal_geometry_delete(geom);
+
+	output = SFCGALGeometry2POSTGIS(result, 1, srid);
+	sfcgal_geometry_delete(result);
+
+	PG_RETURN_POINTER(output);
+#endif
+}
+
+PG_FUNCTION_INFO_V1(sfcgal_generate_skillion_roof);
+Datum
+sfcgal_generate_skillion_roof(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_SFCGAL_VERSION < 20300
+	lwpgerror(
+	    "The SFCGAL version this PostGIS binary was compiled against (%d) doesn't support "
+	    "'sfcgal_geometry_generate_skillion_roof' function (requires SFCGAL 2.3.0+)",
+	    POSTGIS_SFCGAL_VERSION);
+	PG_RETURN_NULL();
+#else
+	GSERIALIZED *input, *output;
+	sfcgal_geometry_t *geom, *result;
+	double height;
+	double slope_angle;
+	int primary_edge_index;
+	srid_t srid;
+
+	sfcgal_postgis_init();
+
+	input = PG_GETARG_GSERIALIZED_P(0);
+	if (gserialized_get_type(input) != POLYGONTYPE)
+	{
+		PG_FREE_IF_COPY(input, 0);
+		lwpgerror("CG_GenerateSkillionRoof: input geometry must be a Polygon");
+		PG_RETURN_NULL();
+	}
+	height = PG_GETARG_FLOAT8(1);
+	slope_angle = PG_GETARG_FLOAT8(2);
+	primary_edge_index = PG_GETARG_INT32(3);
+	if (primary_edge_index < 0)
+	{
+		PG_FREE_IF_COPY(input, 0);
+		lwpgerror("CG_GenerateSkillionRoof: primary_edge_index must be >= 0");
+		PG_RETURN_NULL();
+	}
+	srid = gserialized_get_srid(input);
+	geom = POSTGIS2SFCGALGeometry(input);
+	PG_FREE_IF_COPY(input, 0);
+
+	result = sfcgal_geometry_generate_skillion_roof(geom, height, slope_angle, (size_t)primary_edge_index);
+	sfcgal_geometry_delete(geom);
+
+	output = SFCGALGeometry2POSTGIS(result, 1, srid);
+	sfcgal_geometry_delete(result);
+
+	PG_RETURN_POINTER(output);
+#endif
+}
+
+PG_FUNCTION_INFO_V1(sfcgal_generate_roof);
+Datum
+sfcgal_generate_roof(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_SFCGAL_VERSION < 20300
+	lwpgerror(
+	    "The SFCGAL version this PostGIS binary was compiled against (%d) doesn't support "
+	    "'sfcgal_geometry_generate_roof' function (requires SFCGAL 2.3.0+)",
+	    POSTGIS_SFCGAL_VERSION);
+	PG_RETURN_NULL();
+#else
+	GSERIALIZED *input, *output;
+	sfcgal_geometry_t *geom, *result;
+	sfcgal_roof_type_t roof_type;
+	double height;
+	double slope_angle;
+	int primary_edge_index;
+	srid_t srid;
+
+	sfcgal_postgis_init();
+
+	input = PG_GETARG_GSERIALIZED_P(0);
+	if (gserialized_get_type(input) != POLYGONTYPE)
+	{
+		PG_FREE_IF_COPY(input, 0);
+		lwpgerror("CG_GenerateRoof: input geometry must be a Polygon");
+		PG_RETURN_NULL();
+	}
+	height = PG_GETARG_FLOAT8(2);
+	slope_angle = PG_GETARG_FLOAT8(3);
+	primary_edge_index = PG_GETARG_INT32(4);
+	if (primary_edge_index < 0)
+	{
+		PG_FREE_IF_COPY(input, 0);
+		lwpgerror("CG_GenerateRoof: primary_edge_index must be >= 0");
+		PG_RETURN_NULL();
+	}
+	srid = gserialized_get_srid(input);
+
+	{
+		char *type_str = text_to_cstring(PG_GETARG_TEXT_P(1));
+
+		if (strcmp(type_str, "FLAT") == 0)
+			roof_type = SFCGAL_ROOF_FLAT;
+		else if (strcmp(type_str, "HIPPED") == 0)
+			roof_type = SFCGAL_ROOF_HIPPED;
+		else if (strcmp(type_str, "GABLE") == 0)
+			roof_type = SFCGAL_ROOF_GABLE;
+		else if (strcmp(type_str, "SKILLION") == 0)
+			roof_type = SFCGAL_ROOF_SKILLION;
+		else
+		{
+			lwpgerror("CG_GenerateRoof: unknown roof type '%s', expected FLAT, HIPPED, GABLE or SKILLION",
+			          type_str);
+			pfree(type_str);
+			PG_RETURN_NULL();
+		}
+		pfree(type_str); /* alloc'ed in text_to_cstring */
+	}
+
+	geom = POSTGIS2SFCGALGeometry(input);
+	PG_FREE_IF_COPY(input, 0);
+
+	result = sfcgal_geometry_generate_roof(geom, roof_type, slope_angle, height, (size_t)primary_edge_index);
+	sfcgal_geometry_delete(geom);
+
+	output = SFCGALGeometry2POSTGIS(result, 1, srid);
+	sfcgal_geometry_delete(result);
+
+	PG_RETURN_POINTER(output);
+#endif
+}
+
+PG_FUNCTION_INFO_V1(sfcgal_polygon_repair);
+Datum
+sfcgal_polygon_repair(PG_FUNCTION_ARGS)
+{
+#if POSTGIS_SFCGAL_VERSION < 20300 || \
+    !defined(SFCGAL_CGAL_VERSION_MAJOR) || \
+    SFCGAL_CGAL_VERSION_MAJOR < 6
+	lwpgerror(
+	    "The SFCGAL version this PostGIS binary was compiled against (%d) doesn't support "
+	    "'sfcgal_geometry_polygon_repair' function (requires SFCGAL 2.3.0+ and CGAL 6.0+)",
+	    POSTGIS_SFCGAL_VERSION);
+	PG_RETURN_NULL();
+#else
+	GSERIALIZED *input, *output;
+	sfcgal_geometry_t *geom, *result;
+	sfcgal_polygon_repair_rule_t rule = SFCGAL_POLYGON_REPAIR_EVEN_ODD;
+	srid_t srid;
+
+	sfcgal_postgis_init();
+
+	input = PG_GETARG_GSERIALIZED_P(0);
+	srid = gserialized_get_srid(input);
+
+	if (!PG_ARGISNULL(1))
+	{
+		char *rule_str = text_to_cstring(PG_GETARG_TEXT_P(1));
+
+		if (strcmp(rule_str, "EVEN_ODD") == 0)
+			rule = SFCGAL_POLYGON_REPAIR_EVEN_ODD;
+		else if (strcmp(rule_str, "NON_ZERO") == 0 ||
+		         strcmp(rule_str, "UNION") == 0 ||
+		         strcmp(rule_str, "INTERSECTION") == 0)
+		{
+			if (SFCGAL_CGAL_VERSION_MAJOR < 6 ||
+			    (SFCGAL_CGAL_VERSION_MAJOR == 6 && SFCGAL_CGAL_VERSION_MINOR < 1))
+			{
+				lwpgerror("CG_PolygonRepair: '%s' rule requires CGAL 6.1 or later", rule_str);
+				pfree(rule_str);
+				PG_RETURN_NULL();
+			}
+			if (strcmp(rule_str, "NON_ZERO") == 0)
+				rule = SFCGAL_POLYGON_REPAIR_NON_ZERO;
+			else if (strcmp(rule_str, "UNION") == 0)
+				rule = SFCGAL_POLYGON_REPAIR_UNION;
+			else
+				rule = SFCGAL_POLYGON_REPAIR_INTERSECTION;
+		}
+		else
+		{
+			lwpgerror("CG_PolygonRepair: unknown rule '%s', expected EVEN_ODD, NON_ZERO, UNION or INTERSECTION",
+			          rule_str);
+			pfree(rule_str);
+			PG_RETURN_NULL();
+		}
+		pfree(rule_str); /* alloc'ed in text_to_cstring */
+	}
+
+	geom = POSTGIS2SFCGALGeometry(input);
+	PG_FREE_IF_COPY(input, 0);
+
+	result = sfcgal_geometry_polygon_repair(geom, rule);
+	sfcgal_geometry_delete(geom);
+
+	output = SFCGALGeometry2POSTGIS(result, 0, srid);
+	sfcgal_geometry_delete(result);
+
 	PG_RETURN_POINTER(output);
 #endif
 }

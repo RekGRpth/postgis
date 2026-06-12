@@ -4,9 +4,7 @@
 name: "CI (FreeBSD)"
 
 on:
-  push:
-    branches-ignore:
-      - 'master'
+  push: ~
   pull_request: ~
 
 jobs:
