@@ -27,11 +27,91 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
 
 #include "liblwgeom_internal.h"
 #include "lwgeom_log.h"
 
 #define out_stack_size 32
+
+static char
+lwnurbscurve_weight_same(const LWNURBSCURVE *curve1, const LWNURBSCURVE *curve2)
+{
+	uint32_t npoints = curve1->points->npoints;
+
+	if ((curve1->nweights && curve1->nweights != npoints) ||
+	    (curve2->nweights && curve2->nweights != npoints))
+		return LW_FALSE;
+
+	for (uint32_t i = 0; i < npoints; i++)
+	{
+		double weight1 = curve1->weights ? curve1->weights[i] : 1.0;
+		double weight2 = curve2->weights ? curve2->weights[i] : 1.0;
+		if (!FP_EQUALS(weight1, weight2))
+			return LW_FALSE;
+	}
+
+	return LW_TRUE;
+}
+
+static double
+lwnurbscurve_uniform_knot_value(uint32_t degree, uint32_t npoints, uint32_t idx)
+{
+	uint32_t nknots = npoints + degree + 1;
+	uint32_t internal_knots = nknots - 2 * (degree + 1);
+
+	if (idx <= degree)
+		return 0.0;
+	if (idx >= nknots - degree - 1)
+		return 1.0;
+
+	return (double)(idx - degree) / (internal_knots + 1);
+}
+
+static char
+lwnurbscurve_knot_same(const LWNURBSCURVE *curve1, const LWNURBSCURVE *curve2)
+{
+	uint32_t npoints = curve1->points->npoints;
+	uint32_t nknots;
+
+	if (npoints < curve1->degree + 1)
+		return LW_FALSE;
+
+	nknots = npoints + curve1->degree + 1;
+	if ((curve1->nknots && curve1->nknots != nknots) ||
+	    (curve2->nknots && curve2->nknots != nknots))
+		return LW_FALSE;
+
+	for (uint32_t i = 0; i < nknots; i++)
+	{
+		double knot1 = curve1->knots ? curve1->knots[i] :
+			lwnurbscurve_uniform_knot_value(curve1->degree, npoints, i);
+		double knot2 = curve2->knots ? curve2->knots[i] :
+			lwnurbscurve_uniform_knot_value(curve2->degree, npoints, i);
+		if (!FP_EQUALS(knot1, knot2))
+			return LW_FALSE;
+	}
+
+	return LW_TRUE;
+}
+
+static char
+lwnurbscurve_same(const LWNURBSCURVE *curve1, const LWNURBSCURVE *curve2)
+{
+	if (lwnurbscurve_is_empty(curve1) && lwnurbscurve_is_empty(curve2))
+		return LW_TRUE;
+
+	if (curve1->degree != curve2->degree)
+		return LW_FALSE;
+	if (!curve1->points || !curve2->points || !ptarray_same(curve1->points, curve2->points))
+		return LW_FALSE;
+	if (!lwnurbscurve_weight_same(curve1, curve2))
+		return LW_FALSE;
+	if (!lwnurbscurve_knot_same(curve1, curve2))
+		return LW_FALSE;
+
+	return LW_TRUE;
+}
 
 
 /**
@@ -392,12 +472,13 @@ uint8_t MULTITYPE[NUMTYPES] =
 	POLYHEDRALSURFACETYPE, /* 11 */
 	0, 0,
 	TINTYPE,               /* 14 */
-	0
+	0,
+	MULTICURVETYPE         /* 16 */
 };
 
 uint8_t lwtype_multitype(uint8_t type)
 {
-	if (type > 15) return 0;
+	if (type >= NUMTYPES) return 0;
 	return MULTITYPE[type];
 }
 
@@ -566,6 +647,8 @@ lwgeom_clone(const LWGEOM *lwgeom)
 		return (LWGEOM *)lwline_clone((LWLINE *)lwgeom);
 	case CIRCSTRINGTYPE:
 		return (LWGEOM *)lwcircstring_clone((LWCIRCSTRING *)lwgeom);
+	case NURBSCURVETYPE:
+		return (LWGEOM *)lwnurbscurve_clone_deep((LWNURBSCURVE *)lwgeom);
 	case POLYGONTYPE:
 		return (LWGEOM *)lwpoly_clone((LWPOLY *)lwgeom);
 	case TRIANGLETYPE:
@@ -588,8 +671,18 @@ lwgeom_clone(const LWGEOM *lwgeom)
 }
 
 /**
-* Deep-clone an #LWGEOM object. #POINTARRAY <em>are</em> copied.
-*/
+ * Create a deep copy of an LWGEOM.
+ *
+ * Performs a full (deep) clone of the provided geometry, including copying
+ * internal vertex/point arrays so the returned geometry is independent of the
+ * original. Dispatches to type-specific deep-clone helpers (e.g. line, polygon,
+ * collection, NURBS curve).
+ *
+ * @param lwgeom Source geometry to clone. Must be non-NULL.
+ * @returns Pointer to a newly allocated LWGEOM that is a deep clone of
+ *          `lwgeom`, or NULL if `lwgeom->type` is unrecognized (an error is
+ *          reported in that case).
+ */
 LWGEOM *
 lwgeom_clone_deep(const LWGEOM *lwgeom)
 {
@@ -616,6 +709,8 @@ lwgeom_clone_deep(const LWGEOM *lwgeom)
 	case TINTYPE:
 	case COLLECTIONTYPE:
 		return (LWGEOM *)lwcollection_clone_deep((LWCOLLECTION *)lwgeom);
+	case NURBSCURVETYPE:
+		return (LWGEOM *)lwnurbscurve_clone_deep((LWNURBSCURVE *)lwgeom);
 	default:
 		lwerror("lwgeom_clone_deep: Unknown geometry type: %s", lwtype_name(lwgeom->type));
 		return NULL;
@@ -703,6 +798,9 @@ lwgeom_same(const LWGEOM *lwgeom1, const LWGEOM *lwgeom2)
 	case CIRCSTRINGTYPE:
 		return lwcircstring_same((LWCIRCSTRING *)lwgeom1,
 					 (LWCIRCSTRING *)lwgeom2);
+	case NURBSCURVETYPE:
+		return lwnurbscurve_same((LWNURBSCURVE *)lwgeom1,
+		                         (LWNURBSCURVE *)lwgeom2);
 	case MULTIPOINTTYPE:
 	case MULTILINETYPE:
 	case MULTIPOLYGONTYPE:
@@ -904,6 +1002,8 @@ lwgeom_force_dims(const LWGEOM *geom, int hasz, int hasm, double zval, double mv
 		case TINTYPE:
 		case COLLECTIONTYPE:
 			return lwcollection_as_lwgeom(lwcollection_force_dims((LWCOLLECTION*)geom, hasz, hasm, zval, mval));
+		case NURBSCURVETYPE:
+			return lwnurbscurve_as_lwgeom(lwnurbscurve_force_dims((LWNURBSCURVE*)geom, hasz, hasm, zval, mval));
 		default:
 			lwerror("lwgeom_force_2d: unsupported geom type: %s", lwtype_name(geom->type));
 			return NULL;
@@ -1131,6 +1231,27 @@ lwgeom_is_closed(const LWGEOM *geom)
 		return lwpoly_is_closed((LWPOLY*)geom);
 	case CIRCSTRINGTYPE:
 		return lwcircstring_is_closed((LWCIRCSTRING*)geom);
+	case NURBSCURVETYPE:
+	{
+		POINT4D start, end;
+		LWPOINT *startpt = lwnurbscurve_evaluate((const LWNURBSCURVE*)geom, 0.0);
+		LWPOINT *endpt = lwnurbscurve_evaluate((const LWNURBSCURVE*)geom, 1.0);
+		int closed = LW_FALSE;
+
+		if (startpt && endpt &&
+		    lwpoint_getPoint4d_p(startpt, &start) &&
+		    lwpoint_getPoint4d_p(endpt, &end))
+		{
+			if (FLAGS_GET_Z(geom->flags))
+				closed = FP_EQUALS(start.x, end.x) && FP_EQUALS(start.y, end.y) && FP_EQUALS(start.z, end.z);
+			else
+				closed = FP_EQUALS(start.x, end.x) && FP_EQUALS(start.y, end.y);
+		}
+
+		lwpoint_free(startpt);
+		lwpoint_free(endpt);
+		return closed;
+	}
 	case COMPOUNDTYPE:
 		return lwcompound_is_closed((LWCOMPOUND*)geom);
 	case TINTYPE:
@@ -1176,6 +1297,7 @@ lwtype_is_unitary(uint32_t lwtype)
 	case CURVEPOLYTYPE:
 	case COMPOUNDTYPE:
 	case CIRCSTRINGTYPE:
+	case NURBSCURVETYPE:
 	case TRIANGLETYPE:
 	case POLYHEDRALSURFACETYPE:
 	case TINTYPE:
@@ -1270,6 +1392,8 @@ lwtype_get_collectiontype(uint8_t type)
 			return MULTICURVETYPE;
 		case COMPOUNDTYPE:
 			return MULTICURVETYPE;
+		case NURBSCURVETYPE:
+			return MULTICURVETYPE;
 		case CURVEPOLYTYPE:
 			return MULTISURFACETYPE;
 		case TRIANGLETYPE:
@@ -1280,6 +1404,16 @@ lwtype_get_collectiontype(uint8_t type)
 }
 
 
+/**
+ * Free an LWGEOM and its associated resources.
+ *
+ * Dispatches to the appropriate type-specific free function based on lwgeom->type.
+ * If `lwgeom` is NULL the function is a no-op. Logs an error if the geometry type
+ * is unknown.
+ *
+ * @param lwgeom Pointer to the LWGEOM to free (may be NULL). After return the
+ *               memory for the provided geometry will have been released.
+ */
 void lwgeom_free(LWGEOM *lwgeom)
 {
 
@@ -1327,12 +1461,33 @@ void lwgeom_free(LWGEOM *lwgeom)
 	case COLLECTIONTYPE:
 		lwcollection_free((LWCOLLECTION *)lwgeom);
 		break;
+	case NURBSCURVETYPE:
+		lwnurbscurve_free((LWNURBSCURVE *)lwgeom);
+		break;
 	default:
 		lwerror("lwgeom_free called with unknown type (%d) %s", lwgeom->type, lwtype_name(lwgeom->type));
 	}
 	return;
 }
 
+/**
+ * Determine whether a geometry requires a bounding box.
+ *
+ * Returns LW_TRUE if callers should attach/maintain a bounding box for the
+ * provided geometry type and state, or LW_FALSE when a bbox is unnecessary
+ * (e.g., point-like or trivially short line geometries).
+ *
+ * Detailed behavior:
+ * - POINTTYPE: returns LW_FALSE.
+ * - LINETYPE: returns LW_FALSE for lines with 0–2 vertices, otherwise LW_TRUE.
+ * - NURBSCURVETYPE: currently treated as not requiring a bbox (LW_FALSE).
+ * - MULTIPOINTTYPE: returns LW_FALSE for a single-member collection, otherwise LW_TRUE.
+ * - MULTILINETYPE: returns LW_FALSE when the collection has one member and that member has ≤2 vertices, otherwise LW_TRUE.
+ * - All other types: returns LW_TRUE.
+ *
+ * @param geom Geometry to inspect (must not be NULL).
+ * @return LW_TRUE if a bbox is needed, LW_FALSE otherwise.
+ */
 int lwgeom_needs_bbox(const LWGEOM *geom)
 {
 	assert(geom);
@@ -1343,6 +1498,18 @@ int lwgeom_needs_bbox(const LWGEOM *geom)
 	else if ( geom->type == LINETYPE )
 	{
 		if ( lwgeom_count_vertices(geom) <= 2 )
+			return LW_FALSE;
+		else
+			return LW_TRUE;
+	}
+	else if ( geom->type == NURBSCURVETYPE )
+	{
+		const LWNURBSCURVE *nurbs = (LWNURBSCURVE*)geom;
+		/* Empty curves don't need bbox */
+		if ( !nurbs->points || nurbs->points->npoints == 0 )
+			return LW_FALSE;
+		/* Single control point doesn't need bbox */
+		else if ( nurbs->points->npoints == 1 )
 			return LW_FALSE;
 		else
 			return LW_TRUE;
@@ -1394,6 +1561,12 @@ uint32_t lwgeom_count_vertices(const LWGEOM *geom)
 	case LINETYPE:
 		result = lwline_count_vertices((const LWLINE *)geom);
 		break;
+	case NURBSCURVETYPE:
+		{
+			const LWNURBSCURVE *nurbs = (const LWNURBSCURVE *)geom;
+			result = (nurbs->points != NULL) ? nurbs->points->npoints : 0;
+		}
+		break;
 	case POLYGONTYPE:
 		result = lwpoly_count_vertices((const LWPOLY *)geom);
 		break;
@@ -1419,10 +1592,19 @@ uint32_t lwgeom_count_vertices(const LWGEOM *geom)
 }
 
 /**
-* For an #LWGEOM, returns 0 for points, 1 for lines,
-* 2 for polygons, 3 for volume, and the max dimension
-* of a collection.
-*/
+ * Return the topological dimension of a geometry.
+ *
+ * Determines the topological dimension for the given LWGEOM:
+ * - 0 for point-like geometries,
+ * - 1 for curve-like geometries (lines, circular strings, compound/curve collections, NURBS),
+ * - 2 for surface-like geometries (polygons, triangles, surfaces, TIN),
+ * - 3 for a closed polyhedral surface (volume).
+ * For a COLLECTION, returns the maximum dimension among its members.
+ *
+ * @param geom Pointer to the geometry; may be NULL.
+ * @return 0..3 for the geometry's topological dimension, the maximum member dimension for collections,
+ *         -1 if geom is NULL or its type is unsupported.
+ */
 int lwgeom_dimension(const LWGEOM *geom)
 {
 
@@ -1445,6 +1627,7 @@ int lwgeom_dimension(const LWGEOM *geom)
 	case COMPOUNDTYPE:
 	case MULTICURVETYPE:
 	case MULTILINETYPE:
+	case NURBSCURVETYPE:
 		return 1;
 	case TRIANGLETYPE:
 	case POLYGONTYPE:
@@ -1556,6 +1739,19 @@ static int lwcollection_dimensionality(const LWCOLLECTION *col)
 	return dimensionality;
 }
 
+/**
+ * Determine the topological dimensionality of a geometry.
+ *
+ * Returns the maximal topological dimension for the input geometry:
+ * - 0 for points and multipoints,
+ * - 1 for linear/curve types (lines, circular strings, compound/multi-curves, NURBS),
+ * - 2 for polygonal/surface types,
+ * - 3 for polyhedral surfaces or TINs that are closed (otherwise 2).
+ * For COLLECTIONTYPE the result is the maximum dimensionality of its members.
+ *
+ * @param geom Geometry to inspect (must be non-NULL).
+ * @return The topological dimension (0..3). On unsupported types the function logs an error and returns 0.
+ */
 extern int lwgeom_dimensionality(const LWGEOM *geom)
 {
 	int dim;
@@ -1574,6 +1770,7 @@ extern int lwgeom_dimensionality(const LWGEOM *geom)
 	case MULTILINETYPE:
 	case COMPOUNDTYPE:
 	case MULTICURVETYPE:
+	case NURBSCURVETYPE:
 		return 1;
 		break;
 	case POLYGONTYPE:
@@ -1634,6 +1831,14 @@ void lwgeom_swap_ordinates(LWGEOM *in, LWORD o1, LWORD o2)
 	case CIRCSTRINGTYPE:
 		ptarray_swap_ordinates(lwgeom_as_lwcircstring(in)->points, o1, o2);
 		break;
+
+	case NURBSCURVETYPE:
+	{
+		LWNURBSCURVE *n = (LWNURBSCURVE *)in;
+		if (n->points)
+			ptarray_swap_ordinates(n->points, o1, o2);
+		break;
+	}
 
 	case POLYGONTYPE:
 		poly = (LWPOLY *) in;
@@ -1840,9 +2045,10 @@ lwgeom_remove_repeated_points_in_place(LWGEOM *geom, double tolerance)
 		break;
 	}
 
-	case CIRCSTRINGTYPE:
-		/* Dunno how to handle these, will return untouched */
-		return geometry_modified;
+		case CIRCSTRINGTYPE:
+		case NURBSCURVETYPE:
+			/* Dunno how to handle these, will return untouched */
+			return geometry_modified;
 
 	/* Can process most multi* types as generic collection */
 	case MULTILINETYPE:
@@ -2119,6 +2325,14 @@ double lwgeom_length(const LWGEOM *geom)
 		return lwline_length((LWLINE*)geom);
 	else if ( type == CIRCSTRINGTYPE )
 		return lwcircstring_length((LWCIRCSTRING*)geom);
+	else if ( type == NURBSCURVETYPE )
+	{
+		double length;
+		LWLINE *line = lwnurbscurve_to_linestring((LWNURBSCURVE*)geom, 32);
+		length = lwline_length(line);
+		lwline_free(line);
+		return length;
+	}
 	else if ( type == COMPOUNDTYPE )
 		return lwcompound_length((LWCOMPOUND*)geom);
 	else if ( lwgeom_is_collection(geom) )
@@ -2141,6 +2355,14 @@ double lwgeom_length_2d(const LWGEOM *geom)
 		return lwline_length_2d((LWLINE*)geom);
 	else if ( type == CIRCSTRINGTYPE )
 		return lwcircstring_length_2d((LWCIRCSTRING*)geom);
+	else if ( type == NURBSCURVETYPE )
+	{
+		double length;
+		LWLINE *line = lwnurbscurve_to_linestring((LWNURBSCURVE*)geom, 32);
+		length = lwline_length_2d(line);
+		lwline_free(line);
+		return length;
+	}
 	else if ( type == COMPOUNDTYPE )
 		return lwcompound_length_2d((LWCOMPOUND*)geom);
 	else if ( type != CURVEPOLYTYPE && lwgeom_is_collection(geom) )
@@ -2172,6 +2394,13 @@ lwgeom_affine(LWGEOM *geom, const AFFINE *affine)
 		{
 			LWLINE *l = (LWLINE*)geom;
 			ptarray_affine(l->points, affine);
+			break;
+		}
+		case NURBSCURVETYPE:
+		{
+			LWNURBSCURVE *n = (LWNURBSCURVE*)geom;
+			if (n->points != NULL)
+				ptarray_affine(n->points, affine);
 			break;
 		}
 		case POLYGONTYPE:
@@ -2210,6 +2439,18 @@ lwgeom_affine(LWGEOM *geom, const AFFINE *affine)
 		lwgeom_refresh_bbox(geom);
 }
 
+/**
+ * Scale a geometry in-place by per-ordinate factors.
+ *
+ * Applies the provided scale factors to all coordinates of the given geometry.
+ * Scaling is applied component-wise: X by factor->x, Y by factor->y, Z by factor->z
+ * and M by factor->m when those ordinates are present. The operation mutates
+ * the input geometry and recurses into collections and curve/polygon components.
+ * If the geometry has an attached bounding box it is refreshed after scaling.
+ *
+ * @param geom Geometry to be scaled (modified in place). Behavior is undefined if NULL.
+ * @param factor Per-ordinate scale factors (X, Y, Z, M).
+ */
 void
 lwgeom_scale(LWGEOM *geom, const POINT4D *factor)
 {
@@ -2226,6 +2467,13 @@ lwgeom_scale(LWGEOM *geom, const POINT4D *factor)
 		{
 			LWLINE *l = (LWLINE*)geom;
 			ptarray_scale(l->points, factor);
+			break;
+		}
+		case NURBSCURVETYPE:
+		{
+			LWNURBSCURVE *n = (LWNURBSCURVE*)geom;
+			if (n->points != NULL)
+				ptarray_scale(n->points, factor);
 			break;
 		}
 		case POLYGONTYPE:
@@ -2264,6 +2512,27 @@ lwgeom_scale(LWGEOM *geom, const POINT4D *factor)
 		lwgeom_refresh_bbox(geom);
 }
 
+/**
+ * Construct an empty LWGEOM of the requested geometry type.
+ *
+ * Creates and returns a newly allocated geometry instance with no coordinates
+ * (an "empty" geometry), using the provided SRID and dimensionality flags.
+ * For homogeneous collection types (MULTI*, COLLECTION, COMPOUND) the `type`
+ * argument selects the specific collection subtype to construct.
+ *
+ * @param type Geometry type code (e.g., POINTTYPE, LINETYPE, POLYGONTYPE,
+ *             CURVEPOLYTYPE, CIRCSTRINGTYPE, TRIANGLETYPE, COMPOUNDTYPE,
+ *             MULTIPOINTTYPE, MULTILINETYPE, MULTIPOLYGONTYPE, COLLECTIONTYPE,
+ *             NURBSCURVETYPE). Unsupported types cause an error to be logged
+ *             and the function to return NULL.
+ * @param srid Spatial reference identifier to assign to the constructed geometry
+ *             (use SRID_UNKNOWN if not set).
+ * @param hasz Non-zero to include a Z ordinate in the geometry, zero to omit Z.
+ * @param hasm Non-zero to include an M ordinate in the geometry, zero to omit M.
+ *
+ * @return Pointer to the newly constructed LWGEOM, or NULL if `type` is not
+ *         supported.
+ */
 LWGEOM *
 lwgeom_construct_empty(uint8_t type, int32_t srid, char hasz, char hasm)
 {
@@ -2287,6 +2556,8 @@ lwgeom_construct_empty(uint8_t type, int32_t srid, char hasz, char hasm)
 		case MULTIPOLYGONTYPE:
 		case COLLECTIONTYPE:
 			return lwcollection_as_lwgeom(lwcollection_construct_empty(type, srid, hasz, hasm));
+		case NURBSCURVETYPE:
+			return lwnurbscurve_as_lwgeom(lwnurbscurve_construct_empty(srid, hasz, hasm));
 		default:
 			lwerror("lwgeom_construct_empty: unsupported geometry type: %s",
 		        	lwtype_name(type));
@@ -2308,6 +2579,15 @@ lwgeom_startpoint(const LWGEOM *lwgeom, POINT4D *pt)
 		case CIRCSTRINGTYPE:
 		case LINETYPE:
 			return ptarray_startpoint(((LWLINE*)lwgeom)->points, pt);
+		case NURBSCURVETYPE:
+		{
+			LWPOINT *start = lwnurbscurve_evaluate((const LWNURBSCURVE*)lwgeom, 0.0);
+			int rv = LW_FAILURE;
+			if ( start && start->point && start->point->npoints > 0 )
+				rv = getPoint4d_p(start->point, 0, pt) ? LW_SUCCESS : LW_FAILURE;
+			lwpoint_free(start);
+			return rv;
+		}
 		case POLYGONTYPE:
 			return lwpoly_startpoint((LWPOLY*)lwgeom, pt);
 		case TINTYPE:
@@ -2387,6 +2667,31 @@ lwgeom_grid_in_place(LWGEOM *geom, gridspec *grid)
 			/* For invalid line, return an EMPTY */
 			if (ln->points->npoints < 2)
 				ln->points->npoints = 0;
+			return;
+		}
+		case NURBSCURVETYPE:
+		{
+			LWNURBSCURVE *n = (LWNURBSCURVE *)(geom);
+			uint32_t old_npoints;
+			if (!n->points)
+				return;
+
+			old_npoints = n->points->npoints;
+			ptarray_grid_in_place(n->points, grid);
+			if (n->points->npoints < n->degree + 1)
+				n->points->npoints = 0;
+
+			if (n->points->npoints != old_npoints)
+			{
+				if (n->weights)
+					lwfree(n->weights);
+				if (n->knots)
+					lwfree(n->knots);
+				n->weights = NULL;
+				n->knots = NULL;
+				n->nweights = 0;
+				n->nknots = 0;
+			}
 			return;
 		}
 		case POLYGONTYPE:
@@ -2786,6 +3091,30 @@ lwgeom_boundary(LWGEOM *lwgeom)
 			getPoint4d_p(lwline->points, lwline->points->npoints - 1, &pt);
 			lwmpoint_add_lwpoint(lwmpoint, lwpoint_make(srid, hasz, hasm, &pt));
 
+			return (LWGEOM *)lwmpoint;
+		}
+	}
+	case NURBSCURVETYPE: {
+		if (lwgeom_is_closed(lwgeom) || lwgeom_is_empty(lwgeom))
+			return (LWGEOM *)lwmpoint_construct_empty(srid, hasz, hasm);
+		else
+		{
+			LWMPOINT *lwmpoint = lwmpoint_construct_empty(srid, hasz, hasm);
+			POINT4D pt;
+			LWPOINT *startpt = lwnurbscurve_evaluate((const LWNURBSCURVE *)lwgeom, 0.0);
+			LWPOINT *endpt   = lwnurbscurve_evaluate((const LWNURBSCURVE *)lwgeom, 1.0);
+			if (startpt)
+			{
+				lwpoint_getPoint4d_p(startpt, &pt);
+				lwmpoint_add_lwpoint(lwmpoint, lwpoint_make(srid, hasz, hasm, &pt));
+				lwpoint_free(startpt);
+			}
+			if (endpt)
+			{
+				lwpoint_getPoint4d_p(endpt, &pt);
+				lwmpoint_add_lwpoint(lwmpoint, lwpoint_make(srid, hasz, hasm, &pt));
+				lwpoint_free(endpt);
+			}
 			return (LWGEOM *)lwmpoint;
 		}
 	}

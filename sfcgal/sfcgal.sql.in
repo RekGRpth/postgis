@@ -659,4 +659,28 @@ AS 'MODULE_PATHNAME', 'sfcgal_polygon_repair'
 LANGUAGE 'c' IMMUTABLE STRICT PARALLEL SAFE
 _COST_DEFAULT;
 
+-- Availability: 3.7.0
+-- Compute derivative of NURBS curve at given parameter
+CREATE OR REPLACE FUNCTION CG_NurbsCurveDerivative(nurbscurve geometry, parameter float8, derivative_order integer)
+RETURNS geometry
+AS 'MODULE_PATHNAME', 'sfcgal_postgis_nurbs_curve_derivative'
+LANGUAGE 'c' IMMUTABLE STRICT PARALLEL SAFE
+_COST_MEDIUM;
+
+-- Availability: 3.7.0
+-- Create interpolating NURBS curve through data points
+CREATE OR REPLACE FUNCTION CG_NurbsCurveInterpolate(data_points geometry, degree integer)
+RETURNS geometry
+AS 'MODULE_PATHNAME', 'sfcgal_postgis_nurbs_curve_interpolate'
+LANGUAGE 'c' IMMUTABLE STRICT PARALLEL SAFE
+_COST_HIGH;
+
+-- Availability: 3.7.0
+-- Create approximating NURBS curve for data points
+CREATE OR REPLACE FUNCTION CG_NurbsCurveApproximate(data_points geometry, degree integer, tolerance float8, max_control_points integer DEFAULT 100)
+RETURNS geometry
+AS 'MODULE_PATHNAME', 'sfcgal_postgis_nurbs_curve_approximate'
+LANGUAGE 'c' IMMUTABLE STRICT PARALLEL SAFE
+_COST_HIGH;
+
 COMMIT;

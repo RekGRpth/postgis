@@ -45,6 +45,9 @@ LWGEOM* lwmline_unstroke(const LWMLINE *mline);
 LWGEOM* lwmpolygon_unstroke(const LWMPOLY *mpoly);
 LWGEOM* lwcollection_unstroke(const LWCOLLECTION *c);
 LWGEOM* lwgeom_unstroke(const LWGEOM *geom);
+static LWLINE* lwnurbscurve_linearize(const LWNURBSCURVE *curve, double tol, LW_LINEARIZE_TOLERANCE_TYPE tolerance_type, int flags);
+
+#define NURBS_MIN_LINEARIZE_SEGMENTS 8
 
 
 /*
@@ -72,6 +75,7 @@ lwgeom_has_arc(const LWGEOM *geom)
 	case TINTYPE:
 		return LW_FALSE;
 	case CIRCSTRINGTYPE:
+	case NURBSCURVETYPE:
 		return LW_TRUE;
 	/* It's a collection that MAY contain an arc */
 	default:
@@ -92,6 +96,7 @@ lwgeom_type_arc(const LWGEOM *geom)
 	{
 	case COMPOUNDTYPE:
 	case CIRCSTRINGTYPE:
+	case NURBSCURVETYPE:
 	case CURVEPOLYTYPE:
 	case MULTISURFACETYPE:
 	case MULTICURVETYPE:
@@ -620,6 +625,21 @@ lwcompound_linearize(const LWCOMPOUND *icompound, double tol,
 				ptarray_append_point(ptarray, &p, LW_TRUE);
 			}
 		}
+		else if (geom->type == NURBSCURVETYPE)
+		{
+			tmp = lwnurbscurve_linearize((LWNURBSCURVE *)geom, tol, tolerance_type, flags);
+			if (!tmp)
+			{
+				lwerror("%s: failed to linearize NURBS curve component", __func__);
+				return NULL;
+			}
+			for (j = 0; j < tmp->points->npoints; j++)
+			{
+				getPoint4d_p(tmp->points, j, &p);
+				ptarray_append_point(ptarray, &p, LW_TRUE);
+			}
+			lwline_free(tmp);
+		}
 		else
 		{
 			lwerror("%s: Unsupported geometry type: %s", __func__, lwtype_name(geom->type));
@@ -672,6 +692,17 @@ lwcurvepoly_linearize(const LWCURVEPOLY *curvepoly, double tol,
 		else if (tmp->type == COMPOUNDTYPE)
 		{
 			line = lwcompound_linearize((LWCOMPOUND *)tmp, tol, tolerance_type, flags);
+			ptarray[i] = ptarray_clone_deep(line->points);
+			lwline_free(line);
+		}
+		else if (tmp->type == NURBSCURVETYPE)
+		{
+			line = lwnurbscurve_linearize((LWNURBSCURVE *)tmp, tol, tolerance_type, flags);
+			if (!line)
+			{
+				lwerror("%s: failed to linearize NURBS curve ring", __func__);
+				return NULL;
+			}
 			ptarray[i] = ptarray_clone_deep(line->points);
 			lwline_free(line);
 		}
@@ -729,6 +760,15 @@ lwmcurve_linearize(const LWMCURVE *mcurve, double tol,
 		else if (tmp->type == COMPOUNDTYPE)
 		{
 			lines[i] = (LWGEOM *)lwcompound_linearize((LWCOMPOUND *)tmp, tol, type, flags);
+		}
+		else if (tmp->type == NURBSCURVETYPE)
+		{
+			lines[i] = (LWGEOM *)lwnurbscurve_linearize((LWNURBSCURVE *)tmp, tol, type, flags);
+			if (!lines[i])
+			{
+				lwerror("%s: failed to linearize NURBS curve component", __func__);
+				return NULL;
+			}
 		}
 		else
 		{
@@ -817,6 +857,14 @@ lwcollection_linearize(const LWCOLLECTION *collection, double tol,
 		case CIRCSTRINGTYPE:
 			geoms[i] = (LWGEOM *)lwcircstring_linearize((LWCIRCSTRING *)tmp, tol, type, flags);
 			break;
+		case NURBSCURVETYPE:
+			geoms[i] = (LWGEOM *)lwnurbscurve_linearize((LWNURBSCURVE *)tmp, tol, type, flags);
+			if (!geoms[i])
+			{
+				lwerror("%s: failed to linearize NURBS curve element", __func__);
+				return NULL;
+			}
+			break;
 		case COMPOUNDTYPE:
 			geoms[i] = (LWGEOM *)lwcompound_linearize((LWCOMPOUND *)tmp, tol, type, flags);
 			break;
@@ -837,6 +885,96 @@ lwcollection_linearize(const LWCOLLECTION *collection, double tol,
 	return ocol;
 }
 
+/*
+ * @param curve input NURBS curve
+ * @param tol tolerance, semantic driven by tolerance_type
+ * @param tolerance_type see LW_LINEARIZE_TOLERANCE_TYPE
+ * @param flags see flags in lwarc_linearize
+ *
+ * @return a newly allocated LWLINE
+ */
+static LWLINE *
+lwnurbscurve_linearize(const LWNURBSCURVE *curve, double tol,
+                        LW_LINEARIZE_TOLERANCE_TYPE tolerance_type,
+                        int flags)
+{
+	uint32_t num_segments;
+
+	LWDEBUG(2, "lwnurbscurve_linearize called.");
+
+	if (!curve)
+		return NULL;
+
+	if (!isfinite(tol) || tol <= 0.0)
+	{
+		lwerror("%s: tolerance must be finite and > 0, got %.15g", __func__, tol);
+		return NULL;
+	}
+
+	switch (tolerance_type)
+	{
+	case LW_LINEARIZE_TOLERANCE_TYPE_SEGS_PER_QUAD:
+		if (tol != rint(tol))
+		{
+			lwerror("%s: segs-per-quad must be an integer, got %.15g", __func__, tol);
+			return NULL;
+		}
+		if (tol > ((double)UINT32_MAX / 4.0))
+		{
+			lwerror("%s: segs-per-quad is too large, got %.15g", __func__, tol);
+			return NULL;
+		}
+		num_segments = (uint32_t)(tol * 4);
+		break;
+	case LW_LINEARIZE_TOLERANCE_TYPE_MAX_DEVIATION:
+	{
+		GBOX box;
+		double width = 0.0;
+		double height = 0.0;
+		double depth = 0.0;
+		double diagonal = 0.0;
+
+		if (!curve->points || curve->points->npoints == 0)
+			return lwnurbscurve_to_linestring(curve, NURBS_MIN_LINEARIZE_SEGMENTS);
+
+		if (ptarray_calculate_gbox_cartesian(curve->points, &box) == LW_SUCCESS)
+		{
+			width = box.xmax - box.xmin;
+			height = box.ymax - box.ymin;
+			if (FLAGS_GET_Z(curve->flags))
+				depth = box.zmax - box.zmin;
+			diagonal = sqrt(width * width + height * height + depth * depth);
+		}
+
+		if (diagonal > tol * UINT32_MAX)
+		{
+			lwerror("%s: max deviation is too small, got %.15g", __func__, tol);
+			return NULL;
+		}
+		num_segments = diagonal > 0.0 ? (uint32_t)ceil(diagonal / tol) : NURBS_MIN_LINEARIZE_SEGMENTS;
+		break;
+	}
+	case LW_LINEARIZE_TOLERANCE_TYPE_MAX_ANGLE:
+		if (tol < (2.0 * M_PI) / UINT32_MAX)
+		{
+			lwerror("%s: max angle is too small, got %.15g", __func__, tol);
+			return NULL;
+		}
+		num_segments = (uint32_t)ceil((2.0 * M_PI) / tol);
+		break;
+	default:
+		lwerror("%s: unsupported tolerance type %d", __func__, tolerance_type);
+		return NULL;
+	}
+
+	if (num_segments < NURBS_MIN_LINEARIZE_SEGMENTS)
+		num_segments = NURBS_MIN_LINEARIZE_SEGMENTS;
+
+	(void)flags; /* Currently unused for NURBS linearization */
+
+	return lwnurbscurve_to_linestring(curve, num_segments);
+}
+
 LWGEOM *
 lwcurve_linearize(const LWGEOM *geom, double tol,
                   LW_LINEARIZE_TOLERANCE_TYPE type,
@@ -847,6 +985,9 @@ lwcurve_linearize(const LWGEOM *geom, double tol,
 	{
 	case CIRCSTRINGTYPE:
 		ogeom = (LWGEOM *)lwcircstring_linearize((LWCIRCSTRING *)geom, tol, type, flags);
+		break;
+	case NURBSCURVETYPE:
+		ogeom = (LWGEOM *)lwnurbscurve_linearize((LWNURBSCURVE *)geom, tol, type, flags);
 		break;
 	case COMPOUNDTYPE:
 		ogeom = (LWGEOM *)lwcompound_linearize((LWCOMPOUND *)geom, tol, type, flags);
@@ -1291,4 +1432,3 @@ lwgeom_unstroke(const LWGEOM *geom)
 		return lwgeom_clone_deep(geom);
 	}
 }
-

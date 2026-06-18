@@ -954,7 +954,7 @@ FROM polyTable
 	  <refnamediv>
 		<refname>ST_EndPoint</refname>
 
-		<refpurpose>Returns the last point of a LineString or CircularLineString.</refpurpose>
+		<refpurpose>Returns the last point of a LineString, CircularLineString, or NURBSCurve.</refpurpose>
 	  </refnamediv>
 
 	  <refsynopsisdiv>
@@ -970,11 +970,11 @@ FROM polyTable
 	  <refsection>
 		<title>Description</title>
 
-	  <para>Returns the last point of a <varname>LINESTRING</varname>
-      or <varname>CIRCULARLINESTRING</varname> geometry
+	  <para>Returns the last point of a <varname>LINESTRING</varname>,
+      <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname> geometry
 	  as a <varname>POINT</varname>.
       Returns <varname>NULL</varname> if the input
-	  is not a <varname>LINESTRING</varname> or <varname>CIRCULARLINESTRING</varname>.</para>
+	  is not a <varname>LINESTRING</varname>, <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname>.</para>
 
 		<para>&sqlmm_compliant; SQL-MM 3: 7.1.4</para>
 		<para>&Z_support;</para>
@@ -1017,10 +1017,18 @@ SELECT ST_AsEWKT(ST_EndPoint('LINESTRING(1 1 2, 1 2 3, 0 0 5)'));
 
 <para>End point of a CircularString</para>
 <programlisting>
-SELECT ST_AsText(ST_EndPoint('CIRCULARSTRING(5 2,-3 1.999999, -2 1, -4 2, 6 3)'::geometry));
+SELECT ST_AsText(ST_EndPoint('CIRCULARSTRING(5 2,-3 2, -2 1, -4 2, 6 3)'::geometry));
  st_astext
 ------------
  POINT(6 3)
+</programlisting>
+
+<para>End point of a NURBSCurve</para>
+<programlisting>
+SELECT ST_AsText(ST_EndPoint('NURBSCURVE(2, (0 0, 1 1, 2 0))'::geometry));
+ st_astext
+------------
+ POINT(2 0)
 </programlisting>
 	  </refsection>
 
@@ -2826,7 +2834,7 @@ MULTIPOINT Z ((30 10 4),(10 30 5),(40 40 6),(30 10 4))
 	<refnamediv>
 	  <refname>ST_StartPoint</refname>
 
-	  <refpurpose>Returns the first point of a LineString.</refpurpose>
+	  <refpurpose>Returns the first point of a LineString, CircularLineString, or NURBSCurve.</refpurpose>
 	</refnamediv>
 
 	<refsynopsisdiv>
@@ -2842,11 +2850,11 @@ MULTIPOINT Z ((30 10 4),(10 30 5),(40 40 6),(30 10 4))
 	<refsection>
 	  <title>Description</title>
 
-	  <para>Returns the first point of a <varname>LINESTRING</varname>
-      or <varname>CIRCULARLINESTRING</varname> geometry
+	  <para>Returns the first point of a <varname>LINESTRING</varname>,
+      <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname> geometry
 	  as a <varname>POINT</varname>.
       Returns <varname>NULL</varname> if the input
-	  is not a <varname>LINESTRING</varname> or <varname>CIRCULARLINESTRING</varname>.</para>
+	  is not a <varname>LINESTRING</varname>, <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname>.</para>
 
 	  <para>&sqlmm_compliant; SQL-MM 3: 7.1.3</para>
 	  <para>&Z_support;</para>
@@ -2891,10 +2899,18 @@ SELECT ST_AsEWKT(ST_StartPoint('LINESTRING(0 1 1, 0 2 2)'::geometry));
 
 <para>Start point of a CircularString</para>
 <programlisting>
-SELECT ST_AsText(ST_StartPoint('CIRCULARSTRING(5 2,-3 1.999999, -2 1, -4 2, 6 3)'::geometry));
+SELECT ST_AsText(ST_StartPoint('CIRCULARSTRING(5 2,-3 2, -2 1, -4 2, 6 3)'::geometry));
  st_astext
 ------------
  POINT(5 2)
+</programlisting>
+
+<para>Start point of a NURBSCurve</para>
+<programlisting>
+SELECT ST_AsText(ST_StartPoint('NURBSCURVE(2, (0 0, 1 1, 2 0))'::geometry));
+ st_astext
+------------
+ POINT(0 0)
 </programlisting>
 	</refsection>
 
@@ -2904,6 +2920,289 @@ SELECT ST_AsText(ST_StartPoint('CIRCULARSTRING(5 2,-3 1.999999, -2 1, -4 2, 6 3)
 	  <para><xref linkend="ST_EndPoint"/>, <xref linkend="ST_PointN"/></para>
 	</refsection>
   </refentry>
+
+	<refentry xml:id="ST_StartM">
+	<refnamediv>
+	  <refname>ST_StartM</refname>
+
+	  <refpurpose>Returns the M coordinate of the first point of a LineString, CircularLineString, or NURBSCurve.</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+	  <funcsynopsis>
+		<funcprototype>
+		  <funcdef>float8 <function>ST_StartM</function></funcdef>
+
+		  <paramdef><type>geometry </type> <parameter>geom</parameter></paramdef>
+		</funcprototype>
+	  </funcsynopsis>
+	</refsynopsisdiv>
+
+	<refsection>
+	  <title>Description</title>
+
+	  <para>Returns the M coordinate of the first point of a <varname>LINESTRING</varname>,
+      <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname> geometry.
+      Returns <varname>NULL</varname> if the input geometry does not have an M dimension or
+	  is not a <varname>LINESTRING</varname>, <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname>.</para>
+
+	  <para>&curve_support;</para>
+	</refsection>
+
+	<refsection>
+	  <title>Examples</title>
+<para>Start M value of a LineString</para>
+	  <programlisting>SELECT ST_StartM('LINESTRING M(0 0 10, 1 1 20, 2 0 30)'::geometry);
+ st_startm
+-----------
+        10
+</programlisting>
+
+<para>Start M value of a CircularString</para>
+<programlisting>
+SELECT ST_StartM('CIRCULARSTRING M(0 0 5, 1 1 10, 2 0 15)'::geometry);
+ st_startm
+-----------
+         5
+</programlisting>
+
+<para>Start M value of a NURBSCurve</para>
+<programlisting>
+SELECT ST_StartM('NURBSCURVE M(2, (0 0 100, 1 1 200, 2 0 300))'::geometry);
+ st_startm
+-----------
+       100
+</programlisting>
+
+<para>Geometry without M dimension returns NULL</para>
+<programlisting>
+SELECT ST_StartM('LINESTRING(0 0, 1 1)'::geometry) IS NULL AS is_null;
+ is_null
+---------
+ t
+</programlisting>
+	</refsection>
+
+	<refsection>
+	  <title>See Also</title>
+
+	  <para><xref linkend="ST_EndM"/>, <xref linkend="ST_SetStartM"/>, <xref linkend="ST_StartPoint"/></para>
+	</refsection>
+  </refentry>
+
+	<refentry xml:id="ST_EndM">
+	<refnamediv>
+	  <refname>ST_EndM</refname>
+
+	  <refpurpose>Returns the M coordinate of the last point of a LineString, CircularLineString, or NURBSCurve.</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+	  <funcsynopsis>
+		<funcprototype>
+		  <funcdef>float8 <function>ST_EndM</function></funcdef>
+
+		  <paramdef><type>geometry </type> <parameter>geom</parameter></paramdef>
+		</funcprototype>
+	  </funcsynopsis>
+	</refsynopsisdiv>
+
+	<refsection>
+	  <title>Description</title>
+
+	  <para>Returns the M coordinate of the last point of a <varname>LINESTRING</varname>,
+      <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname> geometry.
+      Returns <varname>NULL</varname> if the input geometry does not have an M dimension or
+	  is not a <varname>LINESTRING</varname>, <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname>.</para>
+
+	  <para>&curve_support;</para>
+	</refsection>
+
+	<refsection>
+	  <title>Examples</title>
+<para>End M value of a LineString</para>
+	  <programlisting>SELECT ST_EndM('LINESTRING M(0 0 10, 1 1 20, 2 0 30)'::geometry);
+ st_endm
+---------
+      30
+</programlisting>
+
+<para>End M value of a CircularString</para>
+<programlisting>
+SELECT ST_EndM('CIRCULARSTRING M(0 0 5, 1 1 10, 2 0 15)'::geometry);
+ st_endm
+---------
+      15
+</programlisting>
+
+<para>End M value of a NURBSCurve</para>
+<programlisting>
+SELECT ST_EndM('NURBSCURVE M(2, (0 0 100, 1 1 200, 2 0 300))'::geometry);
+ st_endm
+---------
+     300
+</programlisting>
+
+<para>Geometry without M dimension returns NULL</para>
+<programlisting>
+SELECT ST_EndM('LINESTRING(0 0, 1 1)'::geometry) IS NULL AS is_null;
+ is_null
+---------
+ t
+</programlisting>
+	</refsection>
+
+	<refsection>
+	  <title>See Also</title>
+
+	  <para><xref linkend="ST_StartM"/>, <xref linkend="ST_SetEndM"/>, <xref linkend="ST_EndPoint"/></para>
+	</refsection>
+  </refentry>
+
+	<refentry xml:id="ST_SetStartM">
+	<refnamediv>
+	  <refname>ST_SetStartM</refname>
+
+	  <refpurpose>Sets the M coordinate of the first point of a LineString, CircularLineString, or NURBSCurve.</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+	  <funcsynopsis>
+		<funcprototype>
+		  <funcdef>geometry <function>ST_SetStartM</function></funcdef>
+
+		  <paramdef><type>geometry </type> <parameter>geom</parameter></paramdef>
+		  <paramdef><type>float8 </type> <parameter>m</parameter></paramdef>
+		</funcprototype>
+	  </funcsynopsis>
+	</refsynopsisdiv>
+
+	<refsection>
+	  <title>Description</title>
+
+	  <para>Returns a copy of the input <varname>LINESTRING</varname>,
+      <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname> geometry
+      with the M coordinate of the first point set to the specified value.
+      If the input geometry does not have an M dimension, it will be added.
+      Returns <varname>NULL</varname> if the input
+	  is not a <varname>LINESTRING</varname>, <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname>.</para>
+
+	  <para>&curve_support;</para>
+	</refsection>
+
+	<refsection>
+	  <title>Examples</title>
+<para>Set start M value of a LineString</para>
+	  <programlisting>SELECT ST_AsText(ST_SetStartM('LINESTRING M(0 0 10, 1 1 20, 2 0 30)'::geometry, 100));
+        st_astext
+------------------------
+ LINESTRING M (0 0 100,1 1 20,2 0 30)
+</programlisting>
+
+<para>Add M dimension and set start M value</para>
+<programlisting>
+SELECT ST_AsText(ST_SetStartM('LINESTRING(0 0, 1 1, 2 0)'::geometry, 50));
+        st_astext
+------------------------
+ LINESTRING M (0 0 50,1 1 0,2 0 0)
+</programlisting>
+
+<para>Set start M value of a CircularString</para>
+<programlisting>
+SELECT ST_AsText(ST_SetStartM('CIRCULARSTRING M(0 0 5, 1 1 10, 2 0 15)'::geometry, 99));
+        st_astext
+------------------------
+ CIRCULARSTRING M (0 0 99,1 1 10,2 0 15)
+</programlisting>
+
+<para>Set start M value of a NURBSCurve</para>
+<programlisting>
+SELECT ST_AsText(ST_SetStartM('NURBSCURVE M(2, (0 0 100, 1 1 200, 2 0 300))'::geometry, 500));
+        st_astext
+------------------------
+ NURBSCURVE M (2,(0 0 500,1 1 200,2 0 300))
+</programlisting>
+	</refsection>
+
+	<refsection>
+	  <title>See Also</title>
+
+	  <para><xref linkend="ST_SetEndM"/>, <xref linkend="ST_StartM"/>, <xref linkend="ST_StartPoint"/></para>
+	</refsection>
+  </refentry>
+
+	<refentry xml:id="ST_SetEndM">
+	<refnamediv>
+	  <refname>ST_SetEndM</refname>
+
+	  <refpurpose>Sets the M coordinate of the last point of a LineString, CircularLineString, or NURBSCurve.</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+	  <funcsynopsis>
+		<funcprototype>
+		  <funcdef>geometry <function>ST_SetEndM</function></funcdef>
+
+		  <paramdef><type>geometry </type> <parameter>geom</parameter></paramdef>
+		  <paramdef><type>float8 </type> <parameter>m</parameter></paramdef>
+		</funcprototype>
+	  </funcsynopsis>
+	</refsynopsisdiv>
+
+	<refsection>
+	  <title>Description</title>
+
+	  <para>Returns a copy of the input <varname>LINESTRING</varname>,
+      <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname> geometry
+      with the M coordinate of the last point set to the specified value.
+      If the input geometry does not have an M dimension, it will be added.
+      Returns <varname>NULL</varname> if the input
+	  is not a <varname>LINESTRING</varname>, <varname>CIRCULARLINESTRING</varname>, or <varname>NURBSCURVE</varname>.</para>
+
+	  <para>&curve_support;</para>
+	</refsection>
+
+	<refsection>
+	  <title>Examples</title>
+<para>Set end M value of a LineString</para>
+	  <programlisting>SELECT ST_AsText(ST_SetEndM('LINESTRING M(0 0 10, 1 1 20, 2 0 30)'::geometry, 999));
+        st_astext
+------------------------
+ LINESTRING M (0 0 10,1 1 20,2 0 999)
+</programlisting>
+
+<para>Add M dimension and set end M value</para>
+<programlisting>
+SELECT ST_AsText(ST_SetEndM('LINESTRING(0 0, 1 1, 2 0)'::geometry, 75));
+        st_astext
+------------------------
+ LINESTRING M (0 0 0,1 1 0,2 0 75)
+</programlisting>
+
+<para>Set end M value of a CircularString</para>
+<programlisting>
+SELECT ST_AsText(ST_SetEndM('CIRCULARSTRING M(0 0 5, 1 1 10, 2 0 15)'::geometry, 88));
+        st_astext
+------------------------
+ CIRCULARSTRING M (0 0 5,1 1 10,2 0 88)
+</programlisting>
+
+<para>Set end M value of a NURBSCurve</para>
+<programlisting>
+SELECT ST_AsText(ST_SetEndM('NURBSCURVE M(2, (0 0 100, 1 1 200, 2 0 300))'::geometry, 999));
+        st_astext
+------------------------
+ NURBSCURVE M (2,(0 0 100,1 1 200,2 0 999))
+</programlisting>
+	</refsection>
+
+	<refsection>
+	  <title>See Also</title>
+
+	  <para><xref linkend="ST_SetStartM"/>, <xref linkend="ST_EndM"/>, <xref linkend="ST_EndPoint"/></para>
+	</refsection>
+  </refentry>
+
 	<refentry xml:id="ST_Summary">
 	  <refnamediv>
 		<refname>ST_Summary</refname>
@@ -3325,5 +3624,383 @@ SELECT ST_Zmflag(ST_GeomFromEWKT('POINT(1 2 3 4)'));
   </refsection>
 </refentry>
 
+	<refentry xml:id="ST_ControlPoints">
+		<refnamediv>
+			<refname>ST_ControlPoints</refname>
+			<refpurpose>Returns the control points of a NURBS curve as a MULTIPOINT geometry.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>geometry <function>ST_ControlPoints</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>nurbscurve</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Extracts the control points from a NURBS curve and returns them as a MULTIPOINT geometry. Control points define the control polygon that influences the shape of the NURBS curve.</para>
+
+			<para>The function raises an error if the input is not a NURBS curve. Returns NULL if the input is NULL.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Extract control points from a NURBS curve
+SELECT ST_AsText(ST_ControlPoints('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry));
+-- Result: MULTIPOINT((0 0),(5 10),(10 0))
+
+-- Count the number of control points
+SELECT ST_NPoints(ST_ControlPoints('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry));
+-- Result: 3</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_NumControlPoints"/>, <xref linkend="ST_Weights"/></para>
+		</refsection>
+	</refentry>
+
+	<refentry xml:id="ST_Degree">
+		<refnamediv>
+			<refname>ST_Degree</refname>
+			<refpurpose>Returns the polynomial degree of a NURBS curve.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>integer <function>ST_Degree</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>nurbscurve</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Returns the polynomial degree of a NURBS curve as an integer. The degree determines the curve's smoothness and flexibility. Higher degrees produce smoother curves but require more control points.</para>
+
+			<para>The function raises an error if the input is not a NURBS curve. Returns NULL if the input is NULL.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Get the degree of a NURBS curve
+SELECT ST_Degree('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry);
+-- Result: 2
+
+-- Check if a NURBS curve is cubic
+SELECT ST_Degree('NURBSCURVE(3, (0 0, 2 5, 5 8, 10 0))'::geometry) = 3;
+-- Result: true</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_NumControlPoints"/></para>
+		</refsection>
+	</refentry>
+
+	<refentry xml:id="ST_Weights">
+		<refnamediv>
+			<refname>ST_Weights</refname>
+			<refpurpose>Returns the weight array of a rational NURBS curve.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>float8[] <function>ST_Weights</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>nurbscurve</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Returns the weight values of a rational NURBS curve as an array of double precision values. Weights control the influence of each control point on the curve shape. Higher weights pull the curve closer to the corresponding control point.</para>
+
+			<para>Returns NULL if the curve has no weights (non-rational B-spline) or if the input is NULL. Raises an error if the input is not a NURBS curve.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Get weights from a rational NURBS curve
+SELECT ST_Weights(ST_MakeNurbsCurve(2, 'LINESTRING(0 0, 5 10, 10 0)'::geometry, ARRAY[1.0, 2.0, 1.0]));
+-- Result: {1,2,1}
+
+-- Check if a curve has uniform weights
+SELECT ST_Weights('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry);
+-- Result: NULL (non-rational curve)</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_NurbsCurveIsRational"/>, <xref linkend="ST_ControlPoints"/></para>
+		</refsection>
+	</refentry>
+
+	<refentry xml:id="ST_Knots">
+		<refnamediv>
+			<refname>ST_Knots</refname>
+			<refpurpose>Returns the knot vector of a NURBS curve.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>float8[] <function>ST_Knots</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>nurbscurve</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Returns the knot vector of a NURBS curve as an array of double precision values. The knot vector defines the parameter space and controls where and how the control points affect the curve. It must be a non-decreasing sequence with length equal to (number of control points + degree + 1).</para>
+
+			<para>Returns NULL if the curve uses the default uniform clamped knot vector or if the input is NULL. Raises an error if the input is not a NURBS curve.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Get knots from a NURBS curve with custom knot vector
+SELECT ST_Knots(ST_MakeNurbsCurve(2, 'LINESTRING(0 0, 5 10, 10 0)'::geometry,
+                 ARRAY[1.0, 2.0, 1.0], ARRAY[0,0,0,1,1,1]));
+-- Result: {0,0,0,1,1,1}
+
+-- Check if a curve uses default knot vector
+SELECT ST_Knots('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry);
+-- Result: NULL (uniform clamped knot vector)</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_Degree"/>, <xref linkend="ST_NumControlPoints"/></para>
+		</refsection>
+	</refentry>
+
+	<refentry xml:id="ST_NumControlPoints">
+		<refnamediv>
+			<refname>ST_NumControlPoints</refname>
+			<refpurpose>Returns the number of control points in a NURBS curve.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>integer <function>ST_NumControlPoints</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>nurbscurve</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Returns the number of control points in a NURBS curve. The number of control points must be at least (degree + 1) for a valid NURBS curve.</para>
+
+			<para>Raises an error if the input is not a NURBS curve. Returns NULL if the input is NULL.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Get the number of control points
+SELECT ST_NumControlPoints('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry);
+-- Result: 3
+
+-- Verify curve has enough control points for its degree
+SELECT ST_NumControlPoints(curve) >= ST_Degree(curve) + 1 AS valid
+FROM (SELECT 'NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry AS curve) AS t;
+-- Result: true</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_ControlPoints"/>, <xref linkend="ST_Degree"/></para>
+		</refsection>
+	</refentry>
+
+	<refentry xml:id="ST_NurbsCurveIsRational">
+		<refnamediv>
+			<refname>ST_NurbsCurveIsRational</refname>
+			<refpurpose>Checks if a NURBS curve is rational (has weights).</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>boolean <function>ST_NurbsCurveIsRational</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>nurbscurve</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Returns TRUE if the NURBS curve has weights assigned to its control points (rational NURBS), FALSE if it uses uniform weights (non-rational B-spline).</para>
+
+			<para>Rational NURBS curves provide more flexibility in curve shape control through variable weights. Non-rational B-splines use uniform weights and are a special case of NURBS curves.</para>
+
+			<para>Raises an error if the input is not a NURBS curve. Returns NULL if the input is NULL.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Check if a curve is rational
+SELECT ST_NurbsCurveIsRational(ST_MakeNurbsCurve(2, 'LINESTRING(0 0, 5 10, 10 0)'::geometry,
+                                ARRAY[1.0, 2.0, 1.0]));
+-- Result: true
+
+-- Non-rational curve
+SELECT ST_NurbsCurveIsRational('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry);
+-- Result: false</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_Weights"/>, <xref linkend="ST_IsNurbsCurve"/></para>
+		</refsection>
+	</refentry>
+
+	<refentry xml:id="ST_IsNurbsCurve">
+		<refnamediv>
+			<refname>ST_IsNurbsCurve</refname>
+			<refpurpose>Checks if a geometry is a NURBS curve.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>boolean <function>ST_IsNurbsCurve</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>geom</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Returns TRUE if the geometry is a NURBS curve, FALSE otherwise. This function can be used to test geometry types before applying NURBS-specific functions.</para>
+
+			<para>Returns NULL if the input is NULL.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Check if geometry is a NURBS curve
+SELECT ST_IsNurbsCurve('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry);
+-- Result: true
+
+-- Test a regular linestring
+SELECT ST_IsNurbsCurve('LINESTRING(0 0, 10 10)'::geometry);
+-- Result: false</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_GeometryType"/>, <xref linkend="ST_NurbsCurveIsRational"/></para>
+		</refsection>
+	</refentry>
+
+	<refentry xml:id="ST_Evaluate">
+		<refnamediv>
+			<refname>ST_Evaluate</refname>
+			<refpurpose>Evaluates a NURBS curve at a specific parameter value and returns the resulting point.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>geometry <function>ST_Evaluate</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>nurbscurve</parameter></paramdef>
+					<paramdef><type>float8</type> <parameter>parameter</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Evaluates a NURBS curve at the specified parameter value and returns a POINT geometry representing the position on the curve. The parameter typically ranges from 0.0 (start of curve) to 1.0 (end of curve), though the actual range depends on the knot vector.</para>
+
+			<para>Raises an error if the input is not a NURBS curve or if evaluation fails. Returns NULL if either input is NULL.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Get the midpoint of a NURBS curve
+SELECT ST_AsText(ST_Evaluate('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry, 0.5));
+
+-- Sample multiple points along a curve
+SELECT t, ST_AsText(ST_Evaluate(curve, t)) AS point
+FROM (SELECT 'NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry AS curve) AS c,
+     generate_series(0, 1, 0.25) AS t;</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_NurbsToLineString"/></para>
+		</refsection>
+	</refentry>
+
+	<refentry xml:id="ST_NurbsToLineString">
+		<refnamediv>
+			<refname>ST_NurbsToLineString</refname>
+			<refpurpose>Converts a NURBS curve to a LINESTRING by uniform sampling.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<funcsynopsis>
+				<funcprototype>
+					<funcdef>geometry <function>ST_NurbsToLineString</function></funcdef>
+					<paramdef><type>geometry</type> <parameter>nurbscurve</parameter></paramdef>
+					<paramdef choice="opt"><type>integer</type> <parameter>num_segments=32</parameter></paramdef>
+				</funcprototype>
+			</funcsynopsis>
+		</refsynopsisdiv>
+
+		<refsection>
+			<title>Description</title>
+			<para>Converts a NURBS curve to a LINESTRING geometry by creating a piecewise linear approximation. The curve is sampled at uniformly distributed parameter values and the resulting points are connected with straight line segments.</para>
+
+			<para>The optional <varname>num_segments</varname> parameter specifies the number of line segments in the output (default: 32, range: 2-10000). Higher values produce smoother approximations but increase geometry complexity.</para>
+
+			<para>Raises an error if the input is not a NURBS curve. Returns NULL if the input is NULL.</para>
+
+			<para role="availability" conformance="3.7.0">Availability: 3.7.0</para>
+		</refsection>
+
+		<refsection>
+			<title>Examples</title>
+			<programlisting>-- Convert NURBS to linestring with default quality
+SELECT ST_AsText(ST_NurbsToLineString('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry));
+
+-- High-quality approximation with 64 segments
+SELECT ST_AsText(ST_NurbsToLineString('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry, 64));
+
+-- Lower quality, faster conversion with 16 segments
+SELECT ST_AsText(ST_NurbsToLineString('NURBSCURVE(2, (0 0, 5 10, 10 0))'::geometry, 16));</programlisting>
+		</refsection>
+
+		<refsection>
+			<title>See Also</title>
+			<para><xref linkend="ST_MakeNurbsCurve"/>, <xref linkend="ST_Evaluate"/>, <xref linkend="ST_Segmentize"/></para>
+		</refsection>
+	</refentry>
 
   </section>

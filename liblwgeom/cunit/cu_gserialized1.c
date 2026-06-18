@@ -589,6 +589,11 @@ static void test_lwgeom_swap_ordinates(void)
 	);
 
 	do_lwgeom_swap_ordinates(
+	    "NURBSCURVE(2, (0 10, 1 11, 2 10))",
+	    "NURBSCURVE(DEGREE 2,CONTROLPOINTS(NURBSPOINT(WEIGHTEDPOINT(10 0),WEIGHT 1),NURBSPOINT(WEIGHTEDPOINT(11 1),WEIGHT 1),NURBSPOINT(WEIGHTEDPOINT(10 2),WEIGHT 1)),KNOTS (KNOT(0,3),KNOT(1,3)))"
+	);
+
+	do_lwgeom_swap_ordinates(
 	    "COMPOUNDCURVE(CIRCULARSTRING(0 1,1 1,1 0),(1 0,0 1))",
 	    "COMPOUNDCURVE(CIRCULARSTRING(1 0,1 1,0 1),(0 1,1 0))"
 	);
@@ -715,7 +720,7 @@ static void test_lwgeom_clone(void)
 		"SRID=4326;GEOMETRYCOLLECTION(POINT(0 1),POLYGON((-1 -1,-1 2.5,2 2,2 -1,-1 -1),(0 0,0 1,1 1,1 0,0 0)),MULTIPOLYGON(((-1 -1,-1 2.5,2 2,2 -1,-1 -1),(0 0,0 1,1 1,1 0,0 0),(-0.5 -0.5,-0.5 -0.4,-0.4 -0.4,-0.4 -0.5,-0.5 -0.5))))",
 		"MULTICURVE((5 5 1 3,3 5 2 2,3 3 3 1,0 3 1 1),CIRCULARSTRING(0 0 0 0,0.26794 1 3 -2,0.5857864 1.414213 1 2))",
 		"MULTISURFACE(CURVEPOLYGON(CIRCULARSTRING(-2 0,-1 -1,0 0,1 -1,2 0,0 2,-2 0),(-1 0,0 0.5,1 0,0 1,-1 0)),((7 8,10 10,6 14,4 11,7 8)))",
-		"TIN(((0 0 0,0 0 1,0 1 0,0 0 0)),((0 0 0,0 1 0,1 0 0,0 0 0)),((0 0 0,1 0 0,0 0 1,0 0 0)),((1 0 0,0 1 0,0 0 1,1 0 0)))"
+		"TIN Z (((0 0 0,0 0 1,0 1 0,0 0 0)),((0 0 0,0 1 0,1 0 0,0 0 0)),((0 0 0,1 0 0,0 0 1,0 0 0)),((1 0 0,0 1 0,0 0 1,1 0 0)))"
 	};
 
 
@@ -910,6 +915,20 @@ static void test_lwgeom_same(void)
 	lwgeom_add_bbox(geom);
 	CU_ASSERT( lwgeom_same(geom, geom) );
 	lwgeom_free(geom);
+
+	geom = lwgeom_from_wkt("NURBSCURVE(2, (0 0, 1 1, 2 0))", LW_PARSER_CHECK_NONE);
+	geom2 = lwgeom_from_wkt("NURBSCURVE(2, (0 0, 1 1, 2 0))", LW_PARSER_CHECK_NONE);
+	CU_ASSERT( lwgeom_same(geom, geom2) );
+	lwgeom_free(geom);
+	lwgeom_free(geom2);
+
+	geom = lwgeom_from_wkt("NURBSCURVE(2, (0 0, 1 1, 2 0))", LW_PARSER_CHECK_NONE);
+	geom2 = lwgeom_from_wkt(
+	    "NURBSCURVE(DEGREE 2,CONTROLPOINTS(NURBSPOINT(WEIGHTEDPOINT(0 0),WEIGHT 1),NURBSPOINT(WEIGHTEDPOINT(1 1),WEIGHT 1),NURBSPOINT(WEIGHTEDPOINT(2 0),WEIGHT 1)),KNOTS (KNOT(0,3),KNOT(1,3)))",
+	    LW_PARSER_CHECK_NONE);
+	CU_ASSERT( lwgeom_same(geom, geom2) );
+	lwgeom_free(geom);
+	lwgeom_free(geom2);
 
 	geom = lwgeom_from_wkt("POLYGON EMPTY", LW_PARSER_CHECK_NONE);
 	CU_ASSERT( lwgeom_same(geom, geom) );

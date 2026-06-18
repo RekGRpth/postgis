@@ -246,6 +246,38 @@ CREATE OR REPLACE FUNCTION ST_M(geometry)
 	LANGUAGE 'c' IMMUTABLE STRICT
 	PARALLEL SAFE _COST_DEFAULT;
 
+-- Availability: 3.7.0
+CREATE OR REPLACE FUNCTION ST_StartM(geometry)
+	RETURNS float8
+	AS 'MODULE_PATHNAME','LWGEOM_startm_curve'
+	LANGUAGE 'c' IMMUTABLE STRICT
+	PARALLEL SAFE
+	COST 10;
+
+-- Availability: 3.7.0
+CREATE OR REPLACE FUNCTION ST_EndM(geometry)
+	RETURNS float8
+	AS 'MODULE_PATHNAME','LWGEOM_endm_curve'
+	LANGUAGE 'c' IMMUTABLE STRICT
+	PARALLEL SAFE
+	COST 10;
+
+-- Availability: 3.7.0
+CREATE OR REPLACE FUNCTION ST_SetStartM(geometry, float8)
+	RETURNS geometry
+	AS 'MODULE_PATHNAME','LWGEOM_setstartm_curve'
+	LANGUAGE 'c' IMMUTABLE STRICT
+	PARALLEL SAFE
+	COST 50;
+
+-- Availability: 3.7.0
+CREATE OR REPLACE FUNCTION ST_SetEndM(geometry, float8)
+	RETURNS geometry
+	AS 'MODULE_PATHNAME','LWGEOM_setendm_curve'
+	LANGUAGE 'c' IMMUTABLE STRICT
+	PARALLEL SAFE
+	COST 50;
+
 -------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION box3d_in(cstring)
@@ -2411,7 +2443,8 @@ BEGIN
 	POLYGONM, MULTIPOLYGONM,
 	CIRCULARSTRINGM, COMPOUNDCURVEM, MULTICURVEM
 	CURVEPOLYGONM, MULTISURFACEM, TRIANGLE, TRIANGLEM,
-	POLYHEDRALSURFACE, POLYHEDRALSURFACEM, TIN, TINM
+	POLYHEDRALSURFACE, POLYHEDRALSURFACEM, TIN, TINM,
+	NURBSCURVE, NURBSCURVEM
 	or GEOMETRYCOLLECTIONM', new_type, new_dim;
 		RETURN 'fail';
 	END IF;
@@ -4237,16 +4270,6 @@ CREATE OR REPLACE FUNCTION ST_Collect(geom1 geometry, geom2 geometry)
 	AS 'MODULE_PATHNAME', 'LWGEOM_collect'
 	LANGUAGE 'c' IMMUTABLE PARALLEL SAFE
 	_COST_LOW;
-
--- Availability: 1.2.2
--- Changed: 2.3.0 to support PostgreSQL 9.6
--- Changed: 2.3.1 to support PostgreSQL 9.6 parallel safe
-CREATE AGGREGATE ST_MemCollect(geometry)(
-	sfunc = ST_collect,
-	combinefunc = ST_collect,
-	parallel = safe,
-	stype = geometry
-	);
 
 -- Availability: 1.2.2
 CREATE OR REPLACE FUNCTION ST_Collect(geometry[])
@@ -6135,6 +6158,12 @@ CREATE OR REPLACE FUNCTION ST_MaxDistance(geom1 geometry, geom2 geometry)
 	LANGUAGE 'sql' IMMUTABLE STRICT PARALLEL SAFE
 	_COST_HIGH;
 
+CREATE OR REPLACE FUNCTION ST_MaxDistance(geom geometry)
+	RETURNS float8
+	AS 'SELECT @extschema@.ST_MaxDistance($1, $1)'
+	LANGUAGE 'sql' IMMUTABLE STRICT PARALLEL SAFE
+	_COST_HIGH;
+
 CREATE OR REPLACE FUNCTION ST_ClosestPoint(geom1 geometry, geom2 geometry)
 	RETURNS geometry
 	AS 'MODULE_PATHNAME', 'LWGEOM_closestpoint'
@@ -6156,6 +6185,12 @@ CREATE OR REPLACE FUNCTION _ST_LongestLine(geom1 geometry, geom2 geometry)
 CREATE OR REPLACE FUNCTION ST_LongestLine(geom1 geometry, geom2 geometry)
 	RETURNS geometry
 	AS 'SELECT @extschema@._ST_LongestLine(@extschema@.ST_ConvexHull($1), @extschema@.ST_ConvexHull($2))'
+	LANGUAGE 'sql' IMMUTABLE STRICT PARALLEL SAFE
+	_COST_HIGH;
+
+CREATE OR REPLACE FUNCTION ST_LongestLine(geom geometry)
+	RETURNS geometry
+	AS 'SELECT @extschema@.ST_LongestLine($1, $1)'
 	LANGUAGE 'sql' IMMUTABLE STRICT PARALLEL SAFE
 	_COST_HIGH;
 
@@ -6363,7 +6398,12 @@ $$
 			('TIN', 'Tin', 2),
 			('TIN', 'TinZ', 3),
 			('TINM', 'TinM', 3),
-			('TIN', 'TinZM', 4) )
+			('TIN', 'TinZM', 4),
+
+			('NURBSCURVE',  'NurbsCurve', 2),
+			('NURBSCURVE',  'NurbsCurveZ', 3),
+			('NURBSCURVEM', 'NurbsCurveM', 3),
+			('NURBSCURVE',  'NurbsCurveZM', 4) )
 			 As g(old_name, new_name, coord_dimension)
 	WHERE (upper(old_name) = upper($1) OR upper(new_name) = upper($1))
 		AND coord_dimension = $2;
@@ -7063,5 +7103,8 @@ RETURNS geometry
 AS 'MODULE_PATHNAME','ST_RemoveSmallParts'
 LANGUAGE 'c' IMMUTABLE STRICT PARALLEL SAFE
 	_COST_MEDIUM;
+
+
+#include "postgis_nurbs.sql.in"
 
 COMMIT;

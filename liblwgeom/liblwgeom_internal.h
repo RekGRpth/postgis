@@ -132,7 +132,7 @@
 #define WKB_POLYHEDRALSURFACE_TYPE 15
 #define WKB_TIN_TYPE 16
 #define WKB_TRIANGLE_TYPE 17
-
+#define WKB_NURBSCURVE_TYPE 21 /* ISO 19107:2019 - NURBS curve WKB type */
 
 /**
 * Macro that returns:
@@ -196,6 +196,7 @@ LWPOINT* lwpoint_force_dims(const LWPOINT *lwpoint, int hasz, int hasm, double z
 LWLINE* lwline_force_dims(const LWLINE *lwline, int hasz, int hasm, double zval, double mval);
 LWPOLY* lwpoly_force_dims(const LWPOLY *lwpoly, int hasz, int hasm, double zval, double mval);
 LWCOLLECTION* lwcollection_force_dims(const LWCOLLECTION *lwcol, int hasz, int hasm, double zval, double mval);
+LWNURBSCURVE* lwnurbscurve_force_dims(const LWNURBSCURVE *curve, int hasz, int hasm, double zval, double mval);
 POINTARRAY* ptarray_force_dims(const POINTARRAY *pa, int hasz, int hasm, double zval, double mval);
 
 /**
@@ -380,6 +381,8 @@ POINTARRAY *ptarray_clone(const POINTARRAY *ptarray);
 LWLINE *lwline_clone_deep(const LWLINE *lwgeom);
 LWPOLY *lwpoly_clone_deep(const LWPOLY *lwgeom);
 LWCOLLECTION *lwcollection_clone_deep(const LWCOLLECTION *lwgeom);
+LWNURBSCURVE *lwnurbscurve_clone_deep(const LWNURBSCURVE *curve);
+double *lwnurbscurve_get_or_generate_knots(const LWNURBSCURVE *curve, uint32_t *nknots_out);
 GBOX *gbox_clone(const GBOX *gbox);
 
 /*

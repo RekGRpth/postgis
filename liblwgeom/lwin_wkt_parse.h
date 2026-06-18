@@ -44,6 +44,12 @@
 #if YYDEBUG
 extern int wkt_yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 250 "lwin_wkt_parse.y"
+
+typedef struct WKT_NURBS_CONTROLPOINTS WKT_NURBS_CONTROLPOINTS;
+
+#line 53 "lwin_wkt_parse.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -74,9 +80,17 @@ extern int wkt_yydebug;
     TRIANGLE_TOK = 275,            /* TRIANGLE_TOK  */
     TIN_TOK = 276,                 /* TIN_TOK  */
     POLYHEDRALSURFACE_TOK = 277,   /* POLYHEDRALSURFACE_TOK  */
-    DOUBLE_TOK = 278,              /* DOUBLE_TOK  */
-    DIMENSIONALITY_TOK = 279,      /* DIMENSIONALITY_TOK  */
-    SRID_TOK = 280                 /* SRID_TOK  */
+    NURBSCURVE_TOK = 278,          /* NURBSCURVE_TOK  */
+    DEGREE_TOK = 279,              /* DEGREE_TOK  */
+    CONTROLPOINTS_TOK = 280,       /* CONTROLPOINTS_TOK  */
+    KNOTS_TOK = 281,               /* KNOTS_TOK  */
+    NURBSPOINT_TOK = 282,          /* NURBSPOINT_TOK  */
+    WEIGHTEDPOINT_TOK = 283,       /* WEIGHTEDPOINT_TOK  */
+    WEIGHT_TOK = 284,              /* WEIGHT_TOK  */
+    KNOT_TOK = 285,                /* KNOT_TOK  */
+    DOUBLE_TOK = 286,              /* DOUBLE_TOK  */
+    DIMENSIONALITY_TOK = 287,      /* DIMENSIONALITY_TOK  */
+    SRID_TOK = 288                 /* SRID_TOK  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -85,7 +99,7 @@ extern int wkt_yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 111 "lwin_wkt_parse.y"
+#line 256 "lwin_wkt_parse.y"
 
 	int integervalue;
 	double doublevalue;
@@ -93,8 +107,9 @@ union YYSTYPE
 	LWGEOM *geometryvalue;
 	POINT coordinatevalue;
 	POINTARRAY *ptarrayvalue;
+	WKT_NURBS_CONTROLPOINTS *nurbscontrolpointsvalue;
 
-#line 98 "lwin_wkt_parse.h"
+#line 113 "lwin_wkt_parse.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
