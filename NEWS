@@ -43,10 +43,14 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
  - #5109, Document the meaning of topology.next_left_edge and topology.next_right_edge links (Darafei Praliaskouski)
  - #5889, [topology] Include representative locations in topology build errors (Darafei Praliaskouski)
  - #2614, Use GEOSPreparedDistance and caching to accelerate ST_DWithin (Paul Ramsey)
+ - #6022, Document ST_AsMVTGeom tile-coordinate simplification (Darafei Praliaskouski)
  - GH-839, ST_Multi support for TIN and surfaces (Loïc Bartoletti)
  - #4398, Add ST_CatmullSmoothing smoothes but retains original vertices (Paul Ramsey)
  - #4560, ST_3DInterpolatePoint for M interpolation from XYZ inputs (Paul Ramsey)
+ - #1291, ST_MakePolygon support for curved rings (Darafei Praliaskouski)
  - GT-270, Add NURBSCurve (Loïc Bartoletti)
+ - #2863, Add ST_XSize, ST_YSize, ST_ZSize, and ST_MSize dimension helpers
+          (Darafei Praliaskouski)
 
 * Enhancements *
 
@@ -57,11 +61,19 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
           (Sandro Santilli)
  - #3743, [raster] Document and test raster2pgsql -s FROM_SRID:SRID
           reprojection support (Darafei Praliaskouski)
+ - #4749, Use point-in-polygon predicate fast paths for point-only
+          GeometryCollections (Darafei Praliaskouski)
 
 * Bug Fixes *
 
+ - Fix WKB and TWKB parser resource exhaustion on malformed input
+          (Darafei Praliaskouski)
+ - #6083, Pass configured dependency include paths to fuzzer smoke builds
+          (Darafei Praliaskouski)
  - #3103, Add regression coverage for exact-schema find_srid and
           geometry_columns lookups (Darafei Praliaskouski)
+ - #6038, Avoid stale relation lookups in geometry_columns after topology
+          objects are dropped (Darafei Praliaskouski)
  - #5655, [doc] Skip XML validation during `make check` when xsltproc is
           unavailable (Darafei Praliaskouski)
  - #5487, Improve error detail for repeated upgrades after an incomplete

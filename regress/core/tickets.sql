@@ -123,6 +123,10 @@ SELECT '#175', ST_AsEWKT(ST_GeomFromEWKT('SRID=26915;POINT(482020 4984378.)'));
 -- #178 --
 SELECT '#178a', ST_XMin(ST_MakeBox2D(ST_Point(5, 5), ST_Point(0, 0)));
 SELECT '#178b', ST_XMax(ST_MakeBox2D(ST_Point(5, 5), ST_Point(0, 0)));
+SELECT '#2863a', ST_XSize(ST_MakeBox2D(ST_Point(5, 5), ST_Point(0, 0)));
+SELECT '#2863b', ST_YSize('LINESTRING(1 2 3, 4 6 8)'::geometry);
+SELECT '#2863c', ST_ZSize('LINESTRING(1 2 3, 4 6 8)'::geometry);
+SELECT '#2863d', ST_MSize('LINESTRING M (1 2 3, 4 6 8)'::geometry);
 
 -- #179 --
 SELECT '#179a', ST_MakeLine(ARRAY[NULL,NULL,NULL,NULL]);
@@ -1242,6 +1246,72 @@ SELECT 'equals212', ST_equals('POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))'::geometry
 'GEOMETRYCOLLECTION (POLYGON((0 0, 10 0, 10 10, 0 10, 0 0)),LINESTRING(0 2, 0 5, 5 5))'::geometry);
 SELECT 'equals213', ST_equals('POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))'::geometry,
 'GEOMETRYCOLLECTION (POLYGON((0 0, 10 0, 10 10, 0 10, 0 0)),MULTIPOINT(0 2, 5 5))'::geometry);
+
+-- #4749 point-only GeometryCollections in polygon predicates use the PIP path
+WITH g AS (
+	SELECT
+		'POLYGON((0 0,0 10,10 10,10 0,0 0))'::geometry AS poly,
+		'GEOMETRYCOLLECTION(GEOMETRYCOLLECTION(POINT(5 5)),MULTIPOINT((7 7),(8 8)))'::geometry AS pts_inside,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(0 0))'::geometry AS pts_boundary,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(11 11))'::geometry AS pts_outside
+)
+SELECT '#4749.contains',
+	ST_Contains(poly, pts_inside),
+	ST_Contains(poly, pts_boundary),
+	ST_Contains(poly, pts_outside)
+FROM g;
+
+WITH g AS (
+	SELECT
+		'POLYGON((0 0,0 10,10 10,10 0,0 0))'::geometry AS poly,
+		'GEOMETRYCOLLECTION(GEOMETRYCOLLECTION(POINT(5 5)),MULTIPOINT((7 7),(8 8)))'::geometry AS pts_inside,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(0 0))'::geometry AS pts_boundary,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(11 11))'::geometry AS pts_outside
+)
+SELECT '#4749.within',
+	ST_Within(pts_inside, poly),
+	ST_Within(pts_boundary, poly),
+	ST_Within(pts_outside, poly)
+FROM g;
+
+WITH g AS (
+	SELECT
+		'POLYGON((0 0,0 10,10 10,10 0,0 0))'::geometry AS poly,
+		'GEOMETRYCOLLECTION(GEOMETRYCOLLECTION(POINT(5 5)),MULTIPOINT((7 7),(8 8)))'::geometry AS pts_inside,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(0 0))'::geometry AS pts_boundary,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(11 11))'::geometry AS pts_outside
+)
+SELECT '#4749.covers',
+	ST_Covers(poly, pts_inside),
+	ST_Covers(poly, pts_boundary),
+	ST_Covers(poly, pts_outside)
+FROM g;
+
+WITH g AS (
+	SELECT
+		'POLYGON((0 0,0 10,10 10,10 0,0 0))'::geometry AS poly,
+		'GEOMETRYCOLLECTION(GEOMETRYCOLLECTION(POINT(5 5)),MULTIPOINT((7 7),(8 8)))'::geometry AS pts_inside,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(0 0))'::geometry AS pts_boundary,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(11 11))'::geometry AS pts_outside
+)
+SELECT '#4749.coveredby',
+	ST_CoveredBy(pts_inside, poly),
+	ST_CoveredBy(pts_boundary, poly),
+	ST_CoveredBy(pts_outside, poly)
+FROM g;
+
+WITH g AS (
+	SELECT
+		'POLYGON((0 0,0 10,10 10,10 0,0 0))'::geometry AS poly,
+		'GEOMETRYCOLLECTION(GEOMETRYCOLLECTION(POINT(5 5)),MULTIPOINT((7 7),(8 8)))'::geometry AS pts_inside,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(0 0))'::geometry AS pts_boundary,
+		'GEOMETRYCOLLECTION(POINT(5 5),POINT(11 11))'::geometry AS pts_outside
+)
+SELECT '#4749.intersects',
+	ST_Intersects(poly, pts_inside),
+	ST_Intersects(pts_boundary, poly),
+	ST_Intersects(poly, pts_outside)
+FROM g;
 
 -- #4299
 SELECT '#4299', ST_Disjoint(ST_GeneratePoints(g, 1000), ST_GeneratePoints(g, 1000))

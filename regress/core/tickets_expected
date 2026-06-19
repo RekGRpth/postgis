@@ -37,6 +37,10 @@ ERROR:  Invalid hex string, length (267) has to be a multiple of two!
 #175|SRID=26915;POINT(482020 4984378)
 #178a|0
 #178b|5
+#2863a|5
+#2863b|4
+#2863c|5
+#2863d|5
 NOTICE:  No points or linestrings in input array
 #179a|
 NOTICE:  No points or linestrings in input array
@@ -383,6 +387,11 @@ equals210|t
 equals211|t
 equals212|t
 equals213|t
+#4749.contains|t|t|f
+#4749.within|t|t|f
+#4749.covers|t|t|f
+#4749.coveredby|t|t|f
+#4749.intersects|t|t|t
 #4299|t
 #4304|t|t|t
 ERROR:  BOX3D_construct: args can not be empty points

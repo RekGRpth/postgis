@@ -24,11 +24,15 @@
  **********************************************************************/
 
 #include <math.h>
+#include <limits.h>
+#include <string.h>
 #include "liblwgeom_internal.h"
 #include "lwgeom_log.h"
 #include "varint.h"
 
 #define TWKB_IN_MAXCOORDS 4
+/** Max depth in a geometry. Matches the WKB parser recursion limit. */
+#define LW_PARSER_MAX_DEPTH 200
 
 /**
 * Used for passing the parse state between the parsing functions.
@@ -42,6 +46,7 @@ typedef struct
 
 	uint32_t check; /* Simple validity checks on geometries */
 	uint32_t lwtype; /* Current type we are handling */
+	uint8_t depth;   /* Current recursion level, to prevent stack overflows */
 
 	uint8_t has_bbox;
 	uint8_t has_size;
@@ -157,6 +162,25 @@ twkb_parse_state_has_min_bytes(twkb_parse_state *s, uint32_t count, size_t min_b
 	return LW_TRUE;
 }
 
+/** Implements *pa += b using explicit wraparound semantics. */
+#if defined(__clang__) && __clang_major__ >= 4
+__attribute__((no_sanitize("unsigned-integer-overflow")))
+#endif
+static inline void
+safe_add_int64(int64_t *pa, int64_t b)
+{
+	uint64_t u_a = (uint64_t)*pa;
+	uint64_t u_b = (uint64_t)b;
+	u_a += u_b;
+	memcpy(pa, &u_a, sizeof(int64_t));
+}
+
+static inline void
+twkb_parse_state_accum_coord(twkb_parse_state *s, int coord_index)
+{
+	safe_add_int64(&s->coords[coord_index], twkb_parse_state_varint(s));
+}
+
 static uint32_t lwtype_from_twkb_type(uint8_t twkb_type)
 {
 	switch (twkb_type)
@@ -211,7 +235,9 @@ static POINTARRAY* ptarray_from_twkb_state(twkb_parse_state *s, uint32_t npoints
 	POINTARRAY *pa = NULL;
 	uint32_t ndims = s->ndims;
 	uint32_t i;
+	uint32_t j;
 	double *dlist;
+	double factors[TWKB_IN_MAXCOORDS];
 
 	LWDEBUG(2,"Entering ptarray_from_twkb_state");
 	LWDEBUGF(4,"Pointarray has %d points", npoints);
@@ -223,32 +249,22 @@ static POINTARRAY* ptarray_from_twkb_state(twkb_parse_state *s, uint32_t npoints
 	if (!twkb_parse_state_has_min_bytes(s, npoints, s->ndims))
 		return NULL;
 
+	factors[0] = s->factor;
+	factors[1] = s->factor;
+	j = 2;
+	if (s->has_z)
+		factors[j++] = s->factor_z;
+	if (s->has_m)
+		factors[j++] = s->factor_m;
+
 	pa = ptarray_construct(s->has_z, s->has_m, npoints);
 	dlist = (double*)(pa->serialized_pointlist);
 	for( i = 0; i < npoints; i++ )
 	{
-		int j = 0;
-		/* X */
-		s->coords[j] += twkb_parse_state_varint(s);
-		dlist[ndims*i + j] = s->coords[j] / s->factor;
-		j++;
-		/* Y */
-		s->coords[j] += twkb_parse_state_varint(s);
-		dlist[ndims*i + j] = s->coords[j] / s->factor;
-		j++;
-		/* Z */
-		if ( s->has_z )
+		for (j = 0; j < ndims; j++)
 		{
-			s->coords[j] += twkb_parse_state_varint(s);
-			dlist[ndims*i + j] = s->coords[j] / s->factor_z;
-			j++;
-		}
-		/* M */
-		if ( s->has_m )
-		{
-			s->coords[j] += twkb_parse_state_varint(s);
-			dlist[ndims*i + j] = s->coords[j] / s->factor_m;
-			j++;
+			twkb_parse_state_accum_coord(s, j);
+			dlist[ndims * i + j] = s->coords[j] / factors[j];
 		}
 	}
 
@@ -294,7 +310,7 @@ static LWLINE* lwline_from_twkb_state(twkb_parse_state *s)
 	/* Read coordinates */
 	pa = ptarray_from_twkb_state(s, npoints);
 
-	if( pa == NULL )
+	if (pa == NULL)
 		return lwline_construct_empty(SRID_UNKNOWN, s->has_z, s->has_m);
 
 	if( s->check & LW_PARSER_CHECK_MINPOINTS && pa->npoints < 2 )
@@ -342,7 +358,7 @@ static LWPOLY* lwpoly_from_twkb_state(twkb_parse_state *s)
 		POINTARRAY *pa = ptarray_from_twkb_state(s, npoints);
 
 		/* Skip empty rings */
-		if( pa == NULL )
+		if (pa == NULL)
 			continue;
 
 		/* Force first and last points to be the same. */
@@ -515,6 +531,7 @@ static LWCOLLECTION* lwcollection_from_twkb_state(twkb_parse_state *s)
 	uint32_t ngeoms, i;
 	LWGEOM *geom = NULL;
 	LWCOLLECTION *col = lwcollection_construct_empty(s->lwtype, SRID_UNKNOWN, s->has_z, s->has_m);
+	uint8_t start_depth = s->depth;
 
 	LWDEBUG(2,"Entering lwcollection_from_twkb_state");
 
@@ -539,16 +556,28 @@ static LWCOLLECTION* lwcollection_from_twkb_state(twkb_parse_state *s)
 	if (!twkb_parse_state_has_min_bytes(s, ngeoms, 2))
 		return col;
 
+	s->depth++;
+	if (s->depth >= LW_PARSER_MAX_DEPTH)
+	{
+		lwcollection_free(col);
+		lwerror("Geometry has too many chained collections");
+		s->depth = start_depth;
+		return NULL;
+	}
+
 	for ( i = 0; i < ngeoms; i++ )
 	{
 		geom = lwgeom_from_twkb_state(s);
-		if ( lwcollection_add_lwgeom(col, geom) == NULL )
+		if (!geom || lwcollection_add_lwgeom(col, geom) == NULL)
 		{
-			lwerror("Unable to add geometry (%p) to collection (%p)", (void *) geom, (void *) col);
+			lwgeom_free(geom);
+			lwcollection_free(col);
+			s->depth = start_depth;
 			return NULL;
 		}
 	}
 
+	s->depth--;
 
 	return col;
 }
@@ -702,7 +731,7 @@ LWGEOM* lwgeom_from_twkb_state(twkb_parse_state *s)
 			break;
 	}
 
-	if ( has_bbox )
+	if (has_bbox && geom)
 		geom->bbox = gbox_clone(&bbox);
 
 	return geom;
