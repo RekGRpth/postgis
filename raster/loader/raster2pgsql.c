@@ -371,16 +371,18 @@ usage() {
 		"  -R  Register the raster as an out-of-db (filesystem) raster. Provided\n"
 		"      raster should have absolute path to the file\n"
 	));
-	printf(_(
-		" (-d|a|c|p) These are mutually exclusive options:\n"
-		"     -d  Drops the table, then recreates it and populates\n"
-		"         it with current raster data.\n"
-		"     -a  Appends raster into current table, must be\n"
-		"         exactly the same table schema.\n"
-		"     -c  Creates a new table and populates it, this is the\n"
-		"         default if you do not specify any options.\n"
-		"     -p  Prepare mode, only creates the table.\n"
-	));
+	printf(
+	    _(" (-d|a|c|p) These are mutually exclusive options:\n"
+	      "     -d  Drops the table, then recreates it and populates\n"
+	      "         it with current raster data.\n"
+	      "     -a  Appends raster into current table, must be\n"
+	      "         exactly the same table schema.\n"
+	      "     -c  Creates a new table and populates it, this is the\n"
+	      "         default if you do not specify any options.\n"
+	      "     -p  Prepare mode, only creates the table.\n"));
+	printf(
+	    _("  --if-not-exists  Use IF NOT EXISTS for table creation in -c and -p\n"
+	      "     modes. With -I, also use IF NOT EXISTS for index creation.\n"));
 	printf(_(
 		"  -f <column> Specify the name of the raster column\n"
 	));
@@ -690,7 +692,11 @@ init_config(RTLOADERCFG *config) {
 	config->pad_tile = 0;
 	config->outdb = 0;
 	config->opt = 'c';
-	config->idx = 0;
+	config->if_not_exists = 0;
+	config->drop_table = 0;
+	config->create_table = CREATE_TABLE_ALWAYS;
+	config->load_data = 1;
+	config->create_index = CREATE_INDEX_NONE;
 	config->maintenance = 0;
 	config->constraints = 0;
 	config->max_extent = 1;
@@ -705,6 +711,52 @@ init_config(RTLOADERCFG *config) {
 	config->transaction = 1;
 	config->copy_statements = 0;
 	config->max_tiles_per_copy = 50;
+}
+
+static int
+apply_action_presets(RTLOADERCFG *config)
+{
+	config->drop_table = 0;
+	config->create_table = CREATE_TABLE_NONE;
+	config->load_data = 0;
+
+	switch (config->opt)
+	{
+	case 'd':
+		config->drop_table = 1;
+		config->create_table = CREATE_TABLE_ALWAYS;
+		config->load_data = 1;
+		break;
+	case 'a':
+		config->load_data = 1;
+		break;
+	case 'c':
+		config->create_table = CREATE_TABLE_ALWAYS;
+		config->load_data = 1;
+		break;
+	case 'p':
+		config->create_table = CREATE_TABLE_ALWAYS;
+		break;
+	default:
+		rterror(_("Unknown loader operation: -%c"), config->opt);
+		return 0;
+	}
+
+	if (config->if_not_exists)
+	{
+		if (config->opt == 'd' || config->opt == 'a')
+		{
+			rterror(_("--if-not-exists can only modify create and prepare modes"));
+			return 0;
+		}
+
+		if (config->create_table == CREATE_TABLE_ALWAYS)
+			config->create_table = CREATE_TABLE_IF_NOT_EXISTS;
+		if (config->create_index == CREATE_INDEX_ALWAYS)
+			config->create_index = CREATE_INDEX_IF_NOT_EXISTS;
+	}
+
+	return 1;
 }
 
 static void
@@ -1000,19 +1052,23 @@ drop_table(const char *schema, const char *table, STRINGBUFFER *buffer) {
 }
 
 static int
-create_table(
-	const char *schema, const char *table, const char *column,
-	const int file_column, const char *file_column_name,
-	const char *tablespace, const char *idx_tablespace,
-	STRINGBUFFER *buffer
-) {
+create_table(const char *schema,
+	     const char *table,
+	     const char *column,
+	     const int file_column,
+	     const char *file_column_name,
+	     const char *tablespace,
+	     const char *idx_tablespace,
+	     int if_not_exists,
+	     STRINGBUFFER *buffer)
+{
 	char *sql = NULL;
 	uint32_t len = 0;
 
 	assert(table != NULL);
 	assert(column != NULL);
 
-	len = strlen("CREATE TABLE  (\"rid\" serial PRIMARY KEY, raster);") + 1;
+	len = strlen("CREATE TABLE IF NOT EXISTS  (\"rid\" serial PRIMARY KEY, raster);") + 1;
 	if (schema != NULL)
 		len += strlen(schema);
 	len += strlen(table);
@@ -1029,7 +1085,9 @@ create_table(
 		rterror(_("create_table: Could not allocate memory for CREATE TABLE statement"));
 		return 0;
 	}
-	sprintf(sql, "CREATE TABLE %s%s (\"rid\" serial PRIMARY KEY%s%s,%s raster%s%s%s)%s%s;",
+	sprintf(sql,
+		"CREATE TABLE %s%s%s (\"rid\" serial PRIMARY KEY%s%s,%s raster%s%s%s)%s%s;",
+		(if_not_exists ? "IF NOT EXISTS " : ""),
 		(schema != NULL ? schema : ""),
 		table,
 		(idx_tablespace != NULL ? " USING INDEX TABLESPACE " : ""),
@@ -1039,8 +1097,7 @@ create_table(
 		(file_column ? file_column_name : ""),
 		(file_column ? " text" : ""),
 		(tablespace != NULL ? " TABLESPACE " : ""),
-		(tablespace != NULL ? tablespace : "")
-	);
+		(tablespace != NULL ? tablespace : ""));
 
 	append_sql_to_buffer(buffer, sql);
 
@@ -1048,11 +1105,13 @@ create_table(
 }
 
 static int
-create_index(
-	const char *schema, const char *table, const char *column,
-	const char *tablespace,
-	STRINGBUFFER *buffer
-) {
+create_index(const char *schema,
+	     const char *table,
+	     const char *column,
+	     const char *tablespace,
+	     int if_not_exists,
+	     STRINGBUFFER *buffer)
+{
 	char *sql = NULL;
 	uint32_t len = 0;
 	char *_table = NULL;
@@ -1065,7 +1124,7 @@ create_index(
 	_column = chartrim(column, "\"");
 
 	/* create index */
-	len = strlen("CREATE INDEX \"__gist\" ON  USING gist (st_convexhull());") + 1;
+	len = strlen("CREATE INDEX IF NOT EXISTS \"__gist\" ON  USING gist (st_convexhull());") + 1;
 	if (schema != NULL)
 		len += strlen(schema);
 	len += strlen(_table);
@@ -1082,13 +1141,28 @@ create_index(
 		rtdealloc(_column);
 		return 0;
 	}
-	sprintf(sql, "CREATE INDEX ON %s%s USING gist (st_convexhull(%s))%s%s;",
-		(schema != NULL ? schema : ""),
-		table,
-		column,
-		(tablespace != NULL ? " TABLESPACE " : ""),
-		(tablespace != NULL ? tablespace : "")
-	);
+	if (if_not_exists)
+	{
+		sprintf(sql,
+			"CREATE INDEX IF NOT EXISTS \"%s_%s_gist\" ON %s%s USING gist (st_convexhull(%s))%s%s;",
+			_table,
+			_column,
+			(schema != NULL ? schema : ""),
+			table,
+			column,
+			(tablespace != NULL ? " TABLESPACE " : ""),
+			(tablespace != NULL ? tablespace : ""));
+	}
+	else
+	{
+		sprintf(sql,
+			"CREATE INDEX ON %s%s USING gist (st_convexhull(%s))%s%s;",
+			(schema != NULL ? schema : ""),
+			table,
+			column,
+			(tablespace != NULL ? " TABLESPACE " : ""),
+			(tablespace != NULL ? tablespace : ""));
+	}
 	rtdealloc(_table);
 	rtdealloc(_column);
 
@@ -1424,13 +1498,10 @@ build_overview(int idx, RTLOADERCFG *config, RASTERINFO *info, uint32_t ovx, STR
 		tile_size[1] = config->tile_size[1];
 
 	/* number of tiles */
-	if (
-		tile_size[0] != dimOv[0] &&
-		tile_size[1] != dimOv[1]
-	) {
+	if (tile_size[0] != dimOv[0])
 		ntiles[0] = (dimOv[0] + tile_size[0] -  1) / tile_size[0];
-		ntiles[1] = (dimOv[1] + tile_size[1]  - 1) / tile_size[1];
-	}
+	if (tile_size[1] != dimOv[1])
+		ntiles[1] = (dimOv[1] + tile_size[1] - 1) / tile_size[1];
 
 	/* working copy of geotransform matrix */
 	memcpy(gt, gtOv, sizeof(double) * 6);
@@ -1440,7 +1511,7 @@ build_overview(int idx, RTLOADERCFG *config, RASTERINFO *info, uint32_t ovx, STR
 	for (ytile = 0; ytile < ntiles[1]; ytile++) {
 
 		/* edge y tile */
-		if (!config->pad_tile && ntiles[1] > 1 && (ytile + 1) == ntiles[1])
+		if (!config->pad_tile && (ytile + 1) == ntiles[1])
 			_tile_size[1] = dimOv[1] - (ytile * tile_size[1]);
 		else
 			_tile_size[1] = tile_size[1];
@@ -1452,7 +1523,7 @@ build_overview(int idx, RTLOADERCFG *config, RASTERINFO *info, uint32_t ovx, STR
 			*/
 
 			/* edge x tile */
-			if (!config->pad_tile && ntiles[0] > 1 && (xtile + 1) == ntiles[0])
+			if (!config->pad_tile && (xtile + 1) == ntiles[0])
 				_tile_size[0] = dimOv[0] - (xtile * tile_size[0]);
 			else
 				_tile_size[0] = tile_size[0];
@@ -2009,7 +2080,8 @@ process_rasters(RTLOADERCFG *config, STRINGBUFFER *buffer) {
 	}
 
 	/* drop table */
-	if (config->opt == 'd') {
+	if (config->drop_table)
+	{
 		if (!drop_table(config->schema, config->table, buffer)) {
 			rterror(_("process_rasters: Could not add DROP TABLE statement to string buffer"));
 			return 0;
@@ -2026,25 +2098,34 @@ process_rasters(RTLOADERCFG *config, STRINGBUFFER *buffer) {
 	}
 
 	/* create table */
-	if (config->opt != 'a') {
-		if (!create_table(
-			config->schema, config->table, config->raster_column,
-			config->file_column, config->file_column_name,
-			config->tablespace, config->idx_tablespace,
-			buffer
-		)) {
+	if (config->create_table != CREATE_TABLE_NONE)
+	{
+		if (!create_table(config->schema,
+				  config->table,
+				  config->raster_column,
+				  config->file_column,
+				  config->file_column_name,
+				  config->tablespace,
+				  config->idx_tablespace,
+				  config->create_table == CREATE_TABLE_IF_NOT_EXISTS,
+				  buffer))
+		{
 			rterror(_("process_rasters: Could not add CREATE TABLE statement to string buffer"));
 			return 0;
 		}
 
 		if (config->overview_count) {
 			for (i = 0; i < config->overview_count; i++) {
-				if (!create_table(
-					config->schema, config->overview_table[i], config->raster_column,
-					config->file_column, config->file_column_name,
-					config->tablespace, config->idx_tablespace,
-					buffer
-				)) {
+				if (!create_table(config->schema,
+						  config->overview_table[i],
+						  config->raster_column,
+						  config->file_column,
+						  config->file_column_name,
+						  config->tablespace,
+						  config->idx_tablespace,
+						  config->create_table == CREATE_TABLE_IF_NOT_EXISTS,
+						  buffer))
+				{
 					rterror(_("process_rasters: Could not add an overview's CREATE TABLE statement to string buffer"));
 					return 0;
 				}
@@ -2052,8 +2133,9 @@ process_rasters(RTLOADERCFG *config, STRINGBUFFER *buffer) {
 		}
 	}
 
-	/* no need to run if opt is 'p' */
-	if (config->opt != 'p') {
+	/* no need to load data in prepare mode */
+	if (config->load_data)
+	{
 		RASTERINFO refinfo;
 		init_rastinfo(&refinfo);
 
@@ -2141,19 +2223,23 @@ process_rasters(RTLOADERCFG *config, STRINGBUFFER *buffer) {
 	}
 
 	/* index */
-	if (config->idx) {
+	if (config->create_index != CREATE_INDEX_NONE)
+	{
 		/* create index */
-		if (!create_index(
-			config->schema, config->table, config->raster_column,
-			config->idx_tablespace,
-			buffer
-		)) {
+		if (!create_index(config->schema,
+				  config->table,
+				  config->raster_column,
+				  config->idx_tablespace,
+				  config->create_index == CREATE_INDEX_IF_NOT_EXISTS,
+				  buffer))
+		{
 			rterror(_("process_rasters: Could not add CREATE INDEX statement to string buffer"));
 			return 0;
 		}
 
 		/* analyze */
-		if (config->opt != 'p') {
+		if (config->load_data)
+		{
 			if (!analyze_table(
 				config->schema, config->table,
 				buffer
@@ -2166,17 +2252,20 @@ process_rasters(RTLOADERCFG *config, STRINGBUFFER *buffer) {
 		if (config->overview_count) {
 			for (i = 0; i < config->overview_count; i++) {
 				/* create index */
-				if (!create_index(
-					config->schema, config->overview_table[i], config->raster_column,
-					config->idx_tablespace,
-					buffer
-				)) {
+				if (!create_index(config->schema,
+						  config->overview_table[i],
+						  config->raster_column,
+						  config->idx_tablespace,
+						  config->create_index == CREATE_INDEX_IF_NOT_EXISTS,
+						  buffer))
+				{
 					rterror(_("process_rasters: Could not add an overview's CREATE INDEX statement to string buffer"));
 					return 0;
 				}
 
 				/* analyze */
-				if (config->opt != 'p') {
+				if (config->load_data)
+				{
 					if (!analyze_table(
 						config->schema, config->overview_table[i],
 						buffer
@@ -2237,7 +2326,8 @@ process_rasters(RTLOADERCFG *config, STRINGBUFFER *buffer) {
 	}
 
 	/* maintenance */
-	if (config->opt != 'p' && config->maintenance) {
+	if (config->load_data && config->maintenance)
+	{
 		if (!vacuum_table(
 			config->schema, config->table,
 			buffer
@@ -2257,7 +2347,6 @@ process_rasters(RTLOADERCFG *config, STRINGBUFFER *buffer) {
 				}
 			}
 		}
-
 	}
 
 	return 1;
@@ -2467,6 +2556,11 @@ main(int argc, char **argv) {
 		else if (CSEQUAL(argv[argit], "-p")) {
 			config->opt = 'p';
 		}
+		/* make creation statements idempotent */
+		else if (CSEQUAL(argv[argit], "--if-not-exists"))
+		{
+			config->if_not_exists = 1;
+		}
 		/* raster column name */
 		else if (CSEQUAL(argv[argit], "-f") && argit < argc - 1) {
 			const size_t len = (strlen(argv[++argit]) + 1);
@@ -2534,7 +2628,7 @@ main(int argc, char **argv) {
 		}
 		/* create index */
 		else if (CSEQUAL(argv[argit], "-I")) {
-			config->idx = 1;
+			config->create_index = CREATE_INDEX_ALWAYS;
 		}
 		/* maintenance */
 		else if (CSEQUAL(argv[argit], "-M")) {
@@ -2665,6 +2759,12 @@ main(int argc, char **argv) {
 			rterror(_("Invalid argument combination - cannot use -Y with -s FROM_SRID:TO_SRID"));
 			exit(1);
 		}
+	}
+
+	if (!apply_action_presets(config))
+	{
+		rtdealloc_config(config);
+		exit(1);
 	}
 
 	/* register GDAL drivers */

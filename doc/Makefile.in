@@ -64,6 +64,7 @@ XMLCATALOG=@XMLCATALOG@
 XSLTPROC=@XSLTPROC@
 XSLBASE=@XSLBASE@
 DOCBOOK5_RNG=@DOCBOOK5_RNG@
+DOCBOOK5_XSD=@DOCBOOK5_XSD@
 DOCBOOK5_DTD=@DOCBOOK5_DTD@
 CAN_UPDATE_TRANSLATIONS=@CAN_UPDATE_TRANSLATIONS@
 XMLLINT=@XMLLINT@
@@ -284,6 +285,11 @@ CAN_CHECK_XML = no
 endif
 
 ifeq ($(DOCBOOK5_RNG),)
+CAN_CHECK_XML = no
+endif
+
+ifeq ($(DOCBOOK5_XSD),)
+check-xml: requirements_not_met_docbook5_xsd
 CAN_CHECK_XML = no
 endif
 
@@ -558,7 +564,7 @@ endif
 comments-uninstall:
 	$(MAKE) -f Makefile.comments uninstall
 
-man-install: man/shp2pgsql.1 man/pgsql2shp.1 man/pgtopo_export.1 man/pgtopo_import.1 man/postgis.1 man/postgis_restore.1
+man-install: man/shp2pgsql.1 man/pgsql2shp.1 man/raster2pgsql.1 man/pgtopo_export.1 man/pgtopo_import.1 man/postgis.1 man/postgis_restore.1
 	mkdir -p $(DESTDIR)$(mandir)/man1
 	for f in $^; do \
 		$(INSTALL_DATA) $$f $(DESTDIR)$(mandir)/man1/`basename $$f`; \
@@ -567,6 +573,7 @@ man-install: man/shp2pgsql.1 man/pgsql2shp.1 man/pgtopo_export.1 man/pgtopo_impo
 man-uninstall:
 	rm -f $(DESTDIR)$(mandir)/man1/shp2pgsql.1
 	rm -f $(DESTDIR)$(mandir)/man1/pgsql2shp.1
+	rm -f $(DESTDIR)$(mandir)/man1/raster2pgsql.1
 	rm -f $(DESTDIR)$(mandir)/man1/pgtopo_export.1
 	rm -f $(DESTDIR)$(mandir)/man1/pgtopo_import.1
 	rm -f $(DESTDIR)$(mandir)/man1/postgis.1
@@ -624,6 +631,9 @@ check-xml: postgis-out.xml
 		--valid --loaddtd \
 		--relaxng $(DOCBOOK5_RNG) \
 		$<
+	$(XMLLINT) --noout --nonet \
+		--schema $(DOCBOOK5_XSD) \
+		$<
 
 check-cheatsheets: cheatsheets
 	for f in $(html_builddir)/*_cheatsheet-en.html; do \
@@ -654,6 +664,13 @@ requirements_not_met_xmlcatalog:
 	@echo "configure was unable to find 'xmlcatalog' which is required"
 	@echo "to check the postgis documentation."
 	@echo "Install xmlcatalog and then re-run configure."
+	@echo
+	@false
+
+requirements_not_met_docbook5_xsd:
+	@echo
+	@echo "configure was unable to locate DocBook XMLSchema (docbook.xsd)."
+	@echo "Install DocBook 5 schemas/catalog entries and then re-run configure."
 	@echo
 	@false
 

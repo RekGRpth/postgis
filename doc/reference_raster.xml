@@ -4815,8 +4815,9 @@ SELECT x, y, val, ST_AsText(geom)
 
                 <para>Returns the value of a given band in a given columnx, rowy pixel or at a given geometry point. Band numbers start at 1 and band is assumed to be 1 if not specified.</para>
                 <para>If <varname>exclude_nodata_value</varname> is set to true, then only non <varname>nodata</varname> pixels are considered.  If <varname>exclude_nodata_value</varname> is set to false, then all pixels are considered.</para>
-                <para>The allowed values of the <varname>resample</varname> parameter are "nearest" which performs the default nearest-neighbor resampling, and "bilinear" which performs a <link xlink:href="https://en.wikipedia.org/wiki/Bilinear_interpolation">bilinear interpolation</link> to estimate the value between pixel centers.</para>
+                <para>The allowed values of the <varname>resample</varname> parameter are "nearest" which performs the default nearest-neighbor resampling, "bilinear" which performs a <link xlink:href="https://en.wikipedia.org/wiki/Bilinear_interpolation">bilinear interpolation</link> to estimate the value between pixel centers, and the nearest-neighbor boundary options "nearest-UL", "nearest-UR", "nearest-LL", and "nearest-LR". Boundary options choose which pixel is returned when the point lies on a horizontal or vertical pixel boundary, including corner intersections.</para>
 
+                <para role="enhanced" conformance="3.7.0">Enhanced: 3.7.0 resample accepts nearest-neighbor boundary options "nearest-UL", "nearest-UR", "nearest-LL", and "nearest-LR".</para>
                 <para role="enhanced" conformance="3.2.0">Enhanced: 3.2.0 resample optional argument was added.</para>
                 <para role="enhanced" conformance="2.0.0">Enhanced: 2.0.0 exclude_nodata_value optional argument was added.</para>
                 </refsection>
@@ -10276,7 +10277,7 @@ CREATE OR REPLACE FUNCTION sample_callbackfunc(value double precision[][][], pos
                                     </programlisting>
 
                                 <para>
-                                    The <varname>callbackfunc</varname> must have three arguments: a 3-dimension double precision array, a 2-dimension integer array and a variadic 1-dimension text array. The first argument <varname>value</varname> is the set of values (as double precision) from all input rasters. The three dimensions (where indexes are 1-based) are: raster #, row y, column x. The second argument <varname>position</varname> is the set of pixel positions from the output raster and input rasters. The outer dimension (where indexes are 0-based) is the raster #.  The position at outer dimension index 0 is the output raster's pixel position.  For each outer dimension, there are two elements in the inner dimension for X and Y.  The third argument <varname>userargs</varname> is for passing through any user-specified arguments.
+                                    The <varname>callbackfunc</varname> must have two or three arguments: a 3-dimension double precision array, a 2-dimension integer array and, optionally, a variadic 1-dimension text array. The first argument <varname>value</varname> is the set of values (as double precision) from all input rasters. The three dimensions (where indexes are 1-based) are: raster #, row y, column x. The second argument <varname>position</varname> is the set of pixel positions from the output raster and input rasters. The outer dimension (where indexes are 0-based) is the raster #.  The position at outer dimension index 0 is the output raster's pixel position.  For each outer dimension, there are two elements in the inner dimension for X and Y.  The optional third argument <varname>userargs</varname> is for passing through any user-specified arguments.
                                 </para>
 
                                 <para>
@@ -10364,7 +10365,7 @@ CREATE OR REPLACE FUNCTION sample_callbackfunc(value double precision[][][], pos
                             <term><varname>userargs</varname></term>
                             <listitem>
                                 <para>
-                                    The third argument to the <varname>callbackfunc</varname> is a <type>variadic text</type> array. All trailing text arguments are passed through to the specified <varname>callbackfunc</varname>, and are contained in the <varname>userargs</varname> argument.
+                                    If the <varname>callbackfunc</varname> declares a third argument, that argument is a <type>variadic text</type> array. All trailing text arguments are passed through to the specified <varname>callbackfunc</varname>, and are contained in the <varname>userargs</varname> argument.
                                 </para>
                             </listitem>
                         </varlistentry>
@@ -10373,12 +10374,6 @@ CREATE OR REPLACE FUNCTION sample_callbackfunc(value double precision[][][], pos
                     <note>
                         <para>
                             For more information about the VARIADIC keyword, please refer to the PostgreSQL documentation and the "SQL Functions with Variable Numbers of Arguments" section of <link xlink:href="http://www.postgresql.org/docs/current/static/xfunc-sql.html">Query Language (SQL) Functions</link>.
-                        </para>
-                    </note>
-
-                    <note>
-                        <para>
-                            The <type>text[]</type> argument to the <varname>callbackfunc</varname> is required, regardless of whether you choose to pass any arguments to the callback function for processing or not.
                         </para>
                     </note>
 
