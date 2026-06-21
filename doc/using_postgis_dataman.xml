@@ -1090,6 +1090,13 @@ SELECT
         </para></listitem>
         </orderedlist>
 
+      <para>
+        Consecutive repeated points in a polygon boundary ring are treated as
+        redundant vertices, and do not make the polygon invalid. Repeated points
+        that cause the boundary to self-intersect, self-touch, or collapse
+        still violate the validity rules.
+      </para>
+
 	  <informaltable frame="none">
 		<tgroup cols="1">
 		  <tbody>
@@ -1877,6 +1884,11 @@ COMMIT;</programlisting>
     insertion into a PostGIS/PostgreSQL database either in geometry or geography format.
     The loader has several operating modes selected by command line flags.
   </para>
+  <para>
+    The input must be an unpacked shapefile path. The loader does not read
+    <filename>.zip</filename> archives directly; unpack the <filename>.shp</filename>,
+    <filename>.shx</filename>, and <filename>.dbf</filename> files before loading.
+  </para>
   <para>There is also a <filename>shp2pgsql-gui</filename> graphical interface with most
 	of the options as the command-line loader.
     This may be easier to use for one-off non-scripted loading or if you are new to PostGIS.
@@ -1950,6 +1962,18 @@ COMMIT;</programlisting>
           Use the PostgreSQL "dump" format for the output data. This can be combined with -a, -c and
           -d. It is much faster to load than the default "insert" SQL format. Use this for very
           large data sets.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>-f &lt;fid_column&gt;</option></term>
+      <term><option>--feature-id-column &lt;fid_column&gt;</option></term>
+      <listitem>
+        <para>
+          Specify the name of the feature id column. The default is <literal>gid</literal>.
+          The value must be a simple PostgreSQL identifier and cannot use a
+          PostgreSQL system column name.
         </para>
       </listitem>
     </varlistentry>

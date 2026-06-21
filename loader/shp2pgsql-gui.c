@@ -587,9 +587,9 @@ update_loader_config_globals_from_options_ui(SHPLOADERCONFIG *config)
 
 	/* Create spatial index after load */
 	if (createindex)
-		config->createindex = 1;
+		config->createindex = LOADER_CREATE_ALWAYS;
 	else
-		config->createindex = 0;
+		config->createindex = LOADER_CREATE_NONE;
 
 	/* Read the .shp file, don't ignore it */
 	if (dbfonly)
@@ -597,7 +597,7 @@ update_loader_config_globals_from_options_ui(SHPLOADERCONFIG *config)
 		config->readshape = 0;
 
 		/* There will be no spatial column so don't create a spatial index */
-		config->createindex = 0;
+		config->createindex = LOADER_CREATE_NONE;
 	}
 	else
 		config->readshape = 1;
@@ -1188,7 +1188,7 @@ validate_remote_loader_columns(SHPLOADERCONFIG *config, PGresult *result)
 	{
 		ntuples = PQntuples(result);
 
-		switch (config->opt)
+		switch (config->actions.mode)
 		{
 			case 'c':
 				/* If we have a row matching the table given in the config, then it already exists */
@@ -1540,7 +1540,19 @@ pgui_action_import(GtkWidget *widget, gpointer data)
 		loader_file_config = (SHPLOADERCONFIG *)gptr;
 
 		pgui_logf("\n==============================");
-		pgui_logf("Importing with configuration: %s, %s, %s, %s, mode=%c, dump=%d, simple=%d, geography=%d, index=%d, shape=%d, srid=%d", loader_file_config->table, loader_file_config->schema, loader_file_config->geo_col, loader_file_config->shp_file, loader_file_config->opt, loader_file_config->dump_format, loader_file_config->simple_geometries, loader_file_config->geography, loader_file_config->createindex, loader_file_config->readshape, loader_file_config->sr_id);
+		pgui_logf(
+		    "Importing with configuration: %s, %s, %s, %s, mode=%c, dump=%d, simple=%d, geography=%d, index=%d, shape=%d, srid=%d",
+		    loader_file_config->table,
+		    loader_file_config->schema,
+		    loader_file_config->geo_col,
+		    loader_file_config->shp_file,
+		    loader_file_config->actions.mode,
+		    loader_file_config->dump_format,
+		    loader_file_config->simple_geometries,
+		    loader_file_config->geography,
+		    loader_file_config->createindex,
+		    loader_file_config->readshape,
+		    loader_file_config->sr_id);
 
 		/*
 		 * Loop through the items in the shapefile
@@ -1609,8 +1621,8 @@ pgui_action_import(GtkWidget *widget, gpointer data)
 		if (!ret)
 			goto import_cleanup;
 
-		/* If we are in prepare mode, we need to skip the actual load. */
-		if (state->config->opt != 'p')
+		/* Load rows when requested by the selected actions. */
+		if (state->config->plan.load_data)
 		{
             int numrecords = ShpLoaderGetRecordCount(state);
             int records_per_tick = (numrecords / 200) - 1;
@@ -1714,7 +1726,7 @@ pgui_action_import(GtkWidget *widget, gpointer data)
 					goto import_cleanup;
 				}
 			}
-		} /* if (state->config->opt != 'p') */
+		} /* if (state->config->plan.load_data) */
 
 		/* Only continue if we didn't abort part way through */
 		if (is_running)
@@ -1730,7 +1742,7 @@ pgui_action_import(GtkWidget *widget, gpointer data)
 			}
 
 			/* Just in case index creation takes a long time, update the progress text */
-			if (state->config->createindex)
+			if (state->config->plan.create_index != LOADER_CREATE_NONE)
 			{
 				gtk_label_set_text(GTK_LABEL(label_progress), _("Creating spatial index..."));
 
@@ -1756,7 +1768,7 @@ import_cleanup:
 		pg_connection = NULL;
 
 		/* If we didn't finish inserting all of the items (and we expected to), an error occurred */
-		if ((state->config->opt != 'p' && i != ShpLoaderGetRecordCount(state)) || !ret)
+		if ((state->config->plan.load_data && i != ShpLoaderGetRecordCount(state)) || !ret)
 			pgui_logf(_("Shapefile import failed."));
 		else
 			pgui_logf(_("Shapefile import completed."));
@@ -1852,6 +1864,9 @@ pgui_action_export(GtkWidget *widget, gpointer data)
 		/* Grab the SHPDUMPERCONFIG for this row */
 		gtk_tree_model_get(GTK_TREE_MODEL(export_table_list_store), &iter, EXPORT_POINTER_COLUMN, &gptr, -1);
 		dumper_table_config = (SHPDUMPERCONFIG *)gptr;
+		state = NULL;
+		output_shapefile = NULL;
+		orig_shapefile = dumper_table_config->shp_file;
 
 		pgui_logf("\n==============================");
 		pgui_logf("Exporting with configuration: %s, %s, %s", dumper_table_config->table, dumper_table_config->schema, dumper_table_config->shp_file);
@@ -1869,11 +1884,25 @@ pgui_action_export(GtkWidget *widget, gpointer data)
 
 		/* Create the state for each configuration */
 		state = ShpDumperCreate(dumper_table_config);
+		if (!state)
+		{
+			pgui_seterr(_("Out of memory allocating dumper state"));
+			pgui_raise_error_dialogue();
+
+			break;
+		}
 		state->config->conn = conn;
 
 		/* Save the original shapefile name, then create a temporary version containing the full path */
-		orig_shapefile = dumper_table_config->shp_file;
 		output_shapefile = malloc(strlen(folder_path) + strlen(dumper_table_config->shp_file) + 2);
+		if (!output_shapefile)
+		{
+			pgui_seterr(_("Out of memory allocating output shapefile path"));
+			pgui_raise_error_dialogue();
+
+			ShpDumperDestroy(state);
+			break;
+		}
 		strcpy(output_shapefile, folder_path);
 		strcat(output_shapefile, G_DIR_SEPARATOR_S);
 		strcat(output_shapefile, dumper_table_config->shp_file);
@@ -1975,6 +2004,7 @@ export_cleanup:
 
 		/* Reset shapefile back to original form (without full path) */
 		dumper_table_config->shp_file = orig_shapefile;
+		free(output_shapefile);
 
 		/* Get next entry */
 		is_valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(export_table_list_store), &iter);
@@ -2173,23 +2203,23 @@ pgui_action_handle_tree_combo(GtkCellRendererCombo *combo,
 	switch (opt)
 	{
 		case 'a':
-			loader_file_config->opt = 'a';
+			loader_file_config->actions.mode = 'a';
 
 			/* Other half of index creation hack */
-			loader_file_config->createindex = 0;
+			loader_file_config->createindex = LOADER_CREATE_NONE;
 
 			break;
 
 		case 'd':
-			loader_file_config->opt = 'd';
+			loader_file_config->actions.mode = 'd';
 			break;
 
 		case 'p':
-			loader_file_config->opt = 'p';
+			loader_file_config->actions.mode = 'p';
 			break;
 
 		case 'c':
-			loader_file_config->opt = 'c';
+			loader_file_config->actions.mode = 'c';
 			break;
 	}
 
@@ -3518,7 +3548,7 @@ main(int argc, char *argv[])
 	set_dumper_config_defaults(global_dumper_config);
 
 	/* Here we override any defaults for the GUI */
-	global_loader_config->createindex = 1;
+	global_loader_config->createindex = LOADER_CREATE_ALWAYS;
 	global_loader_config->geo_col = strdup(GEOMETRY_DEFAULT);
 	global_loader_config->dump_format = 1;
 

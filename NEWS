@@ -21,7 +21,12 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
 
 * New Features *
 
- - #1124, shp2pgsql can create UNLOGGED tables for transient staging loads
+ - #1124, #2935, #3033, #4658, #4659, [loader] Rework loader arguments:
+          shp2pgsql can create UNLOGGED tables and choose the feature id column
+          name, shp2pgsql --drop-table can emit DROP TABLE before prepare
+          output, raster2pgsql/shp2pgsql expose loader actions as long options,
+          both loaders accept long aliases for existing options, and
+          --if-not-exists makes creation actions idempotent
           (Darafei Praliaskouski)
  - #4208, Add single-geometry variants of ST_MaxDistance and ST_LongestLine
           (Darafei Praliaskouski)
@@ -54,6 +59,12 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
 
 * Enhancements *
 
+ - #1577, [loader] Report unsupported .zip archive input before trying
+          to open shapefile sidecar files (Darafei Praliaskouski)
+ - #3158, Move geometry and geography typmod bit helpers out of the
+          public liblwgeom header (Darafei Praliaskouski)
+ - #4678, [raster] Move st_sum4ma neighborhood callback to C
+          (Darafei Praliaskouski)
  - #2116, [raster] Add ST_Value nearest-neighbor boundary options
           (Darafei Praliaskouski)
  - #2804, #4315, [raster] Support two-argument ST_MapAlgebra callbacks
@@ -63,9 +74,10 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
  - #6062, [topology] Stop using recursive snapping, for improved robustness (Sandro Santilli)
  - #6065, Improved winding order computation robustness for rings having collapsed elements
           (Sandro Santilli)
- - #3743, [raster] Document and test raster2pgsql -s FROM_SRID:SRID
-          reprojection support (Darafei Praliaskouski)
- - #4659, [raster] Add raster2pgsql --if-not-exists creation modifier
+ - #3743, #4385, [raster loader] Document raster2pgsql -s FROM_SRID:SRID
+          reprojection support and clarify index creation timing for append loads
+          (Darafei Praliaskouski)
+ - #2137, [raster] Reuse matching source raster overviews in raster2pgsql -l
           (Darafei Praliaskouski)
  - #4749, Use point-in-polygon predicate fast paths for point-only
           GeometryCollections (Darafei Praliaskouski)
@@ -78,7 +90,11 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
           (Darafei Praliaskouski)
  - #2832, [raster] Avoid padding single-tile raster2pgsql overviews
           when padding is not requested (Darafei Praliaskouski)
+ - #2623, Generate a pgsql2shp GID field when exporting geometry-only
+          shapefiles (Darafei Praliaskouski)
  - Fix WKB and TWKB parser resource exhaustion on malformed input
+          (Darafei Praliaskouski)
+ - #2850, Preserve pgsql2shp numeric precision and scale in DBF metadata
           (Darafei Praliaskouski)
  - #6083, Pass configured dependency include paths to fuzzer smoke builds
           (Darafei Praliaskouski)
@@ -106,6 +122,8 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
  - GH-888, [sfcgal] Avoid stale detoasted geometry access in
           CG_Visibility empty-input handling for SFCGAL < 2.2
           (Darafei Praliaskouski)
+ - #2808, Clarify postgis_full_version() output when installed component
+          scripts are newer than core scripts (Darafei Praliaskouski)
  - #3179, Mark truncated libpgcommon PostgreSQL messages instead of silently
           dropping the tail (Darafei Praliaskouski)
  - #6003, Avoid size_t formats in liblwgeom logging/error wrappers for

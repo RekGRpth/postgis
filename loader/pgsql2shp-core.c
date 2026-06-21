@@ -59,6 +59,8 @@ static char *nullDBFValue(char fieldType);
 static int getMaxFieldSize(PGconn *conn, char *schema, char *table, char *fname);
 static int getTableInfo(SHPDUMPERSTATE *state);
 static int projFileCreate(SHPDUMPERSTATE *state);
+static int numeric_typmod_precision(int typmod);
+static int numeric_typmod_scale(int typmod);
 
 /**
  * @brief Make appropriate formatting of a DBF value based on type.
@@ -85,6 +87,24 @@ core_asprintf(const char* format, ...)
     	exit(-1);
     va_end(ap);
     return value;
+}
+
+static int
+numeric_typmod_precision(int typmod)
+{
+	return ((typmod - 4) >> 16) & 0xffff;
+}
+
+static int
+numeric_typmod_scale(int typmod)
+{
+	int scale = (typmod - 4) & 0x7ff;
+
+	/* PostgreSQL stores numeric scale as an 11-bit signed value. */
+	if (scale & 0x400)
+		scale |= ~0x7ff;
+
+	return scale;
 }
 
 static SHPObject *
@@ -1161,6 +1181,9 @@ ShpDumperCreate(SHPDUMPERCONFIG *config)
 
 	/* Create a new state object and assign the config to it */
 	state = malloc(sizeof(SHPDUMPERSTATE));
+	if (!state)
+		return NULL;
+
 	state->config = config;
 
 	/* Set any state defaults */
@@ -1179,6 +1202,7 @@ ShpDumperCreate(SHPDUMPERCONFIG *config)
 	state->pgfieldnames = NULL;
 	state->pgfieldlens = NULL;
 	state->pgfieldtypmods = NULL;
+	state->generate_dbf_id = LW_FALSE;
 	state->message[0] = '\0';
 	colmap_init(&state->column_map);
 
@@ -1317,16 +1341,18 @@ ShpDumperOpenTable(SHPDUMPERSTATE *state)
 	PGresult *res;
 
 	char buf[256];
-	int gidfound = 0, i, j, ret, status;
+	int gidfound = 0, i, j, status;
+	int ret = SHPDUMPEROK;
 	stringbuffer_t sb;
 	char *quoted = NULL;
 
 	/* Open the column map if one was specified */
 	if (state->config->column_map_filename)
 	{
-		ret = colmap_read(state->config->column_map_filename,
-		                  &state->column_map, state->message, SHPDUMPERMSGLEN);
-		if (!ret) return SHPDUMPERERR;
+		int colmap_ret = colmap_read(
+		    state->config->column_map_filename, &state->column_map, state->message, SHPDUMPERMSGLEN);
+		if (!colmap_ret)
+			return SHPDUMPERERR;
 	}
 
 	/* If a user-defined query has been specified, create and point the state to our new table */
@@ -1607,19 +1633,50 @@ ShpDumperOpenTable(SHPDUMPERSTATE *state)
 		}
 
 		/*
-		 * double or numeric types:
+		 * double types:
 		 *    700: float4
 		 *    701: float8
-		 *   1700: numeric
-		 *
-		 *
-		 * TODO: stricter handling of sizes
 		 */
-		else if (pgfieldtype == 700 || pgfieldtype == 701 || pgfieldtype == 1700)
+		else if (pgfieldtype == 700 || pgfieldtype == 701)
 		{
 			dbffieldtype = FTDouble;
 			dbffieldsize = 32;
 			dbffielddecs = 10;
+		}
+
+		/*
+		 * Numeric type (1700). Preserve declared precision and scale
+		 * when PostgreSQL exposes a typmod and DBF can represent it.
+		 */
+		else if (pgfieldtype == 1700)
+		{
+			dbffieldtype = FTDouble;
+			dbffieldsize = 32;
+			dbffielddecs = 10;
+
+			if (pgtypmod >= 0)
+			{
+				int precision = numeric_typmod_precision(pgtypmod);
+				int scale = numeric_typmod_scale(pgtypmod);
+				int integral_digits = precision - scale;
+				int dbfsize;
+
+				if (integral_digits < 1)
+					integral_digits = 1;
+
+				if (scale > 0)
+					dbfsize = 1 + integral_digits + 1 + scale;
+				else
+					dbfsize = 1 + precision - scale;
+
+				if (dbfsize <= MAX_DBF_FIELD_SIZE)
+				{
+					dbffieldsize = dbfsize;
+					dbffielddecs = (scale > 0) ? scale : 0;
+					if (dbffielddecs == 0)
+						dbffieldtype = FTInteger;
+				}
+			}
 		}
 
 		/*
@@ -1785,6 +1842,25 @@ ShpDumperOpenTable(SHPDUMPERSTATE *state)
 		{
 			free(dbffieldname);
 		}
+	}
+
+	if (state->geo_col_name && !state->fieldcount)
+	{
+		if (DBFAddField(state->dbf, "GID", FTInteger, 11, 0) == -1)
+		{
+			snprintf(
+			    state->message, SHPDUMPERMSGLEN, _("Error: generated field GID could not be created."));
+			PQclear(res);
+			return SHPDUMPERERR;
+		}
+
+		state->generate_dbf_id = LW_TRUE;
+		snprintf(buf,
+			 sizeof(buf),
+			 _("Warning: no DBF attributes found, generating a GID field for compatibility.\n"));
+		if (SHPDUMPERMSGLEN > (strlen(state->message) + 1))
+			strncat(state->message, buf, SHPDUMPERMSGLEN - (strlen(state->message) + 1));
+		ret = SHPDUMPERWARN;
 	}
 
 	/* Now we have generated the field lists, grab some info about the table */
@@ -1956,7 +2032,7 @@ ShpDumperOpenTable(SHPDUMPERSTATE *state)
 	/* Generate the fetch query */
 	state->fetch_query = core_asprintf("FETCH %d FROM cur", state->config->fetchsize);
 
-	return SHPDUMPEROK;
+	return ret;
 }
 
 
@@ -2028,6 +2104,19 @@ int ShpLoaderGenerateShapeRow(SHPDUMPERSTATE *state)
 		if (!DBFWriteAttributeDirectly(state->dbf, state->currow, i, val))
 		{
 			snprintf(state->message, SHPDUMPERMSGLEN, _("Error: record %d could not be created"), state->currow);
+			PQclear(state->fetchres);
+			return SHPDUMPERERR;
+		}
+	}
+
+	if (state->generate_dbf_id)
+	{
+		if (!DBFWriteIntegerAttribute(state->dbf, state->currow, 0, state->currow + 1))
+		{
+			snprintf(state->message,
+				 SHPDUMPERMSGLEN,
+				 _("Error: generated GID for record %d could not be created"),
+				 state->currow);
 			PQclear(state->fetchres);
 			return SHPDUMPERERR;
 		}

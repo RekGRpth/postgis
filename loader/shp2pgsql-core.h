@@ -26,6 +26,7 @@
 #include "shapefil.h"
 #include "shpcommon.h"
 #include "getopt.h"
+#include "loader_actions.h"
 
 #include "../liblwgeom/stringbuffer.h"
 
@@ -70,6 +71,7 @@
  */
 #define GEOMETRY_DEFAULT "geom"
 #define GEOGRAPHY_DEFAULT "geog"
+#define FID_DEFAULT "gid"
 
 /*
  * Default character encoding
@@ -81,7 +83,7 @@
  */
 typedef struct shp_loader_config
 {
-	/* load mode: c = create, d = delete, a = append, p = prepare */
+	/* load mode preset: c = create, d = drop/create, a = append, p = prepare */
 	char opt;
 
 	/* table to load into */
@@ -92,6 +94,9 @@ typedef struct shp_loader_config
 
 	/* geometry/geography column name specified by the user, may be null. */
 	char *geo_col;
+
+	/* feature id column name specified by the user, may be null. */
+	char *fid_col;
 
 	/* the shape file (without the .shp extension) */
 	char *shp_file;
@@ -111,13 +116,17 @@ typedef struct shp_loader_config
 	/* 0 = allow int8 fields, 1 = no int8 fields */
 	int forceint4;
 
-	/* 0 = no index, 1 = create index after load */
-	int createindex;
+	/* index creation action */
+	LoaderCreateMode createindex;
 
 	/* 0 = logged table, 1 = create as UNLOGGED table */
 	int unlogged;
 
-    /* 0 = don't analyze tables , 1 = analyze tables */
+	/* raw action options and normalized execution plan */
+	LoaderActionOptions actions;
+	LoaderPlan plan;
+
+	/* 0 = don't analyze tables , 1 = analyze tables */
 	int analyze;
 
 	/* 0 = load DBF file only, 1 = load everything */
