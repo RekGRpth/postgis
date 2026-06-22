@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-12 20:29+0000\n"
-"PO-Revision-Date: 2026-06-18 08:39+0000\n"
+"PO-Revision-Date: 2026-06-22 06:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -11485,11 +11485,16 @@ msgid ""
 "between some geometries), it produces a Minimum Spanning Forest, and each "
 "connected component is assigned a unique tree ID."
 msgstr ""
+"<link xlink:href=\"https://en.wikipedia.org/wiki/Minimum_spanning_tree\">"
+"Minimum Spanning Tree</link> (最小全域木）はウィンドウ区画にある全ての"
+"ジオメトリーと接続していて、線長が最小となる木です。グラフが完全には接続され"
+"ていない (例: ジオメトリ間が無限距離になっている)場合には、最小全域フォレスト"
+"を生成します。これはそれぞれの接続要素に一意の木IDが付きます。"
 
 #. Tag: para
 #, no-c-format
 msgid "Requires GEOS &gt;= 3.15.0"
-msgstr ""
+msgstr "GEOS &gt;= 3.15.0 が必要です"
 
 #. Tag: para
 #, no-c-format
@@ -11497,6 +11502,8 @@ msgid ""
 ", <xref linkend=\"ST_ClusterKMeans\"/>, <xref "
 "linkend=\"ST_ClusterIntersectingWin\"/>"
 msgstr ""
+", <xref linkend=\"ST_ClusterKMeans\"/>, <xref "
+"linkend=\"ST_ClusterIntersectingWin\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -13293,7 +13300,7 @@ msgstr ""
 #. Tag: refpurpose
 #, no-c-format
 msgid "Computes the unique edges of a polygonal coverage."
-msgstr ""
+msgstr "ポリゴンカバレッジの重複の無いエッジを計算します。"
 
 #. Tag: para
 #, no-c-format
@@ -13302,6 +13309,9 @@ msgid ""
 "coverage. A polygonal coverage is a set of non-overlapping polygons where "
 "adjacent polygons have matching vertices along shared edges."
 msgstr ""
+"ポリゴンカバレッジの重複の無いエッジをMULTILINESTRING表現で返します。"
+"ポリゴンカバレッジはオーバーラップが無いポリゴンの集合で、隣接するポリゴンは"
+"共有するエッジに沿って一致する頂点を持っています。"
 
 #. Tag: para
 #, no-c-format
@@ -13309,11 +13319,15 @@ msgid ""
 "The <parameter>edgetype</parameter> parameter can be used to select which "
 "edges are returned:"
 msgstr ""
+"<parameter>edgetype</parameter>パラメーターはどのエッジを返すかを選択するのに"
+"使われます。取りえる値は次の通りです:"
 
 #. Tag: para
 #, no-c-format
 msgid "<emphasis role=\"bold\">0 (ALL)</emphasis> - all unique edges (default)"
 msgstr ""
+"<emphasis role=\"bold\">0 (ALL)</emphasis> - 全ての重複の無いエッジ "
+"(デフォルト)"
 
 #. Tag: para
 #, no-c-format
@@ -13321,6 +13335,8 @@ msgid ""
 "<emphasis role=\"bold\">1 (EXTERIOR)</emphasis> - only exterior edges (non-"
 "shared)"
 msgstr ""
+"<emphasis role=\"bold\">1 (EXTERIOR)</emphasis> - ポリゴンの外側のエッジのみ "
+"(非共有エッジ)"
 
 #. Tag: para
 #, no-c-format
@@ -13328,6 +13344,8 @@ msgid ""
 "<emphasis role=\"bold\">2 (INTERIOR)</emphasis> - only interior edges "
 "(shared)"
 msgstr ""
+"<emphasis role=\"bold\">2 (INTERIOR)</emphasis> - ポリゴンの内側のエッジのみ "
+"(共有エッジ)"
 
 #. Tag: para
 #, no-c-format
@@ -13335,6 +13353,8 @@ msgid ""
 ", <xref linkend=\"ST_CoverageSimplify\"/>, <xref "
 "linkend=\"ST_CoverageUnion\"/>"
 msgstr ""
+", <xref linkend=\"ST_CoverageSimplify\"/>, <xref "
+"linkend=\"ST_CoverageUnion\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -17548,7 +17568,7 @@ msgstr ""
 #, no-c-format
 msgid ""
 "Returns the interpolated measure of a geometry closest to a point in 3D."
-msgstr ""
+msgstr "3次元で最も近いジオメトリの補間M値を返します。"
 
 #. Tag: para
 #, no-c-format
@@ -17559,6 +17579,10 @@ msgid ""
 "such as flight trajectories, where <xref linkend=\"ST_InterpolatePoint\"/> "
 "would give incorrect results by ignoring the Z dimension."
 msgstr ""
+"ライン系ZMジオメトリの、与えた点から最も近い位置の補間M値を返します。使用投影"
+"法の3次元 (XYZ)距離を使います。航空機の航跡のようにZ値の変化が重要となり、 Z"
+"値を無視する<xref linkend=\"ST_InterpolatePoint\"/>では間違った結果が得られる"
+"ようなジオメトリに対してこの関数を使います。"
 
 #. Tag: para
 #, no-c-format
@@ -17566,13 +17590,17 @@ msgid ""
 "The line must have both Z and M dimensions. The point should have a Z "
 "dimension."
 msgstr ""
+"ラインはZ値とM値を持っていなければなりません。ポイントはZ値をもっていなければ"
+"なりません。"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 ", <xref linkend=\"ST_AddMeasure\"/>, <xref linkend=\"ST_LocateAlong\"/>, "
 "<xref linkend=\"ST_LocateBetween\"/>"
 msgstr ""
+", <xref linkend=\"ST_AddMeasure\"/>, <xref linkend=\"ST_LocateAlong\"/>, "
+"<xref linkend=\"ST_LocateBetween\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -18071,6 +18099,11 @@ msgid ""
 "is Massachusetts State Plane Feet and transformed area is in square meters "
 "since EPSG:26986 is state plane Massachusetts meters."
 msgstr ""
+"平方フィートの面積を返し、平方メートルを得るためにメートル単位"
+"マサチューセッツ州平面 (EPSG:26986) に変換します。一つ目はEPSG:2249でフィート"
+"単位マサチューセッツ州平面なので平方フィートとなり、二つ目は変換後は"
+"EPSG:26986でメートル単位マサチューセッツ州平面なので平方メートルになるので、"
+"注意して下さい。"
 
 #. Tag: para
 #, no-c-format
@@ -18977,6 +19010,9 @@ msgid ""
 "length is desired without reprojection. The spheroid is specified by a text "
 "value as follows:"
 msgstr ""
+"回転楕円体面のジオメトリーの周囲長を計算します。ジオメトリーの座標が経度/緯度"
+"で、投影せずに周囲長を求めたい場合に使います。回転楕円体面は次のような"
+"テキスト値で指定します:"
 
 #. Tag: para
 #, no-c-format
@@ -22919,7 +22955,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Examples: 2.5D geometries"
-msgstr ""
+msgstr "例: 2.5次元ジオメトリー"
 
 #. Tag: para
 #, no-c-format
@@ -22928,6 +22964,9 @@ msgid ""
 "with Z ordinates, but where calculations are performed in 2D). Compare to "
 "the same example using <xref linkend=\"ST_3DIntersection\"/>."
 msgstr ""
+"本当の3次元で見てインターセクトした箇所ではないことに注意して下さい。2.5次元"
+"ジオメトリーを使っています (Z値を持つジオメトリですが計算は2次元で行います)"
+"。<xref linkend=\"ST_3DIntersection\"/>を使った同じ例と比較して下さい。"
 
 #. Tag: para
 #, no-c-format
@@ -23553,6 +23592,10 @@ msgid ""
 "linkend=\"ST_Difference\"/>, <xref linkend=\"ST_SymDifference\"/>, <xref "
 "linkend=\"ST_LineMerge\"/>"
 msgstr ""
+", <xref linkend=\"ST_UnaryUnion\"/>, <xref linkend=\"ST_MemUnion\"/>, <xref "
+"linkend=\"ST_Collect\"/>, <xref linkend=\"ST_Intersection\"/>, <xref "
+"linkend=\"ST_Difference\"/>, <xref linkend=\"ST_SymDifference\"/>, <xref "
+"linkend=\"ST_LineMerge\"/>"
 
 #. Tag: title
 #, no-c-format
@@ -24106,7 +24149,7 @@ msgstr ""
 msgid ""
 "Returns a smoothed version of a geometry, using the Catmull-Rom spline "
 "algorithm"
-msgstr ""
+msgstr "Catmull-Romスプライン曲線を用いて平滑化されたジオメトリーを返します。"
 
 #. Tag: para
 #, no-c-format
