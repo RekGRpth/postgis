@@ -4726,7 +4726,7 @@ Datum ST_RemEdgeModFace(PG_FUNCTION_ARGS)
 {
   text* toponame_text;
   char* toponame;
-  int ret;
+  LWT_ELEMID ret;
   LWT_ELEMID node_id;
   LWT_TOPOLOGY *topo;
 
@@ -4781,7 +4781,7 @@ Datum ST_RemEdgeNewFace(PG_FUNCTION_ARGS)
 {
   text* toponame_text;
   char* toponame;
-  int ret;
+  LWT_ELEMID ret;
   LWT_ELEMID node_id;
   LWT_TOPOLOGY *topo;
 
@@ -4834,7 +4834,7 @@ Datum ST_ModEdgeHeal(PG_FUNCTION_ARGS)
 {
   text* toponame_text;
   char* toponame;
-  int ret;
+  LWT_ELEMID ret;
   LWT_ELEMID eid1, eid2;
   LWT_TOPOLOGY *topo;
 
@@ -4888,7 +4888,7 @@ Datum ST_NewEdgeHeal(PG_FUNCTION_ARGS)
 {
   text* toponame_text;
   char* toponame;
-  int ret;
+  LWT_ELEMID ret;
   LWT_ELEMID eid1, eid2;
   LWT_TOPOLOGY *topo;
 
@@ -5917,7 +5917,9 @@ Datum TopoRingIsCCW(PG_FUNCTION_ARGS)
 
   if ( lwgeom_is_empty(lwgeom) )
   {
-    PG_RETURN_BOOL(false);
+	  lwgeom_free(lwgeom);
+	  PG_FREE_IF_COPY(geom, 0);
+	  PG_RETURN_BOOL(false);
   }
 
   if (lwgeom->type == POLYGONTYPE)
@@ -5930,8 +5932,10 @@ Datum TopoRingIsCCW(PG_FUNCTION_ARGS)
   }
   else
   {
-    lwpgerror("Unsupported geometry type passed to TopoRingIsCCW");
-    PG_RETURN_NULL();
+	  lwgeom_free(lwgeom);
+	  PG_FREE_IF_COPY(geom, 0);
+	  lwpgerror("Unsupported geometry type passed to TopoRingIsCCW");
+	  PG_RETURN_NULL();
   }
 
   isCCW = lwt_IsTopoRingCCW(pa);
