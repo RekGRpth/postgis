@@ -1,5 +1,5 @@
 PostGIS 3.7.0beta1
-2026/xx/xx
+2026/07/xx
 
 This version requires GEOS 3.10+, PostgreSQL 14-19beta1, Proj 6.1+, libgmp.
 To take advantage of all features postgis extension features, GEOS 3.15+ is needed.
@@ -7,6 +7,13 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
 
 * Bug Fixes *
 
+ - #6093, Fix SQL generation on ppc64el when NURBS comments are
+          preprocessed with AltiVec vector macros (Darafei Praliaskouski)
+ - #6094, [upgrade] Avoid legacy string literal warnings in downgrade checks
+          with standard_conforming_strings off (Darafei Praliaskouski)
+ - #5423, Use a DTD-free expanded DocBook input for EPUB builds so
+          out-of-tree builds do not need dbtoepub entity path support
+          (Darafei Praliaskouski)
  - GH-898, Fix ST_DFullyWithin indexed plans and large-coordinate
           ring-orientation precision regressions (Darafei Praliaskouski)
  - GH-1143, [topology] Clean up TopoRingIsCCW early returns
@@ -22,6 +29,31 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
           (Darafei Praliaskouski)
  - GH-1153, [topology] Preserve large ids from edge wrappers
           (Darafei Praliaskouski)
+ - GH-1139, [topology] Preserve large edge ids from vertex-segment
+          proximity helper (Darafei Praliaskouski)
+ - GH-1140, [liblwgeom] Cap NURBS WKT knot multiplicity
+          (Darafei Praliaskouski)
+ - GH-1141, [liblwgeom] Reject overflowing NURBS linearization
+          segment counts (Darafei Praliaskouski)
+ - GH-1151, [topology] Preserve exact zero tolerance in
+          TopoGeometry construction (Darafei Praliaskouski)
+ - GH-1152, [topology] Enforce max edge limits from reported
+          TopoGeo_AddLinestring edge creation (Darafei Praliaskouski)
+ - GH-1154, [topology] Quote TotalTopologySize catalog regclasses
+          safely (Darafei Praliaskouski)
+ - #6092, [fuzzingengine] fuzzingengine doesn't use hardening CPPFLAGS
+            (Bas Couwenberg)
+
+* Enhancements *
+
+ - #4749, Use point-in-polygon predicate fast paths for point-only
+          GeometryCollections, including ST_Disjoint (Darafei Praliaskouski)
+ - #3676, Mark geometry and geography btree comparison support functions
+          as leakproof (Darafei Praliaskouski)
+ - GH-875, Allow ST_OrderingEquals joins to use hash and merge join plans
+          (Darafei Praliaskouski)
+ - #2557, #2805, Document ST_MapAlgebra callback argument
+          signatures and return semantics (Darafei Praliaskouski)
 
 
 PostGIS 3.7.0dev
@@ -154,11 +186,11 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
           centroid regressions on 32-bit systems (Darafei Praliaskouski)
  - #2583, Preserve Z/ZM dimensional qualifiers in ST_AsEWKT output for TIN
           (Darafei Praliaskouski)
+ - #4616, Detect pgsql2shp query keywords case-insensitively
+          (Darafei Praliaskouski)
 
 * Bug Fixes *
 
- - #4616, Detect pgsql2shp query keywords case-insensitively
-          (Darafei Praliaskouski)
  - Fix WKB and TWKB parser resource exhaustion on malformed input
           (Darafei Praliaskouski)
  - #6038, Avoid stale relation lookups in geometry_columns after topology
