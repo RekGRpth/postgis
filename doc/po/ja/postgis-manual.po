@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-05 04:20+0000\n"
-"PO-Revision-Date: 2026-07-08 06:39+0000\n"
+"PO-Revision-Date: 2026-07-09 09:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -16858,16 +16858,20 @@ msgid ""
 "requires superuser access. Also note that database, session, and user "
 "settings override this."
 msgstr ""
+"データベースクラスター全体のデフォルトを全ドライバ利用可能に設定します。この"
+"操作にはスーパーユーザー権限が必要です。また、データベース設定、セッション設"
+"定、ユーザー設定の方がここで設定したものよりも優先されることに注意して下さい"
+"。"
 
 #. Tag: para
 #, no-c-format
 msgid "This example writes the setting to postgres.auto.conf."
-msgstr ""
+msgstr "この例では設定をpostgres.auto.confに書き込みます。"
 
 #. Tag: para
 #, no-c-format
 msgid "Reload the PostgreSQL configuration so the changed setting is applied."
-msgstr ""
+msgstr "PostgreSQL設定を再読み込みして設定変更を適用します。"
 
 #. Tag: para
 #, no-c-format
@@ -16937,11 +16941,13 @@ msgid ""
 "Set and reset <varname>postgis.enable_outdb_rasters</varname> for the "
 "current session."
 msgstr ""
+"現在のセッションの<varname>postgis.enable_outdb_rasters</varname>を設定したり"
+"リセットしたりします。"
 
 #. Tag: para
 #, no-c-format
 msgid "Set the default for all new connections to a database."
-msgstr ""
+msgstr "特定のデータベースへの新規接続全てのデフォルトを設定します。"
 
 #. Tag: para
 #, no-c-format
@@ -16949,6 +16955,9 @@ msgid ""
 "Set the default for the whole database cluster. This requires superuser "
 "access. Also note that database, session, and user settings override this."
 msgstr ""
+"データベースクラスター全体のデフォルトを設定します。この操作には"
+"スーパーユーザー権限が必要です。また、データベース設定、セッション設定、"
+"ユーザー設定の方がここで設定したものよりも優先されることに注意して下さい。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -17127,7 +17136,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "This example converts longitude/latitude coordinates to geography."
-msgstr ""
+msgstr "この例では経度/緯度座標をジオグラフィーに変換します。"
 
 #. Tag: para
 #, no-c-format
@@ -17219,7 +17228,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "3D circular string."
-msgstr ""
+msgstr "3次元曲線ストリング。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -17666,6 +17675,8 @@ msgid ""
 "Although bytea rep contains single \\, these need to be escaped when "
 "inserting into a table."
 msgstr ""
+"bytea表現は単一の \\ を含みますが、これらはテーブルに入れるときにエスケープす"
+"る必要があります。"
 
 #. Tag: para
 #, no-c-format
@@ -17782,6 +17793,8 @@ msgid ""
 "Although bytea rep contains single \\, these need to be escaped when "
 "inserting into a table. Unless standard_conforming_strings is set to on."
 msgstr ""
+"bytea表現は単一の \\ を含みますが、standard_conforming_stringsがonになってい"
+"ない場合には、これらはテーブルに入れるときにエスケープする必要があります。"
 
 #. Tag: para
 #, no-c-format
@@ -18200,7 +18213,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "This example creates a 3D LineString."
-msgstr ""
+msgstr "この例では3次元ラインストリングを生成します。"
 
 #. Tag: para
 #, no-c-format
@@ -18337,14 +18350,14 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "This example creates a LineString from a polyline."
-msgstr ""
+msgstr "この例ではポリラインからラインストリングを生成します。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "This example selects a different precision than the one used for polyline "
 "encoding."
-msgstr ""
+msgstr "この例ではポリライン符号化の精度と違う精度を選択しています。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -18523,7 +18536,7 @@ msgstr "ラインストリングの20% (0.20)位置の補完ポイント"
 #. Tag: para
 #, no-c-format
 msgid "This example returns the point 20 percent along a line."
-msgstr ""
+msgstr "この例ではラインに沿って20%のポイントを返します。"
 
 #. Tag: para
 #, no-c-format
@@ -18623,7 +18636,7 @@ msgstr "20%刻みで補間されたポイントを持つラインストリング
 #, no-c-format
 msgid ""
 "This example returns points every 20 percent along a two-dimensional line."
-msgstr ""
+msgstr "この例では2次元ラインに沿って20%ごとにポイントを生成して返します。"
 
 #. Tag: para
 #, no-c-format
@@ -18677,12 +18690,18 @@ msgid ""
 "street data, and <function>ST_DWithin</function> excludes houses that are "
 "too far from the street."
 msgstr ""
+"この例ではストリートのラインに最も近いポイントの位置を得ることによって、家の"
+"ストリート番号を近似しています。サブクエリーによってサンプルの家とストリート"
+"のデータが作られ、<function>ST_DWithin</function>によってストリートから十分に"
+"遠い家を除きます。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "This example finds the closest point on a line to a point or other geometry."
 msgstr ""
+"この例ではポイントや他のジオメトリから最も近いライン上のポイントを探索します"
+"。"
 
 #. Tag: para
 #, no-c-format
@@ -18708,6 +18727,11 @@ msgid ""
 "in 2D line length. The Z and M values are interpolated for added endpoints "
 "if present."
 msgstr ""
+"与えられた割合位置を開始点と終了点とした、入力ラインの一部を計算します。一つ"
+"目の引数はLINESTRINGでなければなりません。二つ目と三つ目の引数は[0, 1]の範囲"
+"内で、開始点と終了点の、ライン長に対する割合の位置です。ジオメトリー入力に対"
+"する割合は2次元長で計算されます。Z値とM値が存在する場合には、追加された端点に"
+"対して補間計算を行います。"
 
 #. Tag: para
 #, no-c-format
@@ -18788,6 +18812,8 @@ msgid ""
 "the line, even when the input has Z values. The resulting Z values are "
 "interpolated along the selected 2D location."
 msgstr ""
+"ジオメトリー入力の場合には、割合による位置はZ値を持っていてもラインの2次元長"
+"を基に計算します。結果のZ値は選択した2次元位置に沿って補間しています。"
 
 #. Tag: para
 #, no-c-format
@@ -19007,6 +19033,8 @@ msgid ""
 "This example interpolates on a line rising diagonally in Z, using a point at "
 "the 3D midpoint."
 msgstr ""
+"この例ではZ値が斜めに上がっているラインの3次元の中間点での補間を行っています"
+"。"
 
 #. Tag: para
 #, no-c-format
@@ -19014,6 +19042,8 @@ msgid ""
 "This example uses a vertical line with zero XY extent, where 3D projection "
 "works but 2D projection does not."
 msgstr ""
+"この例ではXとYの幅がゼロの垂直ラインを使います。3次元上では動作し、2次元に投"
+"影すると動作しません。"
 
 #. Tag: para
 #, no-c-format
@@ -19133,43 +19163,43 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "This example creates a schema to hold data."
-msgstr ""
+msgstr "この例ではデータを保持するスキーマーを生成します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Create a simple PostgreSQL table in the schema."
-msgstr ""
+msgstr "スキーマー内に単純なPostgreSQLテーブルを生成します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Describing the table shows a single <varname>id</varname> column."
-msgstr ""
+msgstr "テーブルの詳細情報で<varname>id</varname>カラムを出力します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Add a spatial column to the table."
-msgstr ""
+msgstr "空間ラカムをテーブルに追加します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Add a point column using the old constraint-based behavior."
-msgstr ""
+msgstr "古い制約を基にした手法でポイントを追加します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Add a CurvePolygon column using the old constraint-based behavior."
-msgstr ""
+msgstr "古い制約を基にした手法で曲線ポリゴンを追加します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Describe the table again to see the new geometry columns."
-msgstr ""
+msgstr "新しいカラムについてみるためにテーブルの詳細情報を見ます。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "The <varname>geometry_columns</varname> view also registers the new columns."
-msgstr ""
+msgstr "<varname>geometry_columns</varname>ビューは新しいカラムを登録しています。"
 
 #. Tag: para
 #, no-c-format
@@ -19214,6 +19244,8 @@ msgid ""
 "The above is also equivalent to the standard <command>ALTER TABLE</command> "
 "command. Both deregister the column from <varname>geometry_columns</varname>."
 msgstr ""
+"上の例は標準的な<command>ALTER TABLE</command>コマンドと等価です。両方とも"
+"カラムの登録を<varname>geometry_columns</varname>から除外します。"
 
 #. Tag: para
 #, no-c-format
@@ -19254,7 +19286,7 @@ msgstr ""
 msgid ""
 "The above is now equivalent to the standard <command>DROP TABLE</command> "
 "command."
-msgstr ""
+msgstr "今は上の例と標準的な<command>DROP TABLE</command>コマンドとは等価です。"
 
 #. Tag: para
 #, no-c-format
@@ -19424,6 +19456,8 @@ msgid ""
 "This example populates geometry column metadata using typmod behavior. For "
 "this to work, there must be existing data."
 msgstr ""
+"この例ではtypmodを使法手法でジオメトリーカラムにメタデータを投入します。これ"
+"が動作するにはデータが存在する必要があります。"
 
 #. Tag: para
 #, no-c-format
@@ -20090,6 +20124,10 @@ msgid ""
 "vertical datum support so Z is not transformed and assumed to be same units "
 "as final."
 msgstr ""
+"ジオメトリーの例 - メートル単位 (SRID: 2163 米国ナショナルアトラス正積図法)(3"
+"次元ポイントとラインと比較で2次元ポイントとライン)。現在は鉛直データムに対応"
+"していません。Z値は変換されず、かつ単位が同じであると仮定されるので注意して下"
+"さい。"
 
 #. Tag: para
 #, no-c-format
@@ -20097,6 +20135,8 @@ msgid ""
 "Multilinestring and polygon both 3D and 2D distance. Same example as 3D "
 "closest point example."
 msgstr ""
+"MULTILINESTRINGとPOLYGONで3次元距離と2次元距離を測ります。3次元最近ポイントの"
+"例と同じです。"
 
 #. Tag: para
 #, no-c-format
@@ -20430,6 +20470,8 @@ msgid ""
 "This example transforms a WGS 84 LineString to Massachusetts State Plane "
 "meters."
 msgstr ""
+"この例ではWGS84 LINESTRINGからメートル単位のマサチューセッツ平面に変換してい"
+"ます。"
 
 #. Tag: para
 #, no-c-format
@@ -20439,7 +20481,7 @@ msgstr "WGS84ジオグラフィのラインの長さを返します。"
 #. Tag: para
 #, no-c-format
 msgid "This example uses the default spheroid calculation."
-msgstr ""
+msgstr "この例ではデフォルトの回転楕円体計算を使っています。"
 
 #. Tag: para
 #, no-c-format
@@ -20585,11 +20627,14 @@ msgid ""
 "The endpoints of the line lie on the circle computed by <xref "
 "linkend=\"ST_MinimumBoundingCircle\"/>."
 msgstr ""
+"一つのジオメトリーだけが与えられるか、g1とg2が同じジオメトリーである場合には"
+"、ジオメトリーで最も離れた二つの頂点からなるラインが返ります。ラインの端点は "
+"<xref linkend=\"ST_MinimumBoundingCircle\"/>で計算される円の上になります。"
 
 #. Tag: para
 #, no-c-format
 msgid "Enhanced: 3.7.0 - support for a single geometry input."
-msgstr ""
+msgstr "Enhanced: 3.7.0 - 単一ジオメトリー入力に対応しました。"
 
 #. Tag: para
 #, no-c-format
@@ -20686,6 +20731,8 @@ msgid ""
 "returns the distance between the two vertices farthest apart in that "
 "geometry."
 msgstr ""
+"一つのジオメトリーだけが与えられるか、g1とg2が同じジオメトリーである場合には"
+"、ジオメトリーで最も離れた二つの頂点間の距離を返します。"
 
 #. Tag: para
 #, no-c-format
@@ -20916,7 +20963,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "This example uses a MultiPolygon."
-msgstr ""
+msgstr "この例ではMULTIPOLYGONを使っています。"
 
 #. Tag: para
 #, no-c-format
@@ -22713,6 +22760,8 @@ msgid ""
 "This example builds the SQL for a Boston-to-San-Francisco path with segments "
 "every 100 kilometers."
 msgstr ""
+"この例ではボストン-サンフランシスコ間を100kmごとに区分したSQLをビルドしていま"
+"す。"
 
 #. Tag: para
 #, no-c-format
@@ -44789,7 +44838,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "CircularString"
-msgstr "曲線ストリング (CircularStringCircularString)"
+msgstr "曲線ストリング (CircularString)"
 
 #. Tag: para
 #, no-c-format
@@ -49384,6 +49433,10 @@ msgid ""
 "final run or after loading; add <option>--if-not-exists</option> to make "
 "reruns tolerate an existing index."
 msgstr ""
+"このraster2pgsqlの実行が終わる時にラスターカラムのGiSTインデックスを生成しま"
+"す。<option>-a</option>による追加実行を繰り返しても、最後の実行またはロード後"
+"にインデックスを生成します。 <option>--if-not-exists</option>でインデックスの"
+"存在を許容します。"
 
 #. Tag: para
 #, no-c-format
