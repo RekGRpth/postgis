@@ -364,15 +364,31 @@ def normalize_woodpecker_status(value):
     return mapping.get(str(value).lower(), UNKNOWN)
 
 
+def woodpecker_matches_branch(build, check, branch):
+    if build.get("branch") != branch["name"]:
+        return False
+
+    event = check.get("event", "push")
+    if event and build.get("event") != event:
+        return False
+
+    expected_ref = render_template(check.get("ref", "refs/heads/${branch}"), branch)
+    return build.get("ref") in (None, expected_ref)
+
+
 def woodpecker_check(check, branch, timeout):
-    query = urllib.parse.urlencode({"branch": branch["name"], "limit": "20"})
+    query = urllib.parse.urlencode({
+        "branch": branch["name"],
+        "event": check.get("event", "push"),
+        "limit": "20",
+    })
     api_url = check["api_url"]
     separator = "&" if "?" in api_url else "?"
     url = f"{api_url}{separator}{query}"
     builds = http_json(url, timeout=timeout)
     if isinstance(builds, dict):
         builds = builds.get("builds") or builds.get("pipelines") or builds.get("data") or []
-    builds = [build for build in builds if build.get("branch") == branch["name"]]
+    builds = [build for build in builds if woodpecker_matches_branch(build, check, branch)]
     if not builds:
         return make_result(check, branch, UNKNOWN, message="no Woodpecker builds found", debug_url=url)
 
@@ -1157,6 +1173,18 @@ def overall_status(branches):
     return NOT_APPLICABLE
 
 
+def required_failures(branches):
+    failures = []
+    for branch in branches:
+        checks = [
+            check for check in branch["checks"]
+            if check.get("required") and check["status"] == FAILURE
+        ]
+        if checks:
+            failures.append((branch["label"], checks))
+    return failures
+
+
 def html_status_label(status):
     return {
         SUCCESS: "Passing",
@@ -1320,12 +1348,38 @@ def html_check_table(problem_checks, passing_checks=None):
     )
 
 
+def html_required_failures(branches):
+    failures = required_failures(branches)
+    if not failures:
+        return ""
+
+    groups = []
+    for branch_label, checks in failures:
+        check_links = []
+        for check in checks:
+            check_name = html.escape(check["check"])
+            link = result_url(check)
+            check_links.append(
+                f"<a href='{html.escape(link)}'>{check_name}</a>" if link else check_name
+            )
+        groups.append(
+            f"<strong>{html.escape(branch_label)}</strong> — {', '.join(check_links)}"
+        )
+
+    return (
+        " <span aria-label='Required CI failures'>· <strong>Required:</strong> "
+        f"{' · '.join(groups)}</span>"
+    )
+
+
 def render_html(data):
     generated = html.escape(data["generated_at"])
     page_status = overall_status(data["branches"])
-    page_summary = html.escape(summary_text({"status": page_status, "checks": [
+    page_summary_text = summary_text({"status": page_status, "checks": [
         check for branch in data["branches"] for check in branch["checks"]
-    ]}))
+    ]})
+    page_summary = html.escape(page_summary_text)
+    failure_attribution = html_required_failures(data["branches"])
     rows = []
     details = []
     for branch in data["branches"]:
@@ -1690,7 +1744,7 @@ a:hover {{ color: var(--brand-strong); }}
 <span class="status-dot" aria-hidden="true"></span>
 <div>
 <div class="banner-title"><span aria-hidden="true">{html.escape(status_mark(page_status))}</span> {html.escape(html_status_label(page_status))}</div>
-<div class="banner-summary">{page_summary}</div>
+<div class="banner-summary">{page_summary}{failure_attribution}</div>
 </div>
 </section>
 <section class="panel" aria-label="Supported branch status">
