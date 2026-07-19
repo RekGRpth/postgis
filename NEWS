@@ -48,6 +48,11 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
 
 * Enhancements *
 
+ - #1986, ST_GeomFromGML support for GML ArcString and curved polygon rings
+          (Darafei Praliaskouski)
+
+ - GH-1161, Render manual geometry examples as build-time SVG in HTML
+          and PDF (Darafei Praliaskouski)
  - #4749, Use point-in-polygon predicate fast paths for point-only
           GeometryCollections, including ST_Disjoint (Darafei Praliaskouski)
  - #3676, Mark geometry and geography btree comparison support functions
@@ -56,6 +61,8 @@ To take advantage of all postgis_sfcgal extension features SFCGAL 2.3+ is needed
           (Darafei Praliaskouski)
  - #2557, #2805, Document ST_MapAlgebra callback argument
           signatures and return semantics (Darafei Praliaskouski)
+ - #1168, [raster] Support curved geometry inputs in ST_AsRaster
+          (Darafei Praliaskouski)
 
 
 PostGIS 3.7.0dev
