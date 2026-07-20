@@ -26,6 +26,8 @@ FAILURE = "failure"
 IN_PROGRESS = "in_progress"
 UNKNOWN = "unknown"
 STALE = "stale"
+STALE_PASSED = "stale-passed"
+STALE_FAILED = "stale-fail"
 DISABLED = "disabled"
 NOT_APPLICABLE = "not_applicable"
 
@@ -35,6 +37,8 @@ SYMBOLS = {
     IN_PROGRESS: ("🔄", "RUN"),
     UNKNOWN: ("⚠️", "UNKNOWN"),
     STALE: ("⚠️", "STALE"),
+    STALE_PASSED: ("⚠️", "STALE-OK"),
+    STALE_FAILED: ("⚠️", "STALE-FAIL"),
     DISABLED: ("➖", "DISABLED"),
     NOT_APPLICABLE: ("➖", "N/A"),
 }
@@ -45,6 +49,8 @@ COLORS = {
     IN_PROGRESS: "\033[36m",
     UNKNOWN: "\033[33m",
     STALE: "\033[33m",
+    STALE_PASSED: "\033[33m",
+    STALE_FAILED: "\033[33m",
     DISABLED: "\033[2m",
     NOT_APPLICABLE: "\033[2m",
 }
@@ -641,6 +647,74 @@ def jenkins_matches_branch(build, check, branch):
     return any(value == expected for name, value in params.items() if name == branch_parameter or name.lower() == branch_parameter.lower())
 
 
+def jenkins_queue_url(job_url):
+    parsed = urllib.parse.urlparse(job_url)
+    if parsed.scheme not in ("http", "https") or not parsed.netloc:
+        raise ConfigError(f"cannot build Jenkins queue URL for {job_url}")
+    return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, "/queue/api/json", "", "", ""))
+
+
+def jenkins_project_url(job_url):
+    parsed = urllib.parse.urlparse(job_url)
+    path = parsed.path.rstrip("/") + "/"
+    if path.startswith("/view/") and "/job/" in path:
+        path = "/job/" + path.split("/job/", 1)[1]
+    if "/label=" in path:
+        path = path.split("/label=", 1)[0].rstrip("/") + "/"
+    return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, path, "", "", ""))
+
+
+def jenkins_queue_items(job_url, timeout):
+    tree = (
+        "items[id,task[name,url],why,params,inQueueSince,url,blocked,buildable,stuck,"
+        "actions[parameters[name,value]]]"
+    )
+    url = jenkins_queue_url(job_url) + "?" + urllib.parse.urlencode({"tree": tree})
+    return http_json(url, timeout=timeout).get("items") or []
+
+
+def jenkins_queue_item_matches(item, job_url, check, branch):
+    task = item.get("task") or {}
+    task_url = (task.get("url") or "").rstrip("/") + "/"
+    if task_url != jenkins_project_url(job_url):
+        return False
+    branch_parameter = check.get("branch_parameter")
+    if not branch_parameter:
+        return True
+    expected = f"refs/heads/{branch['name']}"
+    params = jenkins_parameters(item)
+    return any(value == expected for name, value in params.items() if name == branch_parameter or name.lower() == branch_parameter.lower())
+
+
+def jenkins_queued_check(check, branch, job_url, timeout):
+    if not check.get("branch_parameter"):
+        return None
+    try:
+        queued = [
+            item for item in jenkins_queue_items(job_url, timeout)
+            if jenkins_queue_item_matches(item, job_url, check, branch)
+        ]
+    except RECOVERABLE_PROVIDER_ERRORS:
+        return None
+    if not queued:
+        return None
+    item = sorted(queued, key=lambda value: value.get("inQueueSince") or 0)[0]
+    params = jenkins_parameters(item)
+    message = f"queued item {item.get('id')}"
+    if item.get("why"):
+        message = f"{message}: {item['why']}"
+    return make_result(
+        check,
+        branch,
+        IN_PROGRESS,
+        url=job_url,
+        debug_url=jenkins_queue_url(job_url),
+        revision=params.get("after") or params.get("BRANCH"),
+        completed_at=item.get("inQueueSince"),
+        message=message,
+    )
+
+
 def jenkins_builds(job_url, check, timeout):
     try:
         limit = int(check.get("build_scan_limit", 200 if check.get("branch_parameter") else 25))
@@ -722,6 +796,7 @@ def jenkins_badge_check(check, branch, job_url, timeout, api_error=None):
 
 def jenkins_check(check, branch, timeout):
     job_url = render_template(check["job_url"], branch).rstrip("/") + "/"
+    queued_result = jenkins_queued_check(check, branch, job_url, timeout)
     try:
         builds = [
             build for build in jenkins_builds(job_url, check, timeout)
@@ -730,6 +805,8 @@ def jenkins_check(check, branch, timeout):
     except RECOVERABLE_PROVIDER_ERRORS as exc:
         return jenkins_badge_check(check, branch, job_url, timeout, api_error=exc)
     if not builds:
+        if queued_result:
+            return queued_result
         badge_result = jenkins_badge_check(check, branch, job_url, timeout)
         if badge_result["status"] != UNKNOWN or badge_result.get("status_label") == "Not run":
             return badge_result
@@ -737,6 +814,9 @@ def jenkins_check(check, branch, timeout):
 
     current = builds[0]
     previous = next((build for build in builds[1:] if not build.get("building")), None)
+    if queued_result and not current.get("building"):
+        queued_result.update(previous_fields(normalize_jenkins_status(current), current))
+        return queued_result
     result = make_result(
         check,
         branch,
@@ -817,7 +897,9 @@ def apply_staleness(result, config, check):
         stale["revision_commits_behind"] = distance_count
         stale["revision_compare_ref"] = distance_ref
         stale["revision_distance"] = revision_distance_text(distance_count, distance_ref)
-        stale["status"] = STALE
+        stale["stale_base_status"] = result["status"]
+        stale["status"] = stale_status(result["status"])
+        stale["status_label"] = stale_status_label(result["status"])
         stale["message"] = f"{result.get('message', 'CI run')} ({stale['revision_distance']})"
         return stale
     if result["status"] != SUCCESS:
@@ -836,7 +918,9 @@ def apply_staleness(result, config, check):
         stale["revision_commits_behind"] = distance_count
         stale["revision_compare_ref"] = distance_ref
         stale["revision_distance"] = distance_text
-    stale["status"] = STALE
+    stale["stale_base_status"] = result["status"]
+    stale["status"] = stale_status(result["status"])
+    stale["status_label"] = stale_status_label(result["status"])
     stale["message"] = f"{result.get('message', 'successful run')} (older than {threshold:g}h)"
     return stale
 
@@ -902,7 +986,7 @@ def aggregate(config, results):
         required = [check for check in checks if check.get("required") and check["status"] not in (DISABLED, NOT_APPLICABLE)]
         if any(check["status"] == FAILURE for check in required):
             status = FAILURE
-        elif any(check["status"] in (UNKNOWN, STALE) for check in required):
+        elif any(check["status"] == UNKNOWN or is_stale_status(check["status"]) for check in required):
             status = UNKNOWN
         elif any(check["status"] == IN_PROGRESS for check in required):
             status = IN_PROGRESS
@@ -940,12 +1024,70 @@ def check_counts(branch):
         IN_PROGRESS: 0,
         UNKNOWN: 0,
         STALE: 0,
+        STALE_PASSED: 0,
+        STALE_FAILED: 0,
     }
     for check in required:
         counts[check["status"]] = counts.get(check["status"], 0) + 1
     counts["required"] = len(required)
     counts["informational"] = len(branch["checks"]) - len(required)
     return counts
+
+
+def stale_status_label(base_status):
+    return {
+        SUCCESS: "Stale passed",
+        FAILURE: "Stale fail",
+        UNKNOWN: "Stale unknown",
+    }.get(base_status, "Stale")
+
+
+def stale_status(base_status):
+    return {
+        SUCCESS: STALE_PASSED,
+        FAILURE: STALE_FAILED,
+    }.get(base_status, STALE)
+
+
+def is_stale_status(status):
+    return status in (STALE, STALE_PASSED, STALE_FAILED)
+
+
+def stale_count_bucket(check):
+    if not is_stale_status(check["status"]):
+        return None
+    base_status = check.get("stale_base_status")
+    if check["status"] == STALE_PASSED:
+        return SUCCESS
+    if check["status"] == STALE_FAILED:
+        return FAILURE
+    if base_status in (SUCCESS, FAILURE):
+        return base_status
+    return UNKNOWN
+
+
+def stale_check_counts(branch):
+    counts = {
+        SUCCESS: 0,
+        FAILURE: 0,
+        UNKNOWN: 0,
+    }
+    for check in branch["checks"]:
+        if not check.get("required"):
+            continue
+        bucket = stale_count_bucket(check)
+        if bucket:
+            counts[bucket] += 1
+    return counts
+
+
+def stale_summary_parts(branch):
+    counts = stale_check_counts(branch)
+    return nonzero_parts(
+        (counts[SUCCESS], f"{counts[SUCCESS]} stale-passed"),
+        (counts[FAILURE], f"{counts[FAILURE]} stale-fail"),
+        (counts[UNKNOWN], f"{counts[UNKNOWN]} stale-unknown"),
+    )
 
 
 def plural(count, word):
@@ -959,7 +1101,7 @@ def nonzero_parts(*items):
 def summary_text(branch):
     status = branch["status"]
     counts = check_counts(branch)
-    unknown = counts[UNKNOWN] + counts[STALE]
+    stale_parts = stale_summary_parts(branch)
     if status == SUCCESS:
         return f"all {counts['required']} required CI checks OK"
     if status == FAILURE:
@@ -967,24 +1109,27 @@ def summary_text(branch):
             (counts[SUCCESS], f"{counts[SUCCESS]} OK"),
             (counts[FAILURE], plural(counts[FAILURE], "failure")),
             (counts[IN_PROGRESS], f"{counts[IN_PROGRESS]} running"),
-            (unknown, f"{unknown} unknown/stale"),
+            (counts[UNKNOWN], f"{counts[UNKNOWN]} unknown"),
         )
+        parts.extend(stale_parts)
         return "; ".join(parts)
     if status == IN_PROGRESS:
         previous = previous_summary(branch["checks"])
         parts = nonzero_parts(
             (counts[SUCCESS], f"{counts[SUCCESS]} OK"),
             (counts[IN_PROGRESS], f"{counts[IN_PROGRESS]} running"),
-            (unknown, f"{unknown} unknown/stale"),
+            (counts[UNKNOWN], f"{counts[UNKNOWN]} unknown"),
         )
+        parts.extend(stale_parts)
         prefix = "no known failures; " + ", ".join(parts)
         return f"{prefix}; {previous}" if previous else prefix
     if status == UNKNOWN:
         parts = nonzero_parts(
             (counts[SUCCESS], f"{counts[SUCCESS]} OK"),
             (counts[IN_PROGRESS], f"{counts[IN_PROGRESS]} running"),
-            (unknown, f"{unknown} unknown/stale"),
+            (counts[UNKNOWN], f"{counts[UNKNOWN]} unknown"),
         )
+        parts.extend(stale_parts)
         return "no known failures; " + ", ".join(parts)
     return "no required CI configured"
 
@@ -1008,13 +1153,15 @@ def interesting_checks(branch, verbose=False):
         return branch["checks"]
     has_visible_jenkins_problem = any(
         check.get("provider") == "jenkins"
-        and check["status"] in (FAILURE, UNKNOWN, STALE, IN_PROGRESS, NOT_APPLICABLE)
+        and (check["status"] in (FAILURE, UNKNOWN, IN_PROGRESS, NOT_APPLICABLE) or is_stale_status(check["status"]))
         for check in branch["checks"]
     )
     status_order = {
         FAILURE: 0,
         UNKNOWN: 1,
         STALE: 1,
+        STALE_FAILED: 1,
+        STALE_PASSED: 1,
         IN_PROGRESS: 2,
         SUCCESS: 3,
         NOT_APPLICABLE: 4,
@@ -1022,7 +1169,7 @@ def interesting_checks(branch, verbose=False):
     visible = []
     for index, check in enumerate(branch["checks"]):
         if (
-            check["status"] in (FAILURE, UNKNOWN, STALE, IN_PROGRESS)
+            (check["status"] in (FAILURE, UNKNOWN, IN_PROGRESS) or is_stale_status(check["status"]))
             or (check["status"] == NOT_APPLICABLE and check.get("provider") == "jenkins")
             or (
                 has_visible_jenkins_problem
@@ -1114,7 +1261,8 @@ def print_terminal(data, use_color=True, verbose=False):
         heading_text = f"{glyph} {branch['label']} / {check['check']}"
         heading = terminal_link(heading_text, url, use_color)
         print(heading)
-        print(terminal_field("status", check["status"], use_color))
+        status_value = check.get("status_label") or check["status"]
+        print(terminal_field("status", status_value, use_color))
         if url:
             print(terminal_field("url", url, use_color))
         if check["status"] == IN_PROGRESS and check.get("previous_completed_status"):
@@ -1138,7 +1286,7 @@ def exit_code_for_terminal(data):
     statuses = [branch["status"] for branch in data["branches"]]
     if any(status == FAILURE for status in statuses):
         return 1
-    if any(status in (IN_PROGRESS, UNKNOWN, STALE) for status in statuses):
+    if any(status == IN_PROGRESS or status == UNKNOWN or is_stale_status(status) for status in statuses):
         return 2
     return 0
 
@@ -1164,7 +1312,7 @@ def overall_status(branches):
     statuses = [branch["status"] for branch in branches]
     if any(status == FAILURE for status in statuses):
         return FAILURE
-    if any(status in (UNKNOWN, STALE) for status in statuses):
+    if any(status == UNKNOWN or is_stale_status(status) for status in statuses):
         return UNKNOWN
     if any(status == IN_PROGRESS for status in statuses):
         return IN_PROGRESS
@@ -1192,6 +1340,8 @@ def html_status_label(status):
         IN_PROGRESS: "Running",
         UNKNOWN: "Unknown",
         STALE: "Stale",
+        STALE_PASSED: "Stale passed",
+        STALE_FAILED: "Stale fail",
         DISABLED: "Disabled",
         NOT_APPLICABLE: "Not applicable",
     }.get(status, "Unknown")
@@ -1204,6 +1354,8 @@ def status_mark(status):
         IN_PROGRESS: "↻",
         UNKNOWN: "?",
         STALE: "!",
+        STALE_PASSED: "!",
+        STALE_FAILED: "!",
         DISABLED: "–",
         NOT_APPLICABLE: "–",
     }.get(status, "?")
@@ -1217,6 +1369,7 @@ def html_status_pill(status, label=None):
 
 def html_branch_progress(branch):
     counts = check_counts(branch)
+    stale_counts = stale_check_counts(branch)
     total = counts["required"]
     if not total:
         return ""
@@ -1224,7 +1377,10 @@ def html_branch_progress(branch):
         (SUCCESS, counts[SUCCESS], "OK"),
         (FAILURE, counts[FAILURE], "failing"),
         (IN_PROGRESS, counts[IN_PROGRESS], "running"),
-        (UNKNOWN, counts[UNKNOWN] + counts[STALE], "unknown or stale"),
+        (UNKNOWN, counts[UNKNOWN], "unknown"),
+        ("stale-passed", stale_counts[SUCCESS], "stale-passed"),
+        (STALE_FAILED, stale_counts[FAILURE], "stale-fail"),
+        ("stale-unknown", stale_counts[UNKNOWN], "stale-unknown"),
     ]
     labels = [f"{count} {label}" for status, count, label in segments if count]
     pieces = []
@@ -1242,7 +1398,7 @@ def html_branch_progress(branch):
 
 def html_branch_summary(branch):
     counts = check_counts(branch)
-    unknown = counts[UNKNOWN] + counts[STALE]
+    stale_counts = stale_check_counts(branch)
     parts = []
     if counts[SUCCESS]:
         parts.append((SUCCESS, f"{counts[SUCCESS]} OK"))
@@ -1250,8 +1406,14 @@ def html_branch_summary(branch):
         parts.append((FAILURE, plural(counts[FAILURE], "failure")))
     if counts[IN_PROGRESS]:
         parts.append((IN_PROGRESS, f"{counts[IN_PROGRESS]} running"))
-    if unknown:
-        parts.append((UNKNOWN, f"{unknown} unknown/stale"))
+    if counts[UNKNOWN]:
+        parts.append((UNKNOWN, f"{counts[UNKNOWN]} unknown"))
+    if stale_counts[SUCCESS]:
+        parts.append(("stale-passed", f"{stale_counts[SUCCESS]} stale-passed"))
+    if stale_counts[FAILURE]:
+        parts.append((STALE_FAILED, f"{stale_counts[FAILURE]} stale-fail"))
+    if stale_counts[UNKNOWN]:
+        parts.append(("stale-unknown", f"{stale_counts[UNKNOWN]} stale-unknown"))
     if not parts:
         return html.escape(summary_text(branch))
     return " ".join(
@@ -1313,7 +1475,10 @@ def html_check_rows(checks):
             status_text = f"{status_text} previous: {previous}"
             status = f"{status} <span class='previous-note'>previous: {html.escape(previous)}</span>"
         message = " ".join(str(check.get("message") or "").split())
-        check_status = html.escape(check["status"])
+        check_classes = [f"status-{check['status']}"]
+        if is_stale_status(check["status"]):
+            check_classes.append(f"stale-{stale_count_bucket(check)}")
+        check_status = html.escape(" ".join(check_classes))
         revision = html_revision(check)
         revision_text = check.get("revision") or ""
         if revision_text:
@@ -1323,7 +1488,7 @@ def html_check_rows(checks):
         age = html_time(check.get("completed_at"))
         age_text_value = age_text(check.get("completed_at")) if check.get("completed_at") else ""
         detail_rows.append(
-            f"<tr class='status-{check_status}'>"
+            f"<tr class='{check_status}'>"
             f"<td class='check-name'>{check_html}{terminal_pad(check['check'], 27)}</td>"
             f"<td>{terminal_sep}{status}{terminal_pad(status_text, 30)}</td>"
             f"<td class='revision-cell'>{terminal_sep}{revision}{terminal_pad(revision_text, 44)}</td>"
@@ -1567,6 +1732,18 @@ h1 {{
   color: var(--unknown);
   background: #fff8e5;
 }}
+.chip-stale-passed {{
+  color: #5b6519;
+  background: #f5f8e8;
+}}
+.chip-stale-fail {{
+  color: #9a4f00;
+  background: #fff3e0;
+}}
+.chip-stale-unknown {{
+  color: var(--unknown);
+  background: #fff8e5;
+}}
 .branch-progress {{
   display: flex;
   height: 5px;
@@ -1589,8 +1766,14 @@ h1 {{
 .segment-in_progress {{
   background: #70a7db;
 }}
-.segment-unknown, .segment-stale {{
+.segment-unknown, .segment-stale, .segment-stale-unknown {{
   background: #c8a24b;
+}}
+.segment-stale-passed {{
+  background: #a4b85d;
+}}
+.segment-stale-fail {{
+  background: #d48a3a;
 }}
 .status-dot {{
   width: 10px;
@@ -1602,7 +1785,7 @@ h1 {{
 .status-success .status-dot {{ background: var(--success); }}
 .status-failure .status-dot {{ background: var(--failure); }}
 .status-in_progress .status-dot {{ background: var(--running); }}
-.status-unknown .status-dot, .status-stale .status-dot {{ background: var(--unknown); }}
+.status-unknown .status-dot, .status-stale .status-dot, .status-stale-passed .status-dot, .status-stale-fail .status-dot {{ background: var(--unknown); }}
 .status-disabled .status-dot, .status-not_applicable .status-dot {{ background: var(--disabled); }}
 .status-pill {{
   display: inline-flex;
@@ -1622,10 +1805,12 @@ h1 {{
 .status-failure .status-pill {{ color: var(--failure); border-color: #ffc9cf; background: #fff5f6; }}
 .status-in_progress .status-pill {{ color: var(--running); border-color: #bfdbfe; background: #f0f7ff; }}
 .status-unknown .status-pill, .status-stale .status-pill {{ color: var(--unknown); border-color: #f1d08a; background: #fff8e5; }}
+.status-stale-passed .status-pill, .status-stale.stale-success .status-pill {{ color: #5b6519; border-color: #d8df9f; background: #f5f8e8; }}
+.status-stale-fail .status-pill, .status-stale.stale-failure .status-pill {{ color: #9a4f00; border-color: #efc07a; background: #fff3e0; }}
 tr.status-success .status-pill {{ color: var(--success); border-color: #b7dfc1; background: #f0fff4; }}
 tr.status-failure .status-pill {{ color: var(--failure); border-color: #ffc9cf; background: #fff5f6; }}
 tr.status-in_progress .status-pill {{ color: var(--running); border-color: #bfdbfe; background: #f0f7ff; }}
-tr.status-unknown .status-pill, tr.status-stale .status-pill {{ color: var(--unknown); border-color: #f1d08a; background: #fff8e5; }}
+tr.status-unknown .status-pill, tr.status-stale .status-pill, tr.status-stale-passed .status-pill, tr.status-stale-fail .status-pill {{ color: var(--unknown); border-color: #f1d08a; background: #fff8e5; }}
 .detail-section {{
   background: var(--panel);
   border: 1px solid var(--line);
