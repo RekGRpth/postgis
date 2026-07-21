@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-20 08:06+0000\n"
-"PO-Revision-Date: 2026-07-16 09:39+0000\n"
+"PO-Revision-Date: 2026-07-21 06:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -351,6 +351,8 @@ msgid ""
 "This second call is needed to rebundle the <varname>postgis_raster</varname> "
 "extension."
 msgstr ""
+"この二つ目の関数呼出は <varname>postgis_raster</varname>エクステンションの再"
+"同梱が必要です。"
 
 #. Tag: para
 #, no-c-format
@@ -416,6 +418,9 @@ msgid ""
 "will have a new extension <emphasis>postgis_raster</emphasis> which you can "
 "safely drop, if you don't need raster support."
 msgstr ""
+"PostGISエクステンションを3.0.0より前からアップグレードする場合には新しい"
+"エクステンション<emphasis>postgis_raster</emphasis>が入ることになります。この"
+"エクステンションはラスター機能が不要な場合には安全に削除することができます。"
 
 #. Tag: title
 #, no-c-format
@@ -465,6 +470,11 @@ msgid ""
 "installed without getting duplicate symbol errors or bringing forward "
 "deprecated objects."
 msgstr ""
+"ダンプ/リロード作業は <command role=\"reference-target\">postgis_restore</"
+"command> スクリプトが補助します。このスクリプトを使うと、PostGIS (古いものを"
+"含む)に属する定義を全て飛ばしてダンプします。また、重複シンボルエラーや非推奨"
+"オブジェクトを得ることなく、スキーマとデータをPostGISをインストールした"
+"データベースにリストアできます 。"
 
 #. Tag: para
 #, no-c-format
@@ -647,6 +657,11 @@ msgid ""
 "IGN_spatial_ref_for_PostGIS/master/Put_IGN_SRS_into_Postgis.sql\">this "
 "script</link>. After these operations, import your data:"
 msgstr ""
+"<varname>newdb</varname>を生成し、PostGISエクステンションを有効にし、<link "
+"xlink:href=\"https://raw.githubusercontent.com/Remi-C/"
+"IGN_spatial_ref_for_PostGIS/master/Put_IGN_SRS_into_Postgis.sql\">この"
+"スクリプト</link>を使ってフランスIGN空間参照系を挿入します。この処理の後、"
+"データをインポートします:"
 
 #. Tag: title
 #, no-c-format
@@ -694,6 +709,9 @@ msgid ""
 "use the change, and display the current value. Use <command>SHOW ALL</"
 "command> to list all settings."
 msgstr ""
+"<varname>work_mem</varname> を設定して、コンフィギュレーションの再読込みを実"
+"行すると、新しいコネクションでは変更が反映され、現在の値が表示されます。全て"
+"の設定を確認するには <command>SHOW ALL</command> を使います。"
 
 #. Tag: para
 #, no-c-format
@@ -1099,7 +1117,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Check the transaction history."
-msgstr ""
+msgstr "トランザクション履歴を調べます。"
 
 #. Tag: title
 #, no-c-format
@@ -1180,6 +1198,8 @@ msgid ""
 "its primitive tables, TopoGeometry type, topology management functions, "
 "editing functions, validation functions, and conversion helpers."
 msgstr ""
+"本章では、リミティブテーブル、TopoGeometryタイプ、トポロジー管理関数、関数の"
+"編集、関数の評価、変換補助などのトポロジーモジュールの参照を維持しています。"
 
 #. Tag: para
 #, no-c-format
@@ -1356,7 +1376,7 @@ msgstr "順序番号とエッジ番号で構成される複合型。"
 #. Tag: title
 #, no-c-format
 msgid "<title>Description</title>"
-msgstr ""
+msgstr "<title>説明</title>"
 
 #. Tag: para
 #, no-c-format
@@ -1497,27 +1517,27 @@ msgstr ""
 #. Tag: entry
 #, no-c-format
 msgid "Field"
-msgstr ""
+msgstr "フィールド"
 
 #. Tag: entry
 #, no-c-format
 msgid "Type"
-msgstr ""
+msgstr "型"
 
 #. Tag: entry
 #, no-c-format
 msgid "<entry>Description</entry>"
-msgstr ""
+msgstr "<entry>説明</entry>"
 
 #. Tag: type
 #, no-c-format
 msgid "varchar"
-msgstr ""
+msgstr "varchar"
 
 #. Tag: para
 #, no-c-format
 msgid "Denotes the type of error."
-msgstr ""
+msgstr "エラーのタイプを示します。"
 
 #. Tag: para
 #, no-c-format
@@ -1526,22 +1546,28 @@ msgid ""
 "simple, edge end node geometry mismatch, edge start node geometry mismatch, "
 "face overlaps face, face within face."
 msgstr ""
+"現在のエラー記述は次の通りです: coincident nodes (訳注: 重複ノード)、edge "
+"crosses node (訳注: エッジとノードのクロス)、edge not simple (訳注: 単純でな"
+"いエッジ)、edge end node geometry mismatch (訳注: 終端ノードジオメトリの不整"
+"合)、edge start node geometry mismatch (訳注: 始端ノードジオメトリの不整合)、"
+"face overlaps face (訳注: フェイスをオーバーラップするフェイス)、face within "
+"face (訳注: フェイス内のフェイス)。"
 
 #. Tag: type
 #, no-c-format
 msgid "integer"
-msgstr ""
+msgstr "integer"
 
 #. Tag: entry
 #, no-c-format
 msgid "Denotes the identifier of the edge, face, or node in error."
-msgstr ""
+msgstr "エラーの発生するエッジ、フェイス、ノードの識別子を示します。"
 
 #. Tag: entry
 #, no-c-format
 msgid ""
 "For errors that involve two objects, denotes the secondary edge or node."
-msgstr ""
+msgstr "二つのオブジェクトが関係するエラー用で、第二のエッジまたはノードを示します。"
 
 #. Tag: title
 #, no-c-format
@@ -1889,10 +1915,10 @@ msgid ""
 "topogeometries created before the upgrade. This function fixes this "
 "corruption in affected tables."
 msgstr ""
-"PostGISトポロジー 3.6.0未満から3.6.0以上にアップグレードする時、トポジオメト"
-"リーカラムの定義が変更されました。このためアップグレード前に作られたトポジオ"
-"メトリーで間違いが発生します。この関数は影響を受けるテーブルの該当する間違い"
-"を1修正します。"
+"PostGISトポロジー 3.6.0未満から3.6.0以上にアップグレードする時、"
+"トポジオメトリーカラムの定義が変更されました。このためアップグレード前に作ら"
+"れたトポジオメトリーで間違いが発生します。この関数は影響を受けるテーブルの該"
+"当する間違いを修正します。"
 
 #. Tag: para
 #, no-c-format
@@ -1900,6 +1926,8 @@ msgid ""
 "The function refuses to process tables with expression or partial indexes; "
 "drop or rebuild those indexes manually around the repair."
 msgstr ""
+"この関数は式インデックスまたは部分インデックスを持つテーブルの処理を拒否しま"
+"す。修正の際にこれらのインデックスを手動で削除または再構築します。"
 
 #. Tag: para
 #, no-c-format
@@ -2963,6 +2991,12 @@ msgid ""
 "before smaller contained lines can avoid expensive later splits. For loading "
 "a collection in one call, see <xref linkend=\"TopoGeo_LoadGeometry\"/>."
 msgstr ""
+"多数のラインを追加すると、ロード順序がパフォーマンスに大きな影響を与えること"
+"があります。ロードをするたびにラインがトポロジー要素としてロード済みかを確認"
+"をするためです。大量投入のワークフローでは、閉じられているか囲んでいる大きな"
+"ラインの追加を、小さい含まれているラインの追加より前に行うことで、後で行う計"
+"算量の多い分割を避けられます。一度でコレクションをロードする場合には <xref "
+"linkend=\"TopoGeo_LoadGeometry\"/> を参照して下さい。"
 
 #. Tag: para
 #, no-c-format
@@ -4628,7 +4662,7 @@ msgstr "要素の配列を省略した場合、空のTopoGeometryオブジェク
 #. Tag: para
 #, no-c-format
 msgid "Form from existing edges."
-msgstr ""
+msgstr "既存エッジからの形成。"
 
 #. Tag: para
 #, no-c-format
@@ -4643,7 +4677,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Convert an areal geometry to best guess topogeometry."
-msgstr ""
+msgstr "面ジオメトリから最善と思われるトポジオメトリーに変換します。"
 
 #. Tag: para
 #, no-c-format
@@ -5103,7 +5137,7 @@ msgstr "TopoGeometryの空間参照識別子を返します。"
 msgid ""
 "Returns the spatial reference identifier of the topology containing the "
 "TopoGeometry."
-msgstr ""
+msgstr "TopoGeometryを含むトポロジーの空間参照系識別子を返します。"
 
 #. Tag: para
 #, no-c-format
@@ -5111,6 +5145,8 @@ msgid ""
 "The identifier is recorded for the topology when it is created and refers to "
 "an entry in <xref linkend=\"spatial_ref_sys\"/>."
 msgstr ""
+"識別子はトポロジーが生成され、かつ <xref linkend=\"spatial_ref_sys\"/> 内の"
+"エントリーを参照するときにトポロジーに記録されます。"
 
 #. Tag: para
 #, no-c-format
@@ -5118,6 +5154,8 @@ msgid ""
 "Return the SRID of a TopoGeometry stored in the <varname>ri_topo</varname> "
 "topology."
 msgstr ""
+"<varname>ri_topo</varname> トポロジー内に格納されている TopoGeometry の SRID "
+"を返します。"
 
 #. Tag: para
 #, no-c-format
