@@ -382,6 +382,72 @@ def woodpecker_matches_branch(build, check, branch):
     return build.get("ref") in (None, expected_ref)
 
 
+def woodpecker_workflow_label(workflow, duplicate_names):
+    name = workflow.get("name") or f"workflow {workflow.get('pid') or workflow.get('id')}"
+    pid = workflow.get("pid")
+    if pid is not None and name in duplicate_names:
+        return f"{name}/{pid}"
+    return name
+
+
+def woodpecker_workflow_url(web_url, pipeline, workflow):
+    if not web_url or not pipeline.get("number") or workflow.get("pid") is None:
+        return None
+    return f"{web_url}/pipeline/{pipeline['number']}/{workflow['pid']}"
+
+
+def woodpecker_pipeline_detail_url(api_url, pipeline):
+    if not pipeline.get("number"):
+        return None
+    return f"{api_url.rstrip('/')}/{pipeline['number']}"
+
+
+def woodpecker_workflow_details(pipeline, web_url):
+    workflows = pipeline.get("workflows") or []
+    if not workflows:
+        return None
+
+    name_counts = {}
+    for workflow in workflows:
+        name = workflow.get("name") or f"workflow {workflow.get('pid') or workflow.get('id')}"
+        name_counts[name] = name_counts.get(name, 0) + 1
+    duplicate_names = {name for name, count in name_counts.items() if count > 1}
+
+    buckets = [
+        ("failed", []),
+        ("running", []),
+        ("unknown", []),
+    ]
+    by_bucket = dict(buckets)
+    for workflow in sorted(workflows, key=lambda item: item.get("pid") or item.get("id") or 0):
+        status = normalize_woodpecker_status(workflow.get("state") or workflow.get("status"))
+        if status == SUCCESS:
+            continue
+        label = woodpecker_workflow_label(workflow, duplicate_names)
+        if status == FAILURE:
+            by_bucket["failed"].append((label, workflow))
+        elif status == IN_PROGRESS:
+            by_bucket["running"].append((label, workflow))
+        else:
+            by_bucket["unknown"].append((label, workflow))
+
+    parts = []
+    non_success = []
+    for heading, items in buckets:
+        if not items:
+            continue
+        labels = [label for label, workflow in items]
+        parts.append(f"{heading}: {', '.join(labels)}")
+        non_success.extend(workflow for label, workflow in items)
+    if not parts:
+        return None
+
+    details = {"message": "; ".join(parts)}
+    if len(non_success) == 1:
+        details["url"] = woodpecker_workflow_url(web_url, pipeline, non_success[0])
+    return details
+
+
 def woodpecker_check(check, branch, timeout):
     query = urllib.parse.urlencode({
         "branch": branch["name"],
@@ -404,6 +470,18 @@ def woodpecker_check(check, branch, timeout):
     run_url = current.get("link") or current.get("url")
     if not run_url and web_url and current.get("number"):
         run_url = f"{web_url}/pipeline/{current['number']}"
+    detail_url = woodpecker_pipeline_detail_url(api_url, current)
+    if detail_url and "workflows" not in current:
+        try:
+            current = {**current, **http_json(detail_url, timeout=timeout)}
+        except RECOVERABLE_PROVIDER_ERRORS:
+            pass
+    message = current.get("message")
+    if normalize_woodpecker_status(current.get("status")) != SUCCESS:
+        details = woodpecker_workflow_details(current, web_url)
+        if details:
+            message = details["message"]
+            run_url = details.get("url") or run_url
     result = make_result(
         check,
         branch,
@@ -412,7 +490,7 @@ def woodpecker_check(check, branch, timeout):
         debug_url=url,
         revision=current.get("commit"),
         completed_at=current.get("finished") or current.get("updated") or current.get("created"),
-        message=current.get("message"),
+        message=message,
     )
     if previous:
         result.update(previous_fields(normalize_woodpecker_status(previous.get("status")), previous))
@@ -686,6 +764,31 @@ def jenkins_queue_item_matches(item, job_url, check, branch):
     return any(value == expected for name, value in params.items() if name == branch_parameter or name.lower() == branch_parameter.lower())
 
 
+def queued_jenkins_revision(item):
+    params = jenkins_parameters(item)
+    for name in ("after", "BRANCH", "commit", "GIT_COMMIT"):
+        value = params.get(name)
+        if value and len(value) == 40 and all(ch in "0123456789abcdefABCDEF" for ch in value):
+            return value
+    return None
+
+
+def jenkins_queue_item_rank(item, branch):
+    revision = queued_jenkins_revision(item)
+    is_current = False
+    if revision:
+        for ref in branch_compare_refs(branch):
+            distance = git_commit_distance(revision, ref)
+            if distance == 0:
+                is_current = True
+                break
+    return (
+        0 if is_current else 1,
+        -(item.get("inQueueSince") or 0),
+        item.get("id") or 0,
+    )
+
+
 def jenkins_queued_check(check, branch, job_url, timeout):
     if not check.get("branch_parameter"):
         return None
@@ -698,7 +801,7 @@ def jenkins_queued_check(check, branch, job_url, timeout):
         return None
     if not queued:
         return None
-    item = sorted(queued, key=lambda value: value.get("inQueueSince") or 0)[0]
+    item = sorted(queued, key=lambda value: jenkins_queue_item_rank(value, branch))[0]
     params = jenkins_parameters(item)
     message = f"queued item {item.get('id')}"
     if item.get("why"):
@@ -738,6 +841,117 @@ def jenkins_builds(job_url, check, timeout):
         if len(page) < page_limit:
             break
     return builds
+
+
+def jenkins_matrix_configurations(job_url, timeout):
+    tree = (
+        "activeConfigurations[name,url,color,"
+        "lastBuild[number,url,result,building,timestamp,duration],"
+        "lastCompletedBuild[number,url,result,timestamp],"
+        "lastFailedBuild[number,url,result,timestamp]]"
+    )
+    url = job_url + "api/json?" + urllib.parse.urlencode({"tree": tree})
+    return http_json(url, timeout=timeout).get("activeConfigurations") or []
+
+
+def jenkins_matrix_axes(configuration):
+    axes = {}
+    for item in str(configuration.get("name") or "").split(","):
+        if "=" not in item:
+            continue
+        name, value = item.split("=", 1)
+        axes[name.strip()] = value.strip()
+    return axes
+
+
+def jenkins_matrix_axis_text(name, value):
+    if name == "PG_VER":
+        return f"PG{value}"
+    if name == "label":
+        return value
+    return f"{name}={value}"
+
+
+def jenkins_matrix_summary_axes(configurations):
+    parsed = [jenkins_matrix_axes(configuration) for configuration in configurations]
+    priority = (
+        "label",
+        "PG_VER",
+        "POSTGIS_TAG",
+        "OS_BUILD",
+        "GEOS_VER",
+        "GDAL_VER",
+        "GCC_TYPE",
+        "SFCGAL_VER",
+        "CGAL_VER",
+    )
+    varying = []
+    for name in priority:
+        values = {axes.get(name) for axes in parsed if axes.get(name)}
+        if len(values) > 1:
+            varying.append(name)
+    return varying[:3]
+
+
+def jenkins_matrix_configuration_label(configuration, selected):
+    axes = jenkins_matrix_axes(configuration)
+    parts = [
+        jenkins_matrix_axis_text(name, axes[name])
+        for name in selected
+        if name in axes
+    ]
+    if parts:
+        return ", ".join(parts)
+    return configuration.get("name") or configuration.get("url") or "configuration"
+
+
+def jenkins_matrix_details(job_url, timeout):
+    try:
+        configurations = jenkins_matrix_configurations(job_url, timeout)
+    except RECOVERABLE_PROVIDER_ERRORS:
+        return None
+    if len(configurations) < 2:
+        return None
+
+    selected = jenkins_matrix_summary_axes(configurations)
+
+    by_status = {
+        FAILURE: [],
+        IN_PROGRESS: [],
+        UNKNOWN: [],
+    }
+    for configuration in configurations:
+        build = configuration.get("lastBuild") or {}
+        status = normalize_jenkins_status(build)
+        if status == SUCCESS:
+            continue
+        label = jenkins_matrix_configuration_label(configuration, selected)
+        by_status.setdefault(status, []).append((label, build))
+
+    parts = []
+    for status, prefix in (
+        (FAILURE, "failed"),
+        (IN_PROGRESS, "running"),
+        (UNKNOWN, "unknown"),
+    ):
+        items = by_status.get(status) or []
+        if not items:
+            continue
+        item_labels = [label for label, build in items]
+        parts.append(f"{prefix}: {', '.join(item_labels)}")
+    if not parts:
+        return None
+
+    non_success = [
+        item
+        for status in (FAILURE, IN_PROGRESS, UNKNOWN)
+        for item in by_status.get(status) or []
+    ]
+    url = non_success[0][1].get("url") if len(non_success) == 1 else None
+    return {
+        "message": "; ".join(parts),
+        "url": url,
+    }
 
 
 def jenkins_badge_url(job_url, check, branch):
@@ -827,6 +1041,12 @@ def jenkins_check(check, branch, timeout):
         completed_at=current.get("timestamp"),
         message=f"build {current.get('number')}",
     )
+    if result["status"] != SUCCESS:
+        details = jenkins_matrix_details(job_url, timeout)
+        if details:
+            result["message"] = f"{result['message']}; {details['message']}"
+            if details.get("url"):
+                result["url"] = details["url"]
     if previous:
         result.update(previous_fields(normalize_jenkins_status(previous), previous))
     return result
