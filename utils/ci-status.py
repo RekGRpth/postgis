@@ -11,6 +11,7 @@ import http.client
 import json
 import os
 import pathlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -382,6 +383,15 @@ def woodpecker_matches_branch(build, check, branch):
     return build.get("ref") in (None, expected_ref)
 
 
+def woodpecker_build_sort_key(build):
+    return (
+        build.get("created") or build.get("created_at") or 0,
+        build.get("started") or build.get("started_at") or 0,
+        build.get("finished") or build.get("finished_at") or 0,
+        build.get("number") or 0,
+    )
+
+
 def woodpecker_workflow_label(workflow, duplicate_names):
     name = workflow.get("name") or f"workflow {workflow.get('pid') or workflow.get('id')}"
     pid = workflow.get("pid")
@@ -394,6 +404,13 @@ def woodpecker_workflow_url(web_url, pipeline, workflow):
     if not web_url or not pipeline.get("number") or workflow.get("pid") is None:
         return None
     return f"{web_url}/pipeline/{pipeline['number']}/{workflow['pid']}"
+
+
+def woodpecker_pipeline_url(web_url, pipeline):
+    run_url = pipeline.get("link") or pipeline.get("url")
+    if not run_url and web_url and pipeline.get("number"):
+        run_url = f"{web_url}/pipeline/{pipeline['number']}"
+    return run_url
 
 
 def woodpecker_pipeline_detail_url(api_url, pipeline):
@@ -464,12 +481,14 @@ def woodpecker_check(check, branch, timeout):
     if not builds:
         return make_result(check, branch, UNKNOWN, message="no Woodpecker builds found", debug_url=url)
 
+    builds = sorted(builds, key=woodpecker_build_sort_key, reverse=True)
     current = builds[0]
-    previous = next((build for build in builds[1:] if normalize_woodpecker_status(build.get("status")) not in (IN_PROGRESS, UNKNOWN)), None)
+    previous = next(
+        (build for build in builds[1:] if normalize_woodpecker_status(build.get("status")) not in (IN_PROGRESS, UNKNOWN)),
+        None,
+    )
     web_url = check.get("web_url")
-    run_url = current.get("link") or current.get("url")
-    if not run_url and web_url and current.get("number"):
-        run_url = f"{web_url}/pipeline/{current['number']}"
+    run_url = woodpecker_pipeline_url(web_url, current)
     detail_url = woodpecker_pipeline_detail_url(api_url, current)
     if detail_url and "workflows" not in current:
         try:
@@ -493,6 +512,9 @@ def woodpecker_check(check, branch, timeout):
         message=message,
     )
     if previous:
+        previous_url = woodpecker_pipeline_url(web_url, previous)
+        if previous_url and not (previous.get("link") or previous.get("url")):
+            previous = {**previous, "url": previous_url}
         result.update(previous_fields(normalize_woodpecker_status(previous.get("status")), previous))
     return result
 
@@ -1528,6 +1550,45 @@ def write_atomic(path, content, mode="w"):
             raise
 
 
+def relative_symlink_target(target, link_path):
+    return os.path.relpath(target, start=link_path.parent)
+
+
+def write_html_files(data, output_dir):
+    output_dir = pathlib.Path(output_dir)
+    json_text = json.dumps(data, indent=2, sort_keys=True) + "\n"
+    write_atomic(output_dir / "status.json", json_text)
+    write_atomic(output_dir / "index.html", render_html(data))
+
+
+def switch_html_output(data, output_dir):
+    output_dir = pathlib.Path(output_dir)
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    staging = pathlib.Path(tempfile.mkdtemp(prefix=f".{output_dir.name}.", dir=str(output_dir.parent)))
+    link_tmp = None
+    try:
+        write_html_files(data, staging)
+        has_output = output_dir.exists() or output_dir.is_symlink()
+        if has_output and not output_dir.is_symlink():
+            raise ConfigError(f"{output_dir} must be absent or a symbolic link for --atomic-switch")
+        if has_output:
+            link_fd, link_name = tempfile.mkstemp(prefix=f".{output_dir.name}.link.", dir=str(output_dir.parent))
+            os.close(link_fd)
+            os.unlink(link_name)
+            link_tmp = pathlib.Path(link_name)
+            os.symlink(relative_symlink_target(staging, output_dir), link_tmp)
+            os.replace(link_tmp, output_dir)
+        else:
+            os.replace(staging, output_dir)
+            staging = None
+    except Exception:
+        if link_tmp and (link_tmp.exists() or link_tmp.is_symlink()):
+            link_tmp.unlink()
+        if staging and staging.exists():
+            shutil.rmtree(staging)
+        raise
+
+
 def overall_status(branches):
     statuses = [branch["status"] for branch in branches]
     if any(status == FAILURE for status in statuses):
@@ -1755,6 +1816,32 @@ def html_required_failures(branches):
         " <span aria-label='Required CI failures'>· <strong>Required:</strong> "
         f"{' · '.join(groups)}</span>"
     )
+
+
+def html_auto_refresh_script():
+    return """
+<script>
+(() => {
+  const page = document.querySelector("[data-generated-at]");
+  const generatedAt = page ? page.dataset.generatedAt : "";
+  const refresh = async () => {
+    try {
+      const url = new URL("status.json", window.location.href);
+      url.searchParams.set("_", Date.now().toString());
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) return;
+      const data = await response.json();
+      if (data && data.generated_at && data.generated_at !== generatedAt) {
+        window.location.reload();
+      }
+    } catch (error) {
+      // Local file previews and transient publish windows can make fetch fail.
+    }
+  };
+  window.setInterval(refresh, 60000);
+})();
+</script>
+"""
 
 
 def render_html(data):
@@ -2137,7 +2224,7 @@ a:hover {{ color: var(--brand-strong); }}
 </style>
 </head>
 <body>
-<main class="page">
+<main class="page" data-generated-at="{generated}">
 <header class="masthead">
 <div>
 <p class="brand">PostGIS</p>
@@ -2160,16 +2247,17 @@ a:hover {{ color: var(--brand-strong); }}
 </section>
 {''.join(details)}
 </main>
+{html_auto_refresh_script()}
 </body>
 </html>
 """
 
 
-def write_html_output(data, output_dir):
-    output_dir = pathlib.Path(output_dir)
-    json_text = json.dumps(data, indent=2, sort_keys=True) + "\n"
-    write_atomic(output_dir / "status.json", json_text)
-    write_atomic(output_dir / "index.html", render_html(data))
+def write_html_output(data, output_dir, atomic_switch=False):
+    if atomic_switch:
+        switch_html_output(data, output_dir)
+    else:
+        write_html_files(data, output_dir)
 
 
 def load_config(path):
@@ -2202,6 +2290,11 @@ def parse_args(argv):
     parser.add_argument("--config", default=str(pathlib.Path(__file__).with_suffix(".json")))
     parser.add_argument("--format", choices=("terminal", "json", "html"), default="terminal", help="output format")
     parser.add_argument("--output-dir", default="ci-status")
+    parser.add_argument(
+        "--atomic-switch",
+        action="store_true",
+        help="write HTML output to a complete staging directory, then atomically switch the output symlink",
+    )
     parser.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--no-color", action="store_true")
     parser.add_argument("--verbose", action="store_true", help="show all checks, including passing checks")
@@ -2225,7 +2318,7 @@ def main(argv=None):
         config = load_config(args.config)
         data = collect_status(config, args.branch, args.include_eol, args.timeout)
         if args.format == "html":
-            write_html_output(data, args.output_dir)
+            write_html_output(data, args.output_dir, atomic_switch=args.atomic_switch)
             return 0
         if args.format == "json":
             print(json.dumps(data, indent=2, sort_keys=True))

@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import pathlib
+import tempfile
 import unittest
 from unittest import mock
 
@@ -23,6 +24,22 @@ def check(name, status, *, required=True, url=None):
     if url:
         result["url"] = url
     return result
+
+
+def html_data():
+    return {
+        "generated_at": "2026-07-24T15:20:00+00:00",
+        "branches": [
+            {
+                "name": "master",
+                "label": "master",
+                "status": CI_STATUS.SUCCESS,
+                "checks": [
+                    check("Synthetic CI", CI_STATUS.SUCCESS),
+                ],
+            },
+        ],
+    }
 
 
 class RequiredFailureHtmlTest(unittest.TestCase):
@@ -78,6 +95,46 @@ class RequiredFailureHtmlTest(unittest.TestCase):
         self.assertEqual(CI_STATUS.STALE_PASSED, passed["status"])
         self.assertEqual(CI_STATUS.SUCCESS, passed["stale_base_status"])
         self.assertEqual("Stale passed", passed["status_label"])
+
+    def test_write_html_output_can_atomically_switch_symlink(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = pathlib.Path(tmpdir)
+            old_release = root / "ci-old"
+            old_release.mkdir()
+            (old_release / "index.html").write_text("old page", encoding="utf-8")
+            live = root / "ci"
+            live.symlink_to(old_release.name)
+
+            CI_STATUS.write_html_output(html_data(), live, atomic_switch=True)
+
+            self.assertTrue(live.is_symlink())
+            self.assertTrue(old_release.exists())
+            self.assertEqual("old page", (old_release / "index.html").read_text(encoding="utf-8"))
+            self.assertIn("CI status", (live / "index.html").read_text(encoding="utf-8"))
+            status = json.loads((live / "status.json").read_text(encoding="utf-8"))
+            self.assertEqual("2026-07-24T15:20:00+00:00", status["generated_at"])
+
+    def test_write_html_output_atomic_switch_rejects_real_directory(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            live = pathlib.Path(tmpdir) / "ci"
+            live.mkdir()
+            (live / "index.html").write_text("old page", encoding="utf-8")
+
+            with self.assertRaisesRegex(CI_STATUS.ConfigError, "symbolic link"):
+                CI_STATUS.write_html_output(html_data(), live, atomic_switch=True)
+
+            self.assertEqual("old page", (live / "index.html").read_text(encoding="utf-8"))
+
+    def test_rendered_html_refreshes_status_json_without_breaking_on_errors(self):
+        rendered = CI_STATUS.render_html(html_data())
+
+        self.assertIn('data-generated-at="2026-07-24T15:20:00+00:00"', rendered)
+        self.assertIn('new URL("status.json", window.location.href)', rendered)
+        self.assertIn('fetch(url, { cache: "no-store" })', rendered)
+        self.assertIn("if (!response.ok) return;", rendered)
+        self.assertIn("window.location.reload();", rendered)
+        self.assertIn("catch (error)", rendered)
+        self.assertIn("Local file previews", rendered)
 
     def test_jenkins_matrix_failure_names_failing_axis(self):
         check_config = {
@@ -299,6 +356,49 @@ class RequiredFailureHtmlTest(unittest.TestCase):
         self.assertEqual(CI_STATUS.IN_PROGRESS, result["status"])
         self.assertEqual("running: regress", result["message"])
         self.assertEqual("https://woodie.example.test/repos/30/pipeline/5434/2", result["url"])
+
+    def test_woodpecker_uses_newest_pipeline_when_api_order_is_unstable(self):
+        check_config = {
+            "name": "Woodpecker",
+            "provider": "woodpecker",
+            "required": True,
+            "api_url": "https://woodie.example.test/api/repos/30/pipelines",
+            "web_url": "https://woodie.example.test/repos/30",
+        }
+        branch = {"name": "stable-3.4", "label": "3.4"}
+        older_failed = {
+            "number": 5415,
+            "event": "push",
+            "branch": "stable-3.4",
+            "ref": "refs/heads/stable-3.4",
+            "status": "failure",
+            "commit": "5" * 40,
+            "created": 1784787793,
+            "started": 1784787796,
+            "finished": 1784794269,
+            "message": "older failed pipeline",
+        }
+        newer_success = {
+            "number": 5425,
+            "event": "push",
+            "branch": "stable-3.4",
+            "ref": "refs/heads/stable-3.4",
+            "status": "success",
+            "commit": "5" * 40,
+            "created": 1784806066,
+            "started": 1784806067,
+            "finished": 1784812852,
+            "message": "newer successful pipeline",
+        }
+
+        with mock.patch.object(CI_STATUS, "http_json", side_effect=([older_failed, newer_success], newer_success)):
+            result = CI_STATUS.woodpecker_check(check_config, branch, timeout=5)
+
+        self.assertEqual(CI_STATUS.SUCCESS, result["status"])
+        self.assertEqual("https://woodie.example.test/repos/30/pipeline/5425", result["url"])
+        self.assertEqual("newer successful pipeline", result["message"])
+        self.assertEqual(CI_STATUS.FAILURE, result["previous_completed_status"])
+        self.assertEqual("https://woodie.example.test/repos/30/pipeline/5415", result["previous_completed_url"])
 
     def test_stale_summary_distinguishes_passed_and_failed(self):
         branch = {
