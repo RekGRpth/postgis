@@ -8,10 +8,18 @@ These are only changes since 3.7.0beta1.
 
 * Bug Fixes *
 
+ - Make the computed-columns regression test assert the query plan instead of racing two
+          stopwatches, so it no longer fails at random under CI load
+          (Darafei Praliaskouski)
+
+ - #4323, GT-584, [sfcgal] Document that straight-skeleton and approximate-medial-axis
+          functions ignore input Z and return 2D geometries (Darafei Praliaskouski)
  - GT-545, Fix FlatGeobuf geometry, property, and spatial-index byte order on
           big-endian platforms (Darafei Praliaskouski)
  - [raster] Fix invalid reads in raster band initialization and
           geotransform property access (Darafei Praliaskouski)
+ - #3776, [raster] Keep distinct 32-bit integer pixel values separate in
+          ST_DumpAsPolygons (Darafei Praliaskouski)
  - GT-504, Report extension script/library version mismatches before loading
           functions unavailable in an older library (Darafei Praliaskouski)
  - GT-515, Reject invalid ST_LargestEmptyCircle boundaries before GEOS can
