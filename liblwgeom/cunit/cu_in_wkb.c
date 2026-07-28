@@ -289,6 +289,21 @@ test_wkb_fuzz(void)
 }
 
 static void
+test_wkb_in_linestring_zm_count_exceeds_payload(void)
+{
+	const uint8_t wkb[] = {0x01, 0x02, 0x00, 0x00, 0xc0, 0xff, 0xff, 0xff, 0x07};
+	LWGEOM *geom;
+
+	cu_error_msg_reset();
+
+	geom = lwgeom_from_wkb(wkb, sizeof(wkb), LW_PARSER_CHECK_NONE);
+
+	ASSERT_STRING_EQUAL(cu_error_msg, "WKB structure does not match expected size!");
+	CU_ASSERT_PTR_NULL(geom);
+	cu_error_msg_reset();
+}
+
+static void
 test_wkb_in_nurbscurve_count_exceeds_payload(void)
 {
 	const uint8_t wkb[] = {
@@ -301,6 +316,25 @@ test_wkb_in_nurbscurve_count_exceeds_payload(void)
 
 	ASSERT_STRING_EQUAL(cu_error_msg, "WKB structure does not match expected size!");
 	CU_ASSERT_PTR_NULL(geom);
+	cu_error_msg_reset();
+}
+
+static void
+test_wkb_in_invalid_endian_flag(void)
+{
+	const uint8_t wkb[] = {0x02, /* invalid endian flag */
+			       0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	LWGEOM *geom;
+
+	cu_error_msg_reset();
+
+	geom = lwgeom_from_wkb(wkb, sizeof(wkb), LW_PARSER_CHECK_NONE);
+
+	ASSERT_STRING_EQUAL(cu_error_msg, "Invalid endian flag value encountered.");
+	CU_ASSERT_PTR_NULL(geom);
+	if (geom != NULL)
+		lwgeom_free(geom);
 	cu_error_msg_reset();
 }
 
@@ -325,5 +359,7 @@ void wkb_in_suite_setup(void)
 	PG_ADD_TEST(suite, test_wkb_in_multisurface);
 	PG_ADD_TEST(suite, test_wkb_in_malformed);
 	PG_ADD_TEST(suite, test_wkb_fuzz);
+	PG_ADD_TEST(suite, test_wkb_in_linestring_zm_count_exceeds_payload);
 	PG_ADD_TEST(suite, test_wkb_in_nurbscurve_count_exceeds_payload);
+	PG_ADD_TEST(suite, test_wkb_in_invalid_endian_flag);
 }

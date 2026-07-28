@@ -6,8 +6,6 @@ variables:
   test-image: &test-image repo.osgeo.org/postgis/build-test:debian13
   steps-env: &steps-env
     - export PATH=/usr/lib/postgresql/$${PGVER}/bin:$${PATH}
-    - export PGHOST=/tmp
-    - export PGPORT=$$(grep ^port /etc/postgresql/$${PGVER}/main/postgresql.conf | awk '{print $$3}')
     - export POSTGIS_REGRESS_DB_OWNER=postgis_reg_unprivileged_user
     - export RUNTESTFLAGS="-v
       --after-create-db-script $${CI_WORKSPACE}/regress/hooks/configure-pgextwlist.sql
@@ -17,16 +15,10 @@ variables:
     - export CURRENTVERSION=$$(grep '^POSTGIS_' $${SRCDIR}/Version.config | cut -d= -f2 | paste -sd '.')
     - pg_config --version
   steps-start-postgresql: &steps-start-postgresql
-    # The test image can need crash recovery after clone-local startup. Under
-    # multi-workflow I/O load, Debian's default 60-second pg_ctl wait is short.
-    # Use /tmp for the socket: runner-specific /run mounts are not portable.
-    - runuser -u postgres -- pg_ctl
-      -D /var/lib/postgresql/$${PGVER}/main
-      -l /tmp/postgresql-$${PGVER}.log
-      -o "-c config_file=/etc/postgresql/$${PGVER}/main/postgresql.conf -c unix_socket_directories=/tmp"
-      -t 300 start
+    - . ci/start-postgresql.sh
     - psql -c 'select version()' template1
   steps-pg-build: &steps-pg-build
+    - gate_status=0; python3 $${SRCDIR}/ci/ci_need_suite.py "$${REGRESS_SUITE}" --target "$${REGRESS_TARGET}" --extension "$${UPGRADE_EXTENSION}" --upgrade-surface || gate_status=$$?; if test "$${gate_status}" = 78; then exit 0; elif test "$${gate_status}" != 0; then exit "$${gate_status}"; fi
     - mkdir -p "$${BUILDDIR}"
     - cd "$${BUILDDIR}"
     - $${SRCDIR}/configure
@@ -39,6 +31,7 @@ variables:
     # make graph can otherwise race generation of files such as postgis.control.
     - make -j1
   steps-pg-test-all-upgrades: &steps-pg-test-all-upgrades
+    - gate_status=0; python3 $${SRCDIR}/ci/ci_need_suite.py "$${REGRESS_SUITE}" --target "$${REGRESS_TARGET}" --extension "$${UPGRADE_EXTENSION}" --upgrade-surface || gate_status=$$?; if test "$${gate_status}" = 78; then exit 0; elif test "$${gate_status}" != 0; then exit "$${gate_status}"; fi
     - cd "$${BUILDDIR}"
     - export CHECK_FIFO=check-$${UPGRADE_EXTENSION}.fifo
     - export CHECK_LOG=check-$${UPGRADE_EXTENSION}.log
@@ -93,6 +86,7 @@ steps:
           REGRESS_SUITE: preinstall
     commands:
       - <<: *steps-env
+      - gate_status=0; python3 $${SRCDIR}/ci/ci_need_suite.py "$${REGRESS_SUITE}" --target "$${REGRESS_TARGET}" --extension "$${UPGRADE_EXTENSION}" || gate_status=$$?; if test "$${gate_status}" = 78; then exit 0; elif test "$${gate_status}" != 0; then exit "$${gate_status}"; fi
       - <<: *steps-start-postgresql
       - make -C "$${BUILDDIR}" $${REGRESS_TARGET}
 
@@ -104,6 +98,7 @@ steps:
           REGRESS_SUITE: install
     commands:
       - <<: *steps-env
+      - gate_status=0; python3 $${SRCDIR}/ci/ci_need_suite.py "$${REGRESS_SUITE}" --target "$${REGRESS_TARGET}" --extension "$${UPGRADE_EXTENSION}" --upgrade-surface || gate_status=$$?; if test "$${gate_status}" = 78; then exit 0; elif test "$${gate_status}" != 0; then exit "$${gate_status}"; fi
       - <<: *steps-start-postgresql
       - make -C "$${BUILDDIR}" install
       - make -C "$${BUILDDIR}" $${REGRESS_TARGET}
@@ -115,6 +110,8 @@ steps:
       - matrix:
           REGRESS_SUITE: extension-upgrade
     commands:
+      - export SRCDIR=$${CI_WORKSPACE}
+      - gate_status=0; python3 $${SRCDIR}/ci/ci_need_suite.py "$${REGRESS_SUITE}" --target "$${REGRESS_TARGET}" --extension "$${UPGRADE_EXTENSION}" --upgrade-surface || gate_status=$$?; if test "$${gate_status}" = 78; then exit 0; elif test "$${gate_status}" != 0; then exit "$${gate_status}"; fi
       - <<: *steps-env
       - <<: *steps-start-postgresql
       - make -C "$${BUILDDIR}" staged-install
@@ -128,8 +125,11 @@ steps:
       - matrix:
           REGRESS_SUITE: cluster-upgrade
     commands:
+      - export SRCDIR=$${CI_WORKSPACE}
+      - gate_status=0; python3 $${SRCDIR}/ci/ci_need_suite.py "$${REGRESS_SUITE}" --target "$${REGRESS_TARGET}" --extension "$${UPGRADE_EXTENSION}" --upgrade-surface || gate_status=$$?; if test "$${gate_status}" = 78; then exit 0; elif test "$${gate_status}" != 0; then exit "$${gate_status}"; fi
       - make -C build/pg$${PGVER} install
       - make -C build/pg$${SECOND_PGVER} install
+      - export PGPORT=$$((20000 + ($${CI_PIPELINE_NUMBER:-0} % 1000) * 32 + ($${CI_WORKFLOW_NUMBER:-30} % 32)))
       - su postgres -c 'utils/check_cluster_upgrade.sh -i regress/hooks/cluster-upgrade-geography.sql /usr/lib/postgresql/'$${PGVER}'/bin/pg_config /usr/lib/postgresql/'$${SECOND_PGVER}'/bin/pg_config'
 
 # Every entry is an independent workflow with its own clone, workspace,

@@ -47,14 +47,31 @@ jobs:
 
     - name: 'Check Out'
       uses: actions/checkout@v6
+      with:
+        fetch-depth: 50
+
+    - name: Check changed surface
+      id: changed-surface
+      run: |
+        set +e
+        python3 ci/ci_need_suite.py github-ci
+        gate_status=$?
+        set -e
+        if test "${gate_status}" = 78; then
+          echo "skip=true" >> "${GITHUB_OUTPUT}"
+          exit 0
+        fi
+        exit "${gate_status}"
 
     - name: 'Prepare Image'
+      if: steps.changed-surface.outputs.skip != 'true'
       run: |
         set -e
         retry() {
           max_attempts="$1"
           delay="$2"
-          shift 2
+          max_delay="$3"
+          shift 3
           attempt=1
           while true; do
             "$@" && return 0
@@ -66,12 +83,16 @@ jobs:
             echo "Command failed with exit code ${status}; retrying in ${delay}s (${attempt}/${max_attempts}): $*"
             sleep "$delay"
             attempt=$((attempt + 1))
+            delay=$((delay * 2))
+            if test "$delay" -gt "$max_delay"; then
+              delay="$max_delay"
+            fi
           done
         }
 
         uname -a
         build_image="postgis/postgis-build-env:${{ matrix.ci.tag }}"
-        retry 3 15 docker pull "${build_image}"
+        retry 6 20 180 docker pull "${build_image}"
         echo "FROM ${build_image}" > Dockerfile
         if test "${{ matrix.ci.mode }}" = "garden"; then
           echo "USER root" >> Dockerfile
@@ -84,13 +105,14 @@ jobs:
         docker build --pull=false -t pgtest .
 
     - name: 'Build & Test'
+      if: steps.changed-surface.outputs.skip != 'true'
       run: |
         echo "/tmp/logbt-coredumps/core.%p.%E" | sudo tee /proc/sys/kernel/core_pattern
         ci_env=`bash .github/codecov_env.bash`
         docker run -e RUNTESTFLAGS=-v $ci_env --name pgtest-${GITHUB_RUN_NUMBER} pgtest
 
     - name: 'Clean Up Image'
-      if: ${{ success() }}
+      if: ${{ success() && steps.changed-surface.outputs.skip != 'true' }}
       run: |
         docker rm pgtest-${GITHUB_RUN_NUMBER}
 
