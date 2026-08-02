@@ -8,6 +8,8 @@ These are only changes since 3.7.0beta1.
 
 * Bug Fixes *
 
+ - Stop the extension upgrade script running ANALYZE inside its transaction,
+          where it could deadlock with autovacuum (Darafei Praliaskouski)
  - [liblwgeom] Reject malformed GSERIALIZED NURBS before curve
           evaluation (Darafei Praliaskouski)
  - GT-619, Make interrupt regression tests compare timeout latency to
@@ -35,6 +37,7 @@ These are only changes since 3.7.0beta1.
           geometry data (Darafei Praliaskouski)
  - GT-564, Avoid ST_MakePolygon failures with NULL hole array entries
           (Darafei Praliaskouski)
+ - #6110, regression in speed with geometry_columns
 
 * Enhancements *
 
