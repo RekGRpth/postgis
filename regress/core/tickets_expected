@@ -306,6 +306,10 @@ ERROR:  invalid KML representation
 #3627a|o}~~|AdshNoSsBgd@eGoBlm@wKhj@~@?
 #3627b|t
 #3704|t
+#3705a|t
+#3705b|t
+#3705c|t
+#3705d|1 2
 #3709|t
 NOTICE:  Hole lies outside shell at or near point 25495368.044100001 6671726.9312000005
 #3719a|f
@@ -436,6 +440,17 @@ ERROR:  BOX2D_construct: args can not be empty points
 #4599-1|LINESTRING(0 0 1,1 1 1,1 2 3)
 #4599-2|LINESTRING(1 2 3,0 0 1,1 1 1)
 #4599-3|LINESTRING(0 0 1,1 1 1,1 2 3)
+#1416a|t
+#1416b|t
+#1416c|t
+#1416d|t
+#1416e|t
+#1416f|t
+#1416g|t
+#1416h|t
+#1416i|t
+#1416j|<NurbsCurve  order='3' knot='0 0 0 1 1 1' weight='1 1 1'><Coordinate containerField='controlPoint' point='0 0 0 1 1 0 2 0 0' /></NurbsCurve>
+#1416k|t
 #4670-0|LINESTRING(2 2,0 0,1 1,3 3,4 4)
 #4670-1|LINESTRING(0 0,2 2,1 1,3 3,4 4)
 #4670-2|LINESTRING(0 0,1 1,2 2,3 3,4 4)
@@ -503,15 +518,15 @@ public|test5978|geometry|2|4326|POINT
 public|test5978|shape|2|4326|POINT
 #1705|public|test1705|geom|2|4326|POINT
 #1705|public|test1705|geom_2160|2|2160|POINT
-#1705|public|test1705_alias_view|shape|2|2160|POINT
+#1705|public|test1705_alias_view|shape|2|0|GEOMETRY
 #1705|public|test1705_buffer_view|geom_2160|2|0|GEOMETRY
-#1705|public|test1705_matview|geom_2160|2|2160|POINT
+#1705|public|test1705_matview|geom_2160|2|0|GEOMETRY
 #1705|public|test1705_mixed_view|buffered|2|0|GEOMETRY
-#1705|public|test1705_mixed_view|geom_2160|2|2160|POINT
+#1705|public|test1705_mixed_view|geom_2160|2|0|GEOMETRY
 #1705|public|test1705_nested_buffer_view|geom_2160|2|0|GEOMETRY
 #1705|public|test1705_scalar_buffer_view|geom_2160|2|0|GEOMETRY
 #1705|public|test1705_view|geom|2|4326|POINT
-#1705|public|test1705_view|geom_2160|2|2160|POINT
+#1705|public|test1705_view|geom_2160|2|0|GEOMETRY
 #3103.1|4326
 #3103.2|3857
 #3103.3|test3103b|3857
