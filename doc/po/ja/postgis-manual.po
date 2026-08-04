@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-20 08:06+0000\n"
-"PO-Revision-Date: 2026-08-03 01:39+0000\n"
+"PO-Revision-Date: 2026-08-04 01:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -8253,7 +8253,7 @@ msgstr "境界ポイントと併せて表示したラインストリング。"
 #. Tag: para
 #, no-c-format
 msgid "Polygon holes with the boundary MultiLineString overlaid."
-msgstr "境界マルチラインストリングと併せて表示したポリゴン。"
+msgstr "境界マルチラインストリングと併せて表示したポリゴンの穴。"
 
 #. Tag: para
 #, no-c-format
@@ -8606,12 +8606,12 @@ msgstr "ラインストリングのテーブルを頂点に分けます。"
 #. Tag: para
 #, no-c-format
 msgid "Dump every vertex from a mixed GeometryCollection."
-msgstr ""
+msgstr "ジオメトリーコレクションから全ての頂点をダンプします。"
 
 #. Tag: para
 #, no-c-format
 msgid "Collect the dumped vertices to visualize them over the source geometry."
-msgstr ""
+msgstr "元ジオメトリーの上に表示するためにダンプされた頂点を集める。"
 
 #. Tag: para
 #, no-c-format
@@ -8771,7 +8771,7 @@ msgstr "ポリゴンから外殻と穴の抽出。"
 #. Tag: para
 #, no-c-format
 msgid "Finding interior rings which lie close to the exterior ring."
-msgstr ""
+msgstr "外側リングに近い内側リングを探索する。"
 
 #. Tag: para
 #, no-c-format
@@ -8782,6 +8782,11 @@ msgid ""
 "linkend=\"ST_ExteriorRing\"/>, <xref linkend=\"ST_InteriorRingN\"/>, <xref "
 "linkend=\"ST_Intersection\"/>"
 msgstr ""
+", <xref linkend=\"PostGIS_Geometry_DumpFunctions\"/>, <xref "
+"linkend=\"ST_Boundary\"/>, <xref linkend=\"ST_Buffer\"/>, <xref "
+"linkend=\"ST_Dump\"/>, <xref linkend=\"ST_DWithin\"/>, <xref "
+"linkend=\"ST_ExteriorRing\"/>, <xref linkend=\"ST_InteriorRingN\"/>, <xref "
+"linkend=\"ST_Intersection\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -8918,7 +8923,7 @@ msgstr "&sqlmm_compliant; SQL-MM 3: 5.1.19"
 #. Tag: para
 #, no-c-format
 msgid "Envelope of a point and LineString."
-msgstr ""
+msgstr "ポイントとラインストリングのエンベロープ。"
 
 #. Tag: para
 #, no-c-format
@@ -8962,7 +8967,7 @@ msgstr "&sqlmm_compliant; SQL-MM 3: 8.2.3, 8.3.3"
 #. Tag: para
 #, no-c-format
 msgid "Extract the exterior ring from a Polygon with a hole."
-msgstr ""
+msgstr "穴のあるポリゴンから外側リングを抽出する。"
 
 #. Tag: para
 #, no-c-format
@@ -8970,11 +8975,13 @@ msgid ""
 "For a MultiPolygon, dump the component Polygons before extracting their "
 "exterior rings. Both component Polygons in this example have holes."
 msgstr ""
+"マルチポリゴンについては外側リングを抽出する前にポリゴン要素をダンプします。"
+"この例でのポリゴン要素は両方とも穴を持っています。"
 
 #. Tag: para
 #, no-c-format
 msgid "Extract exterior rings from a table of Polygons."
-msgstr ""
+msgstr "ポリゴンのテーブルから外側リングを抽出します。"
 
 #. Tag: para
 #, no-c-format
@@ -8982,11 +8989,13 @@ msgid ""
 "For a table of MultiPolygons, dump the component Polygons and collect their "
 "exterior rings into a MultiLineString."
 msgstr ""
+"マルチポリゴンのテーブルにおいて、ポリゴン要素をダンプして、外側リングを集め"
+"てマルチラインストリングにします。"
 
 #. Tag: para
 #, no-c-format
 msgid "This example returns the 3D exterior ring of a Polygon."
-msgstr ""
+msgstr "この例では 3次元のポリゴンの外側リングを返します。"
 
 #. Tag: para
 #, no-c-format
@@ -9010,6 +9019,12 @@ msgid ""
 "and <xref linkend=\"ST_NumPatches\"/> to access and count the faces of a TIN "
 "or PolyhedralSurface."
 msgstr ""
+"GEOMETRYCOLLECTION, MULTIPOINT, MULTILINESTRING, MULTICURVE, MULTIPOLYGON の "
+"1始まりのN番目の要素を返します。単一ジオメトリーは、TIN や POLYHEDRALSURFACE "
+"を含んで、1 番目の要素として入力ジオメトリ自体を返し、他の数字の場合には "
+"NULL を返します。TIN や POLYHEDRALSURFACE のフェイスにアクセスしたりフェイス"
+"数を数える場合には、<xref linkend=\"ST_PatchN\"/> と <xref "
+"linkend=\"ST_NumPatches\"/> をそれぞれ使います。"
 
 #. Tag: para
 #, no-c-format
@@ -9044,6 +9059,9 @@ msgid ""
 "Changed: 3.6.0 TIN and PolyhedralSurface are treated as unitary geometries "
 "and are not decomposed into patches; use ST_PatchN to access faces."
 msgstr ""
+"Changed: 3.6.0 TIN と POLYHEDRALSURFACE が単一ジオメトリーとして扱われるよう"
+"になり、パッチに分解されなくなりました。フェイスにアクセスする場合には "
+"ST_PatchN を使います。"
 
 #. Tag: para
 #, no-c-format
@@ -9063,7 +9081,7 @@ msgstr "3次元MULTIPOINTからポイントの部分集合の抽出。"
 #. Tag: para
 #, no-c-format
 msgid "Extracting all geometries (useful when you want to assign an id)."
-msgstr ""
+msgstr "全てのジオメトリーを抽出します (IDを付けたい場合に使います)。"
 
 #. Tag: title
 #, no-c-format
@@ -9079,16 +9097,22 @@ msgid ""
 "varname>. Use <xref linkend=\"ST_PatchN\"/> and <xref "
 "linkend=\"ST_NumPatches\"/> to access individual faces."
 msgstr ""
+"POLYHEDRALSURFACE または TIN が単一ジオメトリーとして扱われ、フェイスの"
+"コレクションとしては扱われません。<function>ST_GeometryN</function> は"
+"サーフェイスをパッチに分解しないので、1 より大きいインデックス値を与えると"
+"、<varname>NULL</varname> を返します。個々のフェイスにアクセスするには"
+"、<xref linkend=\"ST_PatchN\"/> と <xref linkend=\"ST_NumPatches\"/> を使いま"
+"す。"
 
 #. Tag: para
 #, no-c-format
 msgid "This example requests the third element of a PolyhedralSurface."
-msgstr ""
+msgstr "この例では POLYHEDRALSURFACE の3番目の要素を求めています。"
 
 #. Tag: para
 #, no-c-format
 msgid "This example requests the second element of a TIN."
-msgstr ""
+msgstr "この例では TIN の 2番目の要素を求めています。"
 
 #. Tag: para
 #, no-c-format
@@ -9096,6 +9120,8 @@ msgid ""
 ", <xref linkend=\"ST_NumGeometries\"/>, <xref linkend=\"ST_PatchN\"/>, <xref "
 "linkend=\"ST_NumPatches\"/>"
 msgstr ""
+", <xref linkend=\"ST_NumGeometries\"/>, <xref linkend=\"ST_PatchN\"/>, <xref "
+"linkend=\"ST_NumPatches\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -9196,12 +9222,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "This CompoundCurve contains three component curves."
-msgstr ""
+msgstr "この複合曲線には 3個の要素曲線が入っています。"
 
 #. Tag: para
 #, no-c-format
 msgid "An empty CompoundCurve has no component curves."
-msgstr ""
+msgstr "空の複合曲線には要素曲線がありません。"
 
 #. Tag: para
 #, no-c-format
@@ -9232,7 +9258,7 @@ msgstr ""
 msgid ""
 "This example extracts the second component curve, a CircularString, from a "
 "CompoundCurve."
-msgstr ""
+msgstr "この例では複合曲線から 2番目の曲線を CIRCULARSTRING として抽出します。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -9618,16 +9644,20 @@ msgid ""
 "Compare the memory used by all geometries in a Massachusetts town dataset "
 "with the subset for Boston."
 msgstr ""
+"マサチューセッツの町のデータセットとボストンの一部データセットでのメモリ使用"
+"量の比較。"
 
 #. Tag: para
 #, no-c-format
 msgid "Return the memory size of a CircularString in bytes."
-msgstr ""
+msgstr "CIRCULARSTRINGのメモリーサイズをバイト単位で返します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Calculate the percentage of a table's total size used by geometry data."
 msgstr ""
+"テーブル全体サイズから見たジオメトリーデータが使用するデータの使用するメモリ"
+"の割合を計算する。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -9664,12 +9694,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Count the points in a 2D LineString."
-msgstr ""
+msgstr "2次元ラインストリングのポイント数を数える。"
 
 #. Tag: para
 #, no-c-format
 msgid "Count the points in a 3D LineString."
-msgstr ""
+msgstr "3次元ラインストリングのポイントを数える。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -9718,6 +9748,8 @@ msgid ""
 "Changed: 3.6.0 TIN and PolyhedralSurface are treated as unitary geometries "
 "and return 1; use ST_NumPatches to count faces."
 msgstr ""
+"Changed: 3.6.0 TIN と POLYHEDRALSURFACE は単一ジオメトリーとして扱われて 1を"
+"返します。フェイス数を数える場合には ST_NumPatches を使います。"
 
 #. Tag: para
 #, no-c-format
@@ -9732,7 +9764,7 @@ msgstr "この例では1を返します。前のバージョンではNULLを返�
 #. Tag: para
 #, no-c-format
 msgid "A MultiPoint counts as one geometry within a GeometryCollection."
-msgstr ""
+msgstr "GEOMETRYCOLLECTION 内の一つのジオメトリーの MULTIPOINT を数えます。"
 
 #. Tag: para
 #, no-c-format
@@ -9770,14 +9802,14 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Count the interior rings of a Polygon."
-msgstr ""
+msgstr "ポリゴンの内側リングの数を数えます。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "For a MultiPolygon, dump its component Polygons and sum their interior ring "
 "counts."
-msgstr ""
+msgstr "MULTIPOLYGONからPOLYGON要素をダンプさせて内側リングの数を合計する。"
 
 #. Tag: para
 #, no-c-format
@@ -9789,12 +9821,12 @@ msgstr ", <xref linkend=\"ST_InteriorRingN\"/>"
 msgid ""
 "Returns the number of interior rings (holes) of a Polygon. Alias for "
 "ST_NumInteriorRings."
-msgstr ""
+msgstr "POLYGON の内側リング (穴) の数を返します。ST_NumInteriorRings の別名です。"
 
 #. Tag: para
 #, no-c-format
 msgid "This function is an alias for <xref linkend=\"ST_NumInteriorRings\"/>."
-msgstr ""
+msgstr "この関数は <xref linkend=\"ST_NumInteriorRings\"/> の別名です。"
 
 #. Tag: para
 #, no-c-format
@@ -9804,7 +9836,7 @@ msgstr "Availability: 1.2.2"
 #. Tag: refpurpose
 #, no-c-format
 msgid "Returns the number of faces in a PolyhedralSurface or TIN."
-msgstr ""
+msgstr "POLYHEDRALSURFACE または TIN のフェイスの数を返します。"
 
 #. Tag: para
 #, no-c-format
@@ -9813,6 +9845,9 @@ msgid ""
 "other geometries. Unlike <xref linkend=\"ST_NumGeometries\"/>, this function "
 "counts individual faces."
 msgstr ""
+"POLYHEDRALSURFACE または TIN のフェイス数を返します。他のジオメトリーの場合に"
+"は NULL を返します。<xref linkend=\"ST_NumGeometries\"/> と違い、この関数は個"
+"々のフェイスを数えます。"
 
 #. Tag: para
 #, no-c-format
@@ -9822,7 +9857,7 @@ msgstr "&sqlmm_compliant; SQL-MM ISO/IEC 13249-3: 8.5"
 #. Tag: para
 #, no-c-format
 msgid ", <xref linkend=\"ST_NumGeometries\"/>, <xref linkend=\"ST_PatchN\"/>"
-msgstr ""
+msgstr ", <xref linkend=\"ST_NumGeometries\"/>, <xref linkend=\"ST_PatchN\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -9851,7 +9886,7 @@ msgstr "&sqlmm_compliant; SQL-MM 3: 7.2.4"
 #. Tag: refpurpose
 #, no-c-format
 msgid "Returns the Nth face of a PolyhedralSurface or TIN."
-msgstr ""
+msgstr "POLYHEDRALSURFACE または TIN の N番目のフェイスを返します。"
 
 #. Tag: para
 #, no-c-format
@@ -9861,6 +9896,11 @@ msgid ""
 "faces, because <xref linkend=\"ST_GeometryN\"/> treats PolyhedralSurface and "
 "TIN as unitary geometries."
 msgstr ""
+"POLYHEDRALSURFACE または TIN の 1始まりで N番目のフェイスを返します。他の"
+"ジオメトリーの場合またはインデックス番号が範囲外の場合には NULL を返します。"
+"フェイスにアクセスする場合にはこの関数を使います。<xref "
+"linkend=\"ST_GeometryN\"/> は POLYHEDRALSURFACE と TIN を単一ジオメトリーとし"
+"て扱うためです。"
 
 #. Tag: para
 #, no-c-format
@@ -9888,6 +9928,9 @@ msgid ""
 "linkend=\"ST_GeometryN\"/>, <xref linkend=\"ST_NumGeometries\"/>, <xref "
 "linkend=\"ST_NumPatches\"/>"
 msgstr ""
+", <xref linkend=\"ST_GeomFromEWKT\"/>, <xref linkend=\"ST_Dump\"/>, <xref "
+"linkend=\"ST_GeometryN\"/>, <xref linkend=\"ST_NumGeometries\"/>, <xref "
+"linkend=\"ST_NumPatches\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -9969,6 +10012,8 @@ msgid ""
 "The index is 1-based. A negative index counts backward from the end of the "
 "LineString."
 msgstr ""
+"インデックスは 1始まりです。負数インデックスは LINESTRING の最後から遡って数"
+"えます。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -10088,6 +10133,9 @@ msgid ""
 "table. The example uses exact endpoint equality, so linework with nearly "
 "coincident endpoints should be snapped or otherwise cleaned first."
 msgstr ""
+"LINESTRING テーブルの始点と終点からエッジのノード参照を構築します。この例では"
+"終点との完全一致を使っています。よって終点に偶然近いラインは先にスナップさせ"
+"るか消去するかをすべきです。"
 
 #. Tag: para
 #, no-c-format
@@ -11171,7 +11219,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "10-meter expanded box around bbox of a linestring."
-msgstr ""
+msgstr "ラインストリングのバウンダリーボックスの周囲を 10m 拡張したボックス。"
 
 #. Tag: para
 #, no-c-format
@@ -11248,7 +11296,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Return extent of each geometry category."
-msgstr ""
+msgstr "ジオメトリーをカテゴリーごとに集約してその範囲を返します。"
 
 #. Tag: para
 #, no-c-format
@@ -11312,6 +11360,9 @@ msgid ""
 "coordinate bounding box. It is assumed here that the geometries are stored "
 "with SRID=2163 (US National Atlas equal area)."
 msgstr ""
+"地物のうち、米国ナショナルアトラスのバウンディングボックス内に全体が入ったも"
+"のか、一部が入ったものを全て返します。ここでジオメトリーは SRID=2163 (米国"
+"ナショナルアトラス正積図法) で保存します。"
 
 #. Tag: para
 #, no-c-format
@@ -11786,6 +11837,8 @@ msgid ""
 "Cluster polygons within 50 units of each other, requiring at least two "
 "polygons per cluster. The isolated polygon is reported as noise."
 msgstr ""
+"ポリゴンを 50単位以内で、クラスターごとに少なくとも二つのポリゴンが必要という"
+"条件でクラスタリングします。孤立ポリゴンはノイズとして報告されます。"
 
 #. Tag: para
 #, no-c-format
@@ -11863,6 +11916,9 @@ msgid ""
 "conventional <varname>cid</varname> alias keeps the geometry column ready "
 "for color-by-cluster rendering."
 msgstr ""
+"入力ジオメトリーごとに明示的なクラスター ID を返します。慣用的な <varname>"
+"cid</varname> エイリアスを使って、ジオメトリーカラムがクラスターの色の塗分け"
+"に使えるようにします。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -11962,6 +12018,8 @@ msgid ""
 "These six edges describe a square with both diagonals. The minimum spanning "
 "tree keeps three edges and excludes the rest."
 msgstr ""
+"この6本のエッジは正方形と対角線です。最小接続木は3本のエッジを保持して残りを"
+"除外します。"
 
 #. Tag: para
 #, no-c-format
@@ -12025,12 +12083,12 @@ msgstr "Enhanced: 3.1.0 3次元ジオメトリと重みに対応するように�
 msgid ""
 "Define the parcel geometries once in a CTE and reuse them across the "
 "executable examples."
-msgstr ""
+msgstr "一度CTE内で小包ジオメトリーを定義して、実行可能な例で再利用します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Parcels color-coded by cluster number (<varname>cid</varname>)."
-msgstr ""
+msgstr "クラスター番号 (<varname>cid</varname>) ごとに色符号を指定された小包。"
 
 #. Tag: para
 #, no-c-format
@@ -12046,6 +12104,11 @@ msgid ""
 "dataset\">Kontur Population Data</link> that do not span more than 3000 km "
 "from their center:"
 msgstr ""
+"例: 3次元クラスタリングと重みづけを使って、事前集約している惑星全体レベルの人"
+"口データセットにクラスタリングを行います。<link xlink:href=\"https://"
+"data.humdata.org/dataset/kontur-population-dataset\">Kontur Population Data</"
+"link> に基づいて、中心から 3000 km を超えて及ばないように、少なくとも 20地域"
+"に分割します。"
 
 #. Tag: para
 #, no-c-format
@@ -12055,11 +12118,15 @@ msgid ""
 "island clusters span the antimeridian, and cluster edges follow the Earth's "
 "curvature."
 msgstr ""
+"クラスタリングで 46領域が生成されます。クラスターは、ニューヨークやモスクワな"
+"どの人口が集中している点を中心とします。グリーンランドは一つのクラスターで、"
+"いくつかの島のクラスターは緯度180度線をまたぎ、クラスターのエッジは地球の曲率"
+"に従っています。"
 
 #. Tag: para
 #, no-c-format
 msgid "Kontur population clustered with 3000 km maximum radius."
-msgstr ""
+msgstr "最大半径 3000km でクラスタリング下 Kontur 人口。"
 
 #. Tag: para
 #, no-c-format
@@ -12068,6 +12135,9 @@ msgid ""
 "The maximum radius is specified in meters, while the returned geometries "
 "stay in WGS 84 for display."
 msgstr ""
+"地心座標系で地球上の都市人口を重みとしてクラスタリングを行います。最大半径は"
+"メートル単位で指定します。ただし表示用に WGS 84 のままのジオメトリーが返され"
+"ます。"
 
 #. Tag: para
 #, no-c-format
@@ -12238,6 +12308,13 @@ msgid ""
 "<function>ST_Union</function> also splits linestrings at intersections and "
 "may return a single geometry after dissolving boundaries."
 msgstr ""
+"<function>ST_Collect</function> は境界のディソルブやオーバーラップの"
+"ディゾルブを行いません。オーバーラップしているポリゴンの収集は不正な <type>"
+"MultiPolygon</type> を生成する恐れがあります。結果ジオメトリーが、"
+"オーバーラップ部をマージしていて妥当なポリゴンジオメトリーでなければならない"
+"のでしたら、代わりに <xref linkend=\"ST_Union\"/> を使います。<function>"
+"ST_Union</function> もインターセクトする位置でラインストリングを分割し、境界"
+"のディゾルブを行った単一ジオメトリーを返します。"
 
 #. Tag: para
 #, no-c-format
@@ -12248,6 +12325,11 @@ msgid ""
 "<xref linkend=\"ST_Dump\"/> in a subquery to expand input collections to "
 "their atomic elements (see example below)."
 msgstr ""
+"入力ジオメトリーがコレクション (マルチ系または GEOMETRYCOLLECTION) の場合には"
+"、<function>ST_Collect</function> は GEOMETRYCOLLECTION を返します。"
+"GEOMETRYCOLLECTION がコレクションのネストが可能な唯一のタイプだからです。これ"
+"を避けるにはサブクエリーで <xref linkend=\"ST_Dump\"/> を使って入力"
+"コレクションを単一ジオメトリー要素に展開します。"
 
 #. Tag: para
 #, no-c-format
@@ -12261,7 +12343,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Two-input variant."
-msgstr ""
+msgstr "2入力形式。"
 
 #. Tag: para
 #, no-c-format
@@ -12281,7 +12363,7 @@ msgstr "曲線を収集します。"
 #. Tag: para
 #, no-c-format
 msgid "Array variant."
-msgstr ""
+msgstr "配列形式。"
 
 #. Tag: para
 #, no-c-format
@@ -12296,7 +12378,7 @@ msgstr "値から配列を生成するコンストラクタの使用。"
 #. Tag: para
 #, no-c-format
 msgid "Aggregate variant."
-msgstr ""
+msgstr "集約形式。"
 
 #. Tag: para
 #, no-c-format
@@ -12373,7 +12455,7 @@ msgstr "Enhanced: 2.0 SRID指定なしでエンベロープを指定できるよ
 #. Tag: para
 #, no-c-format
 msgid "Building a bounding box polygon."
-msgstr ""
+msgstr "バウンディングボックスのポリゴンを構築します。"
 
 #. Tag: para
 #, no-c-format
@@ -12718,7 +12800,7 @@ msgstr "Enhanced: 3.7.0 - 曲線の入力リングへの対応が導入されま
 #. Tag: para
 #, no-c-format
 msgid "Single input variant."
-msgstr ""
+msgstr "1入力形式。"
 
 #. Tag: para
 #, no-c-format
@@ -12752,7 +12834,7 @@ msgstr "CURVEPOLYGONからCIRCULARSTRINGの外側リングを生成します。"
 #. Tag: para
 #, no-c-format
 msgid "Outer shell with inner holes variant."
-msgstr ""
+msgstr "外側リングと内側リングを別に与える形式。"
 
 #. Tag: para
 #, no-c-format
@@ -12827,7 +12909,7 @@ msgstr "&sqlmm_compliant; SQL-MM 3: 6.1.2"
 #. Tag: para
 #, no-c-format
 msgid "Geometry."
-msgstr ""
+msgstr "ジオメトリー。"
 
 #. Tag: para
 #, no-c-format
@@ -13091,7 +13173,7 @@ msgstr "Availability: 3.0.0"
 #. Tag: para
 #, no-c-format
 msgid "Show tile (2, 1, 1) within the root tile (0, 0, 0)."
-msgstr ""
+msgstr "タイル (2, 1, 1) とルートタイル (0, 0, 0) の表示。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -13111,6 +13193,12 @@ msgid ""
 "tiling of the plane, Tiling(SRS, Size). This function answers the question: "
 "what hexagons in a given Tiling(SRS, Size) overlap with a given bounds."
 msgstr ""
+"平面の六角形タイルという考えから始まりました (地球全体の六角形タイルではあり"
+"ません。H3 については <link xlink:href=\"https://github.com/postgis/h3-pg\">"
+"h3-pg</link> を使います)。与えた平面 SRS と辺サイズで得られる初期タイルを得る"
+"と、独自の平面の六角形タイルができて、Tiling(SRS, Size) となります。この関数"
+"は、与えられた Tiling(SRS, Size) 内のどの六角形が与えた境界を覆うかという問い"
+"の答を出します。"
 
 #. Tag: para
 #, no-c-format
@@ -13137,7 +13225,7 @@ msgstr "Availability: 3.1.0"
 #. Tag: para
 #, no-c-format
 msgid "Unit hexagons covering rectangular bounds."
-msgstr ""
+msgstr "四角形境界を覆う六角形。"
 
 #. Tag: para
 #, no-c-format
@@ -13145,11 +13233,13 @@ msgid ""
 "Child tiles that intersect a doubled-size parent hexagon share the tiling "
 "origin, but do not nest perfectly inside the parent."
 msgstr ""
+"2倍の大きさの親六角形とインターセクトしていて原点が同じになっている子タイル。"
+"親の内側に完全に入れ子になるわけではありません。"
 
 #. Tag: para
 #, no-c-format
 msgid "Counting points in hexagons."
-msgstr ""
+msgstr "六角形内のポイント数の計測。"
 
 #. Tag: para
 #, no-c-format
@@ -13164,7 +13254,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Generating hex coverage of polygons."
-msgstr ""
+msgstr "ポリゴンの六角形カバレッジの生成。"
 
 #. Tag: para
 #, no-c-format
@@ -14817,7 +14907,7 @@ msgstr ""
 msgid ""
 "A Polygon is converted to a single-element MultiPolygon. The coordinates are "
 "unchanged."
-msgstr ""
+msgstr "一つのポリゴンを 1要素マルチポリゴンに変換します。座標値は変わりません。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -15241,17 +15331,19 @@ msgid ""
 "The input polygon has 55 points. The result retains 15 points, while "
 "rendering the same shape inside the view envelope."
 msgstr ""
+"入力ポリゴンは 55ポイントです。結果では 15 ポイントを保持します。どちらも表示"
+"エンベロープ内の形状は同じです。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Only linework affecting the view is retained; existing vertices are reused."
-msgstr ""
+msgstr "表示範囲に影響が出るラインは保持されます。既存の頂点を再利用します。"
 
 #. Tag: para
 #, no-c-format
 msgid "A line with no segment relevant to the view becomes empty."
-msgstr ""
+msgstr "表示範囲と関係する線分が無いラインは空になります。"
 
 #. Tag: para
 #, no-c-format
@@ -15259,6 +15351,8 @@ msgid ""
 "Removing vertices without computing intersections can introduce self-"
 "intersections in the result."
 msgstr ""
+"インターセクトしている箇所を計算しないまま頂点を削除すると、結果に自己"
+"インターセクションが入ってくる可能性があります。"
 
 #. Tag: para
 #, no-c-format
@@ -15266,6 +15360,8 @@ msgid ""
 "With the default <parameter>cartesian_hint</parameter>, the function removes "
 "only points known to be irrelevant to the view."
 msgstr ""
+"デフォルトの <parameter>cartesian_hint</parameter> を付けると、この関数は表示"
+"範囲と関係ないと分かるポイントだけを削除します。"
 
 #. Tag: para
 #, no-c-format

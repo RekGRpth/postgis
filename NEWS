@@ -1,4 +1,4 @@
-PostGIS 3.7.0rc1
+PostGIS 3.7.0beta2
 2026/xx/xx
 This version requires GEOS 3.10+, PostgreSQL 14-19beta2, Proj 6.1+, libgmp.
 To take advantage of all features postgis extension features, GEOS 3.15+ is needed.
@@ -37,7 +37,11 @@ These are only changes since 3.7.0beta1.
           geometry data (Darafei Praliaskouski)
  - GT-564, Avoid ST_MakePolygon failures with NULL hole array entries
           (Darafei Praliaskouski)
- - #6110, regression in speed with geometry_columns
+ - #6109, Out-of-bounds heap read in BOX2D_out and BOX2D_expand
+   on 65-byte box2d under ASAN (Dennis Tighe, Google)
+ - #6110, regression in speed with geometry_columns (Regina Obe)
+ - Schema qualify references to pg_catalog and postgis
+   in geometry_columns and geography_columns views (Regina Obe)
 
 * Enhancements *
 
