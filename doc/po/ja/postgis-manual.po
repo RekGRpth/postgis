@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-04 15:37+0000\n"
-"PO-Revision-Date: 2026-08-04 10:39+0000\n"
+"PO-Revision-Date: 2026-08-05 09:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -483,6 +483,9 @@ msgid ""
 "xlink:href=\"https://postgis.net/documentation/getting_started/"
 "install_windows/\">PostGIS Windows installation guide</link>."
 msgstr ""
+"Windows ユーザー向けの捕捉手順は <link xlink:href=\"https://postgis.net/"
+"documentation/getting_started/install_windows/\">PostGIS Windows "
+"installation guide</link> にあります。"
 
 #. Tag: para
 #, no-c-format
@@ -1231,7 +1234,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Building Faces from Linework"
-msgstr ""
+msgstr "ラインからフェイスを構築する"
 
 #. Tag: para
 #, no-c-format
@@ -1243,13 +1246,19 @@ msgid ""
 "linkend=\"GetFaceByPoint\"/> to locate each attribute point, and <xref "
 "linkend=\"ST_GetFaceGeometry\"/> to materialize ordinary polygon geometries."
 msgstr ""
+"この例では、ノードを与えたラインからトポロジーのフェイスを構築し、結果"
+"フェイスにポイント属性を関連付けます。トポロジーに投入するために <xref "
+"linkend=\"ST_CreateTopoGeo\"/> を使い、結果の確認に <xref "
+"linkend=\"ValidateTopology\"/> を使い、各属性が指すフェイスの特定に <xref "
+"linkend=\"GetFaceByPoint\"/> を使い、通常のポリゴンジオメトリーを作るのに "
+"<xref linkend=\"ST_GetFaceGeometry\"/> を使います。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Create an empty topology and populate it with linework that encloses two "
 "faces:"
-msgstr ""
+msgstr "からトポロジーを生成し、二つのフェイスをラインを取り囲むラインを投入します:"
 
 #. Tag: para
 #, no-c-format
@@ -1259,6 +1268,10 @@ msgid ""
 "face identifier of <literal>0</literal> denotes the universal face, so the "
 "point is outside every bounded face."
 msgstr ""
+"<function>ValidateTopology</function> からの返り値が空の場合には、トポロジー"
+"のエラーがありません。属性のポイントはフェイスに合致させることができます。ID "
+"が <literal>0</literal> のフェイスはユニバーサルフェイスで、ポイントが全ての"
+"フェイスの外側にあります。"
 
 #. Tag: para
 #, no-c-format
@@ -1266,6 +1279,8 @@ msgid ""
 "Before copying attributes into a face table, check both for points outside "
 "bounded faces and for multiple source points assigned to the same face:"
 msgstr ""
+"属性をフェイスのテーブルに複製する前に、ポイントがフェイスの外側に無いかを確"
+"認し、同じフェイスに複数のポイントが割り当てられないかを確認します。"
 
 #. Tag: para
 #, no-c-format
@@ -1273,6 +1288,8 @@ msgid ""
 "Use <xref linkend=\"DropTopology\"/> to remove the example topology when it "
 "is no longer needed:"
 msgstr ""
+"例で使ったトポロジーが不要であって削除するには <xref "
+"linkend=\"DropTopology\"/> を使います:"
 
 #. Tag: title
 #, no-c-format
@@ -5710,6 +5727,12 @@ msgid ""
 "branch/master/doc/development/environment/\">development environment guides</"
 "link>."
 msgstr ""
+"この節では一般的なコンパイル手順を紹介します。Windows または他の"
+"オペレーティングシステム用に困憊する場合には、<link xlink:href=\"https://"
+"postgis.net/documentation/getting_started/\">PostGIS getting started guides</"
+"link> と <link xlink:href=\"https://gitea.osgeo.org/postgis/postgis/src/"
+"branch/master/doc/development/environment/\">development environment guides</"
+"link> とをご覧ください。"
 
 #. Tag: para
 #, no-c-format
@@ -5718,6 +5741,9 @@ msgid ""
 "xlink:href=\"https://postgis.net/documentation/getting_started/\">PostGIS "
 "getting started guides</link>"
 msgstr ""
+"各種 OS 用の事前ビルドパッケージの一覧は <link xlink:href=\"https://"
+"postgis.net/documentation/getting_started/\">PostGIS getting started guides</"
+"link> にあります。"
 
 #. Tag: para
 #, no-c-format
@@ -6343,6 +6369,9 @@ msgid ""
 "development/source_code/\"> code repository </link> , the first step is "
 "really to run the script"
 msgstr ""
+"PostGIS を <link xlink:href=\"https://postgis.net/development/source_code/"
+"\"> code repository </link> から得た場合には、最初の手続は本当に次の"
+"スクリプトの実行です"
 
 #. Tag: para
 #, no-c-format
@@ -7242,10 +7271,10 @@ msgstr ""
 #. Tag: term
 #, no-c-format
 msgid "If you are connecting a desktop GIS"
-msgstr ""
+msgstr "デスクトップ GIS に接続している場合"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "Use the client's current database documentation for its user interface and "
 "supported geometry types. For example, the <link xlink:href=\"https://"
@@ -7256,6 +7285,15 @@ msgid ""
 "known SRID and geometry type. Expensive read-only queries can be exposed "
 "through a view or materialized view and indexed as appropriate."
 msgstr ""
+"クライアントのユーザーインターフェイスや対応するジオメトリータイプに関する現"
+"在のデータベースの文書を使います。たとえば <link xlink:href=\"https://"
+"docs.qgis.org/latest/en/docs/training_manual/databases/db_manager.html\">"
+"QGIS DB Manager lesson</link> では PostgreSQL 接続、テーブルレイヤー、SQL "
+"クエリーレイヤー、インポート、エクスポートを記載しています。クエリーレイヤは"
+"安定した一意の識別子と、知られた SRID とジオメトリータイプを持つ"
+"ジオメトリーカラムとを返すべきです。高コストな読み取り専用クエリーに対して"
+"ビューまたはマテリアライズドビューを通して出てこさせることが可能で、適切に"
+"インデックスを作ることが可能です。"
 
 #. Tag: term
 #, no-c-format
@@ -17333,6 +17371,8 @@ msgid ""
 "compares that value directly with the readable EWKT shown below and uses the "
 "same geometry for the generated figure."
 msgstr ""
+"結果は PostGIS 固有のジオメトリーとして返されます。文書テストのランナーは値と"
+"下に示す読取可能な EWKT と比較し、同じジオメトリーを図形の生成に使います。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -17445,6 +17485,9 @@ msgid ""
 "interprets backslash escapes. Each backslash therefore has to be doubled so "
 "that the <type>bytea</type> input parser receives the octal escapes."
 msgstr ""
+"PostgreSQL エスケープ文字列定数 (<literal>E'...'</literal>) は常に"
+"バックスラッシュによるエスケープを解釈します。バックスラッシュは常に二重にす"
+"ると <type>bytea</type> 入力パーサーは8進数バイト値を受け付けます。"
 
 #. Tag: para
 #, no-c-format
@@ -17453,6 +17496,9 @@ msgid ""
 "ordinary string literals preserve backslashes. The same EWKB can therefore "
 "be written with a single backslash before each octal byte value."
 msgstr ""
+"<varname>standard_conforming_strings</varname> が有効な場合 (デフォルト) には"
+"、通常の文字列リテラルはバックスラッシュを保存します。同じ EWKB でも"
+"バックスラッシュ一つで 8進数バイト値を記述できます。"
 
 #. Tag: para
 #, no-c-format
@@ -17515,6 +17561,10 @@ msgid ""
 "converts a hexadecimal WKB string to the <type>bytea</type> value accepted "
 "by <function>ST_GeomFromWKB</function>."
 msgstr ""
+"PostgreSQL <link xlink:href=\"https://www.postgresql.org/docs/current/"
+"functions-binarystring.html\"><function>decode</function></link> 関数は 16進"
+"数 WKB 文字列を <type>bytea</type> 値に変換すると <function>ST_GeomFromWKB</"
+"function> が受け付けてくれます。"
 
 #. Tag: para
 #, no-c-format
@@ -17522,6 +17572,8 @@ msgid ""
 ", <xref linkend=\"ST_AsBinary\"/>, <xref linkend=\"ST_AsEWKT\"/>, <xref "
 "linkend=\"ST_GeomFromEWKB\"/>"
 msgstr ""
+", <xref linkend=\"ST_AsBinary\"/>, <xref linkend=\"ST_AsEWKT\"/>, <xref "
+"linkend=\"ST_GeomFromEWKB\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -17529,6 +17581,8 @@ msgid ""
 "Creates a <varname>LINESTRING</varname> from a WKB representation, "
 "optionally using a given SRID."
 msgstr ""
+"<varname>LINESTRING</varname> を WKB 表現から生成し、SRID を与えた場合にはそ"
+"れを付けます。"
 
 #. Tag: para
 #, no-c-format
@@ -17538,6 +17592,10 @@ msgid ""
 "ID (<varname>SRID</varname>), and creates a <varname>LINESTRING</varname> "
 "geometry. It is a type-specific geometry factory in SQL."
 msgstr ""
+"<function>ST_LineFromWKB</function> 関数はジオメトリーの Well-Known Binary "
+"(WKB) 表現と必要に応じて空間参照系 ID (<varname>SRID</varname>) を含めて得て"
+"、 <varname>LINESTRING</varname> ジオメトリーを生成します。タイプ限定の SQL "
+"のジオメトリーファクトリーです。"
 
 #. Tag: para
 #, no-c-format
@@ -17546,6 +17604,9 @@ msgid ""
 "returned if the input <varname>bytea</varname> does not represent a "
 "<varname>LINESTRING</varname> geometry."
 msgstr ""
+"SRID が指定されていない場合には、デフォルトの 0 になります。入力 <varname>"
+"bytea</varname> が <varname>LINESTRING</varname> ジオメトリーを表現していない"
+"場合には、<varname>NULL</varname> が返されます。"
 
 #. Tag: para
 #, no-c-format
@@ -17555,6 +17616,10 @@ msgid ""
 "function calls <xref linkend=\"ST_GeomFromWKB\"/> and adds validation that "
 "the result is a <varname>LINESTRING</varname>."
 msgstr ""
+"全てのジオメトリーが <varname>LINESTRING</varname> であることが分かっている場"
+"合には、<xref linkend=\"ST_GeomFromWKB\"/> を直接使う方が効率的です。<xref "
+"linkend=\"ST_GeomFromWKB\"/> は <varname>LINESTRING</varname> かどうかの追加"
+"の評価を行うためです。"
 
 #. Tag: para
 #, no-c-format
@@ -17574,6 +17639,10 @@ msgid ""
 "System ID (<varname>SRID</varname>), and creates a <varname>LINESTRING</"
 "varname> geometry. It is an alias for <xref linkend=\"ST_LineFromWKB\"/>."
 msgstr ""
+"<function>ST_LinestringFromWKB</function> 関数はジオメトリーの Well-Known "
+"Binary (WKB) と任意引数の空間参照系 ID (<varname>SRID</varname>) とを取って"
+"、<varname>LINESTRING</varname> ジオメトリーを生成します。<xref "
+"linkend=\"ST_LineFromWKB\"/> の別名です。"
 
 #. Tag: para
 #, no-c-format
@@ -17626,6 +17695,8 @@ msgid ""
 "Returns a geometry from Well-Known Binary (WKB). SQL/MM alias for "
 "ST_GeomFromWKB without an SRID argument."
 msgstr ""
+"Well-Known Binary (WKB) からジオメトリーを返します。ST_GeomFromWKB の SRID を"
+"除いた形式の SQL/MM 用の別名です。"
 
 #. Tag: para
 #, no-c-format
@@ -17633,6 +17704,8 @@ msgid ""
 "This function is the SQL/MM alias for <xref linkend=\"ST_GeomFromWKB\"/> "
 "with no SRID argument."
 msgstr ""
+"この関数は <xref linkend=\"ST_GeomFromWKB\"/> の SRID を除いた形式の SQL/MM "
+"用の別名です。"
 
 #. Tag: para
 #, no-c-format
@@ -17721,6 +17794,8 @@ msgid ""
 "The cells are returned together so their relative sizes remain visible in a "
 "shared coordinate frame."
 msgstr ""
+"セルがまとめて返るので、相対サイズを共通の座標フレーム内で見ることができます"
+"。"
 
 #. Tag: para
 #, no-c-format
@@ -17786,6 +17861,8 @@ msgid ""
 "Enhanced: 3.7.0 support for GML ArcString, curved Ring, and CurvePolygon "
 "geometries was introduced."
 msgstr ""
+"Enhanced: 3.7.0 GML ArcString、曲線の Ring、CurvePolygon ジオメトリーが導入さ"
+"れました。"
 
 #. Tag: para
 #, no-c-format
@@ -17825,17 +17902,17 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "A single geometry with srsName."
-msgstr ""
+msgstr "srsName 付の一つのジオメトリー。"
 
 #. Tag: para
 #, no-c-format
 msgid "XLink usage."
-msgstr ""
+msgstr "XLink の使用法。"
 
 #. Tag: para
 #, no-c-format
 msgid "Polyhedral Surface."
-msgstr ""
+msgstr "多面体サーフェス。"
 
 #. Tag: para
 #, no-c-format
@@ -17921,7 +17998,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Constructs a PostGIS geometry from an OGC KML representation."
-msgstr ""
+msgstr "OGC KML 表現からの PostGIS ジオメトリーの構築。"
 
 #. Tag: para
 #, no-c-format
@@ -17953,12 +18030,12 @@ msgstr "Availability: 1.5 libxml2 2.6以上が必要です。"
 #. Tag: para
 #, no-c-format
 msgid "ST_GeomFromKML does not support SQL/MM curve geometries."
-msgstr ""
+msgstr "ST_GeomFromKML は SQL/MM 曲線ジオメトリーに対応していません。"
 
 #. Tag: para
 #, no-c-format
 msgid "A single LineString geometry."
-msgstr ""
+msgstr "一つの LINESTRING ジオメトリー。"
 
 #. Tag: para
 #, no-c-format
@@ -17992,7 +18069,7 @@ msgstr ""
 #. Tag: refpurpose
 #, no-c-format
 msgid "Returns a geometry from GML. Alias for ST_GeomFromGML."
-msgstr ""
+msgstr "GML からジオメトリーを返します。ST_GeomFromGML の別名です。"
 
 #. Tag: para
 #, no-c-format
@@ -18000,11 +18077,13 @@ msgid ""
 "This function is an alias for <xref linkend=\"ST_GeomFromGML\"/> and "
 "provides the same signatures."
 msgstr ""
+"この関数は <xref linkend=\"ST_GeomFromGML\"/> のエイリアスで、引数型の順序と"
+"返り値型が同じです。"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid "&sqlmm_compliant; SQL-MM 3: 5.1.50."
-msgstr ""
+msgstr "&sqlmm_compliant; SQL-MM 3: 5.1.50."
 
 #. Tag: para
 #, no-c-format
@@ -18244,6 +18323,9 @@ msgid ""
 "<xref linkend=\"ST_OffsetCurve\"/> before interpolation. This is useful for "
 "locating an address point beside a street centerline."
 msgstr ""
+"補間前に <xref linkend=\"ST_OffsetCurve\"/> を使うと、補間点をラインの左側ま"
+"たは右側に平行移動できます。これは住所ポイントを道路中心線のそばに置くのに使"
+"います。"
 
 #. Tag: para
 #, no-c-format
@@ -18251,6 +18333,8 @@ msgid ""
 ", <xref linkend=\"ST_3DLineInterpolatePoint\"/>, <xref "
 "linkend=\"ST_LineLocatePoint\"/>, <xref linkend=\"ST_OffsetCurve\"/>"
 msgstr ""
+", <xref linkend=\"ST_3DLineInterpolatePoint\"/>, <xref "
+"linkend=\"ST_LineLocatePoint\"/>, <xref linkend=\"ST_OffsetCurve\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -18397,6 +18481,8 @@ msgstr ""
 #, no-c-format
 msgid "This example locates the closest segment and point on a LineString."
 msgstr ""
+"この例は最も近い辺の番号と、最も近いラインストリング上のポイントとを求めてい"
+"ます。"
 
 #. Tag: para
 #, no-c-format
@@ -18405,6 +18491,9 @@ msgid ""
 "linkend=\"ST_Length2D\"/>, <xref linkend=\"ST_LineInterpolatePoint\"/>, "
 "<xref linkend=\"ST_LineSubstring\"/>"
 msgstr ""
+", <xref linkend=\"ST_ClosestPoint\"/>, <xref linkend=\"ST_DWithin\"/>, <xref "
+"linkend=\"ST_Length2D\"/>, <xref linkend=\"ST_LineInterpolatePoint\"/>, "
+"<xref linkend=\"ST_LineSubstring\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -18473,7 +18562,7 @@ msgstr "Availability: 1.1.0 Z軸とM軸のサポートが1.1.1で追加されま
 #. Tag: para
 #, no-c-format
 msgid "Extract the middle third of a LineString, from 0.333 to 0.666."
-msgstr ""
+msgstr "LINESTRING の中央三分の一を抽出します。小数で言うと 0.333 から 0.666 です。"
 
 #. Tag: para
 #, no-c-format
@@ -18497,6 +18586,8 @@ msgid ""
 "The final generated step is filtered out when the line length is an exact "
 "multiple of the requested section length."
 msgstr ""
+"ライン長がリクエストしたセクションの長さの正確な倍数であるとき、最後に生成さ"
+"れる段は除外されます。"
 
 #. Tag: para
 #, no-c-format
@@ -18504,6 +18595,8 @@ msgid ""
 "Split a LineString by points by locating the points along the line, adding "
 "the 0 and 1 endpoints, and extracting substrings between adjacent locations."
 msgstr ""
+"LINESTRING を POINT で分割します。ラインに沿ってポイントを設定して、0 と 1 端"
+"点を追加し、隣接ポイントとの部分ラインを抽出します。"
 
 #. Tag: para
 #, no-c-format
@@ -18530,6 +18623,9 @@ msgid ""
 "linkend=\"ST_LineInterpolatePoint\"/>, <xref linkend=\"ST_LineLocatePoint\"/"
 ">, <xref linkend=\"ST_LineMerge\"/>, <xref linkend=\"ST_Split\"/>"
 msgstr ""
+", <xref linkend=\"ST_LineExtend\"/>, <xref "
+"linkend=\"ST_LineInterpolatePoint\"/>, <xref linkend=\"ST_LineLocatePoint\"/>"
+", <xref linkend=\"ST_LineMerge\"/>, <xref linkend=\"ST_Split\"/>"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -18658,6 +18754,9 @@ msgid ""
 "example is intended for a single overlay panel rather than separate side-by-"
 "side figures."
 msgstr ""
+"M値が 2 と 8 の間にある部分を抽出し、左に平行移動させます。クリップしたライン"
+"と平行移動の結果とは同じ座標空間にあります。この例では分割して並べた図にせず"
+"に単一のオーバーレイパネルを用意しています。"
 
 #. Tag: para
 #, no-c-format
@@ -18946,6 +19045,10 @@ msgid ""
 "<varname>geometry_columns</varname> view updates automatically from the "
 "system catalogs."
 msgstr ""
+"<function>DropGeometryColumn</function> は後方互換のために残していて、新たな"
+"アプリケーションでは使うことを推奨しません。標準的な <command>ALTER TABLE "
+"... DROP COLUMN</command> コマンドを代りに使います。<varname>"
+"geometry_columns</varname> ビューはシステムカタログから自動的に更新されます。"
 
 #. Tag: para
 #, no-c-format
@@ -18953,6 +19056,8 @@ msgid ""
 "Changed: 2.0.0. Retained for backward compatibility after "
 "<varname>geometry_columns</varname> became a view of the system catalogs."
 msgstr ""
+"Changed: 2.0.0. <varname>geometry_columns</varname> がシステムカタログの"
+"ビューになった後に後方互換のため残置。"
 
 #. Tag: para
 #, no-c-format
@@ -18960,11 +19065,13 @@ msgid ""
 "Use standard SQL to drop the geometry column. The <varname>geometry_columns</"
 "varname> view updates automatically."
 msgstr ""
+"標準 SQL を使ってジオメトリーカラムを削除します。<varname>geometry_columns</"
+"varname> ビューは自動的に更新されます。"
 
 #. Tag: para
 #, no-c-format
 msgid "The legacy compatibility function performs the equivalent operation."
-msgstr ""
+msgstr "過去のものとなった互換関数で同等の処理ができます。"
 
 #. Tag: para
 #, no-c-format
@@ -18997,6 +19104,10 @@ msgid ""
 "<varname>geometry_columns</varname> view updates automatically from the "
 "system catalogs."
 msgstr ""
+"<function>DropGeometryTable</function> は後方互換のために残していて、新たな"
+"アプリケーションでは使うことを推奨しません。標準的な <command>DROP TABLE</"
+"command> コマンドを代りに使います。<varname>geometry_columns</varname> ビュー"
+"はシステムカタログから自動的に更新されます。"
 
 #. Tag: para
 #, no-c-format
@@ -19004,6 +19115,8 @@ msgid ""
 "Use standard SQL to drop a table containing geometry columns. The "
 "<varname>geometry_columns</varname> view updates automatically."
 msgstr ""
+"標準 SQL を使ってジオメトリーカラムを含むテーブルを削除します。<varname>"
+"geometry_columns</varname> ビューは自動的に更新されます。"
 
 #. Tag: para
 #, no-c-format
@@ -19179,7 +19292,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Describe the table to see the typmod-based geometry column."
-msgstr ""
+msgstr "typmod を使ったジオメトリーカラムを見るためにテーブルの説明を表示します。"
 
 #. Tag: para
 #, no-c-format
@@ -19194,7 +19307,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Describe the table to see the constraint-based geometry column."
-msgstr ""
+msgstr "制約を使ったジオメトリーカラムを見るためにテーブルの説明を表示します。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -19435,12 +19548,15 @@ msgstr ""
 "<varname>degrees()</varname>で度に変換できます。"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "For offsetting lines relative to their direction, use <xref "
 "linkend=\"ST_OffsetCurve\"/>. For projecting a point by distance and "
 "bearing, use <xref linkend=\"ST_Project\"/>."
 msgstr ""
+"ラインをその方向に平行移動させるには <xref linkend=\"ST_OffsetCurve\"/> を使"
+"います。ポイントを距離と方向とで移動させるには <xref "
+"linkend=\"ST_Project\"/> を使います。"
 
 #. Tag: para
 #, no-c-format
@@ -19466,7 +19582,7 @@ msgstr "度単位のジオメトリの方位"
 #. Tag: para
 #, no-c-format
 msgid "Compass direction labels can be computed from the azimuth."
-msgstr ""
+msgstr "方位からコンパスの方位ラベルを計算することができます。"
 
 #. Tag: para
 #, no-c-format
@@ -19474,11 +19590,13 @@ msgid ""
 "Azimuth from Point(25, 45) to Point(75, 100), shown against the positive Y "
 "axis (north)."
 msgstr ""
+"(25, 45) の位置から (75, 100) の位置を見た際のY軸正方向 (北) を基準とした方位"
+"。"
 
 #. Tag: para
 #, no-c-format
 msgid "Reverse azimuth from Point(75, 100) to Point(25, 45)."
-msgstr ""
+msgstr "逆に (75, 100) の位置から (25, 45) の位置を見た際の方位。"
 
 #. Tag: para
 #, no-c-format
@@ -19603,7 +19721,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Find the closest point on polygon A to polygon B."
-msgstr ""
+msgstr "ポリゴン A とポリゴン B の最近点の検索。"
 
 #. Tag: para
 #, no-c-format
@@ -19649,21 +19767,21 @@ msgstr ""
 msgid ""
 "Compare the 3D closest point to the 2D closest point for a LineString and a "
 "Point."
-msgstr ""
+msgstr "LINESTRING と POINT との 3次元最近点と 2次元最近点との比較。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Compare the 3D closest point to the 2D closest point for a LineString and a "
 "MultiPoint."
-msgstr ""
+msgstr "LINESTRING と MULTIPOINT との 3次元最近点と 2次元最近点との比較。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Compare the 3D closest point to the 2D closest point for a Polygon and a "
 "MultiLineString."
-msgstr ""
+msgstr "POLYGONと MULTILINESTRINGとの 3次元最近点と 2次元最近点との比較。"
 
 #. Tag: para
 #, no-c-format
@@ -20036,6 +20154,8 @@ msgid ""
 "matters, so keeping both inputs in the same direction makes the comparison "
 "clearer."
 msgstr ""
+"両方のラインは左から右へと横切っている。最初のラインはまっすぐで、二つ目の"
+"ラインは中間頂点が上にあり、上がって降りる構造になっている。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -20093,6 +20213,8 @@ msgid ""
 "witness segment from the original illustration is retained and its length is "
 "checked against the computed distance."
 msgstr ""
+"二つのラインの間のハウスドルフ距離と最小距離。元のイラストから出ている"
+"ハウスドルフ距離を示す辺を保持し、辺の長さと計算された距離とを確認します。"
 
 #. Tag: para
 #, no-c-format
@@ -20336,6 +20458,8 @@ msgid ""
 "Measure a table geometry directly on a spheroid when the coordinates are "
 "stored in longitude and latitude."
 msgstr ""
+"経度と緯度で座標を保存している場合のテーブルのジオメトリーに対する回転楕円体"
+"面上での計測。"
 
 #. Tag: para
 #, no-c-format
@@ -20343,11 +20467,13 @@ msgid ""
 "This example measures a 2D MultiLineString and each component separately on "
 "the same spheroid."
 msgstr ""
+"この例では 2次元 MULTILINESTRING を計測し、要素ごとに同じ回転楕円体面で計算し"
+"ます。"
 
 #. Tag: para
 #, no-c-format
 msgid "This example uses 3D input; Z contributes to the measured result."
-msgstr ""
+msgstr "この例では 3次元入力を使います。Z値は計測結果に影響します。"
 
 #. Tag: para
 #, no-c-format
@@ -20400,12 +20526,12 @@ msgstr "Enhanced: 3.7.0 - 単一ジオメトリー入力に対応しました。
 #. Tag: para
 #, no-c-format
 msgid "Longest line between a Point and a LineString."
-msgstr ""
+msgstr "POINT と LINESTRING との間の最長ライン。"
 
 #. Tag: para
 #, no-c-format
 msgid "Longest line between two polygons."
-msgstr ""
+msgstr "二つの POLYGON 間の最長ライン"
 
 #. Tag: para
 #, no-c-format
@@ -20448,21 +20574,21 @@ msgstr ""
 msgid ""
 "Longest line between a LineString and a Point, comparing the 3D and 2D "
 "results."
-msgstr ""
+msgstr "LINESTRING と POINT の間の最長線。3次元と 2次元との比較。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Longest line between a LineString and a MultiPoint, comparing the 3D and 2D "
 "results."
-msgstr ""
+msgstr "LINESTRING と MULTIPOINT の間の最長線。3次元と 2次元との比較。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Longest line between a Polygon and a MultiLineString, comparing the 3D and "
 "2D results."
-msgstr ""
+msgstr "POLYGON と MULTILINESTRING の間の最長線。3次元と 2次元との比較。"
 
 #. Tag: para
 #, no-c-format
@@ -20830,12 +20956,12 @@ msgstr "Enhanced: 3.4.0 - ジオグラフィに対応しました。"
 #. Tag: para
 #, no-c-format
 msgid "Shortest line between a Point and a LineString."
-msgstr ""
+msgstr "POINT と LINESTRING の間の最短線。"
 
 #. Tag: para
 #, no-c-format
 msgid "Shortest line between polygons."
-msgstr ""
+msgstr "POLYGON 間の最短線。"
 
 #. Tag: para
 #, no-c-format
@@ -20876,21 +21002,21 @@ msgstr ""
 msgid ""
 "Compare the 3D shortest line to the 2D shortest line for a LineString and a "
 "Point."
-msgstr ""
+msgstr "LINESTRING と POINT との間の 3次元最短線と 2次元最短線の比較。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Compare the 3D shortest line to the 2D shortest line for a LineString and a "
 "MultiPoint."
-msgstr ""
+msgstr "LINESTRING と MULTIPOINT との間の 3次元最短線と 2次元最短線の比較。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Compare the 3D shortest line to the 2D shortest line for a Polygon and a "
 "MultiLineString."
-msgstr ""
+msgstr "POLYGON と MULTILINESTRING との間の 3次元最短線と 2次元最短線の比較。"
 
 #. Tag: para
 #, no-c-format
@@ -21130,12 +21256,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "3D LineStrings."
-msgstr ""
+msgstr "3次元 LINESTRING。"
 
 #. Tag: para
 #, no-c-format
 msgid "3M LineStrings."
-msgstr ""
+msgstr "M値を持つ LINESTRING。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -21440,12 +21566,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Note: the GROUP BY uses the \"=\" to compare for geometry equivalency."
-msgstr ""
+msgstr "ご注意: GROUP BY はジオメトリーの同等性を比較するために \"=\" を使います。"
 
 #. Tag: para
 #, no-c-format
 msgid "In versions prior to 2.0, this used to return true."
-msgstr ""
+msgstr "2.0より前ではこれは TRUE を返していました。"
 
 #. Tag: para
 #, no-c-format
@@ -22443,6 +22569,11 @@ msgid ""
 "literal> prefix used for <type>bytea</type> display. Specifying "
 "<literal>NDR</literal> makes the byte order deterministic."
 msgstr ""
+"PostgreSQLの <link xlink:href=\"https://www.postgresql.jp/document/current/"
+"html/functions-binarystring.html\"><function>encode</function></link> 関数で"
+"、 <type>bytea</type> 表示に使われる <literal>\\x</literal> が無い 16進数 "
+"WKB 文字列を作ります。<literal>NDR</literal> などを指定することで"
+"バイトオーダーを決定します。"
 
 #. Tag: para
 #, no-c-format
@@ -22540,6 +22671,10 @@ msgid ""
 "after multiplying coordinates by 10 raised to the requested "
 "<varname>precision</varname>."
 msgstr ""
+"<link xlink:href=\"https://developers.google.com/maps/documentation/"
+"utilities/polylinealgorithm\">Encoded Polyline Algorithm Format</link> による"
+"ジオメトリーを返します。書式は 10の <varname>precision</varname> 乗を掛けてか"
+"ら、緯度、経度、これらの差分を整数で保存します。"
 
 #. Tag: para
 #, no-c-format
@@ -22549,6 +22684,10 @@ msgid ""
 "must match when encoding and decoding; otherwise the coordinates are scaled "
 "incorrectly."
 msgstr ""
+"非公式名の <emphasis>polyline5</emphasis> と <emphasis>polyline6</emphasis> "
+"は同じジオメトリーをエンコードしていますが精度は 5 と 6 です。精度は"
+"エンコードと出コードの時に一致していなければなりません。合っていない場合には"
+"座標は正しく拡大縮小されません。"
 
 #. Tag: para
 #, no-c-format
@@ -22557,9 +22696,12 @@ msgid ""
 "Y. Use <xref linkend=\"ST_Transform\"/> to transform geometries in other "
 "coordinate systems before encoding."
 msgstr ""
+"入力ジオメトリは SRID 4326 を使い、経度が X、緯度が Y でなければなりません。"
+"ジオメトリーを他の座標系に変換する場合にはエンコード前に <xref "
+"linkend=\"ST_Transform\"/> を使います。"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "The <link xlink:href=\"https://project-osrm.org/docs/v5.24.0/api/#general-"
 "options\">OSRM API</link> returns precision 5 for "
@@ -22568,11 +22710,16 @@ msgid ""
 "<literal>route.geometry</literal> with <xref "
 "linkend=\"ST_LineFromEncodedPolyline\"/> using the matching precision."
 msgstr ""
+"<link xlink:href=\"https://project-osrm.org/docs/v5.24.0/api/#general-"
+"options\">OSRM API</link> は <literal>geometries=polyline</literal> の時は精"
+"度 5 を返し、<literal>geometries=polyline6</literal> の時は精度 6 を返します"
+"。<literal>route.geometry</literal> を出コードします。これは同じ精度を指定し"
+"た <xref linkend=\"ST_LineFromEncodedPolyline\"/> を使います。"
 
 #. Tag: para
 #, no-c-format
 msgid "Encode the same WGS 84 LineString using precision 5 and 6."
-msgstr ""
+msgstr "同じ WGS84 LINESTRING を精度 5 と精度 6 でエンコードします。"
 
 #. Tag: para
 #, no-c-format
