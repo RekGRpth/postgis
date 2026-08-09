@@ -682,22 +682,31 @@ lwgeom_compare_by_xdr_ewkb(const void *a, const void *b)
 }
 
 static LWGEOM *
-lwgeom_normalized_polygon_to_triangle(LWGEOM *geom)
+lwgeom_normalized_triangle_or_clone(const LWGEOM *triangle_in, LWGEOM *normalized)
 {
 	LWPOLY *poly;
 	LWTRIANGLE *triangle;
 	POINTARRAY *points;
 
-	if (!geom || geom->type != POLYGONTYPE)
-		return geom;
+	if (normalized && normalized->type == TRIANGLETYPE)
+		return normalized;
 
-	poly = lwgeom_as_lwpoly(geom);
-	if (poly->nrings != 1 || !poly->rings[0] || poly->rings[0]->npoints != 4)
-		return geom;
+	if (!normalized || normalized->type != POLYGONTYPE)
+	{
+		lwgeom_free(normalized);
+		return lwgeom_clone_deep(triangle_in);
+	}
+
+	poly = lwgeom_as_lwpoly(normalized);
+	if (poly->nrings != 1 || !poly->rings[0])
+	{
+		lwgeom_free(normalized);
+		return lwgeom_clone_deep(triangle_in);
+	}
 
 	points = ptarray_clone_deep(poly->rings[0]);
 	triangle = lwtriangle_construct(poly->srid, NULL, points);
-	lwgeom_free(geom);
+	lwgeom_free(normalized);
 	return lwtriangle_as_lwgeom(triangle);
 }
 
@@ -717,7 +726,7 @@ lwgeom_normalize_lwgeom(const LWGEOM *geom)
 
 		normalized = lwgeom_normalize(col->geoms[i]);
 		if (col->type == TINTYPE && col->geoms[i]->type == TRIANGLETYPE)
-			normalized = lwgeom_normalized_polygon_to_triangle(normalized);
+			normalized = lwgeom_normalized_triangle_or_clone(col->geoms[i], normalized);
 
 		lwgeom_free(col->geoms[i]);
 		col->geoms[i] = normalized;
@@ -1052,6 +1061,7 @@ LWGEOM *
 lwgeom_pointonsurface(const LWGEOM *geom)
 {
 	LWGEOM *result;
+	LWGEOM *geos_input = NULL;
 	int32_t srid = RESULT_SRID(geom);
 	uint8_t is3d = FLAGS_GET_Z(geom->flags);
 	GEOSGeometry *g1, *g3;
@@ -1066,17 +1076,41 @@ lwgeom_pointonsurface(const LWGEOM *geom)
 
 	initGEOS(lwnotice, lwgeom_geos_error);
 
-	if (!(g1 = LWGEOM2GEOS(geom, AUTOFIX))) GEOS_FAIL();
+	if (lwgeom_is_collection(geom))
+	{
+		const LWCOLLECTION *col = (const LWCOLLECTION *)geom;
+		LWCOLLECTION *clean = lwcollection_construct_empty(geom->type, geom->srid, is3d, lwgeom_has_m(geom));
+		for (uint32_t i = 0; i < col->ngeoms; i++)
+		{
+			if (!lwgeom_is_empty(col->geoms[i]))
+				lwcollection_add_lwgeom(clean, lwgeom_clone_deep(col->geoms[i]));
+		}
+		geos_input = lwcollection_as_lwgeom(clean);
+	}
+
+	if (!(g1 = LWGEOM2GEOS(geos_input ? geos_input : geom, AUTOFIX)))
+	{
+		lwgeom_free(geos_input);
+		GEOS_FAIL();
+	}
 
 	g3 = GEOSPointOnSurface(g1);
 
-	if (!g3) GEOS_FREE_AND_FAIL(g1);
+	if (!g3)
+	{
+		lwgeom_free(geos_input);
+		GEOS_FREE_AND_FAIL(g1);
+	}
 	GEOSSetSRID(g3, srid);
 
 	if (!(result = GEOS2LWGEOM(g3, is3d)))
+	{
+		lwgeom_free(geos_input);
 		GEOS_FREE_AND_FAIL(g1, g3);
+	}
 
 	GEOS_FREE(g1, g3);
+	lwgeom_free(geos_input);
 
 	return result;
 }
