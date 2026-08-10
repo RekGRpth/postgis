@@ -415,6 +415,58 @@ class CIStatusTest(unittest.TestCase):
         self.assertEqual("build 7808", result["message"])
         self.assertEqual("https://ci.example.test/job/PostGIS_Make_Dist/7808/", result["url"])
 
+    def test_jenkins_matrix_ignores_another_parent_build(self):
+        check_config = {
+            "name": "Jenkins / Debbie main",
+            "provider": "jenkins",
+            "required": True,
+            "job_url": "https://ci.example.test/job/PostGIS_trunk/",
+        }
+        branch = {
+            "name": "master",
+            "label": "master",
+            "version_or_trunk": "trunk",
+        }
+        current = {
+            "number": 5212,
+            "building": True,
+            "result": None,
+            "url": "https://ci.example.test/job/PostGIS_trunk/5212/",
+        }
+        matrix = [
+            {
+                "name": "PG_VER=14,OS_BUILD=64",
+                "lastBuild": {
+                    "number": 5208,
+                    "result": "FAILURE",
+                    "url": "https://ci.example.test/job/PostGIS_trunk/PG_VER=14/5208/",
+                },
+            },
+            {
+                "name": "PG_VER=18,OS_BUILD=64",
+                "lastBuild": {
+                    "number": 5212,
+                    "building": True,
+                    "result": None,
+                    "url": "https://ci.example.test/job/PostGIS_trunk/PG_VER=18/5212/",
+                },
+            },
+        ]
+
+        with (
+            mock.patch.object(CI_STATUS, "jenkins_queued_check", return_value=None),
+            mock.patch.object(CI_STATUS, "jenkins_builds", return_value=[current]),
+            mock.patch.object(CI_STATUS, "jenkins_matrix_configurations", return_value=matrix),
+        ):
+            result = CI_STATUS.jenkins_check(check_config, branch, timeout=5)
+
+        self.assertEqual(CI_STATUS.IN_PROGRESS, result["status"])
+        self.assertEqual("build 5212; running: PG18", result["message"])
+        self.assertEqual(
+            "https://ci.example.test/job/PostGIS_trunk/PG_VER=18/5212/",
+            result["url"],
+        )
+
     def test_jenkins_queue_prefers_current_branch_revision(self):
         check_config = {
             "name": "Jenkins / Berrie",
@@ -510,8 +562,8 @@ class CIStatusTest(unittest.TestCase):
         with mock.patch.object(CI_STATUS, "http_json", side_effect=([pipeline], pipeline_detail)) as http_json:
             result = CI_STATUS.woodpecker_check(check_config, branch, timeout=5)
 
-        self.assertEqual(CI_STATUS.FAILURE, result["status"])
-        self.assertEqual("failed: regress/18", result["message"])
+        self.assertEqual(CI_STATUS.UNKNOWN, result["status"])
+        self.assertEqual("unknown: regress/18", result["message"])
         self.assertEqual("https://woodie.example.test/repos/30/pipeline/5430/18", result["url"])
         self.assertEqual("a" * 40, result["revision"])
         self.assertEqual(
@@ -634,9 +686,79 @@ class CIStatusTest(unittest.TestCase):
                 timeout=5,
             )
 
-        self.assertEqual(CI_STATUS.FAILURE, result["status"])
+        self.assertEqual(CI_STATUS.UNKNOWN, result["status"])
         self.assertEqual("Agent lost", result["status_label"])
-        self.assertEqual("agent lost: 3 steps killed at exit 0 (clone, prepare, check-xml)", result["message"])
+        self.assertEqual("agent lost: 3 steps stopped at exit 0 (clone, prepare, check-xml)", result["message"])
+
+    def test_woodpecker_killed_pipeline_with_deadline_exceeded_is_agent_loss(self):
+        check_config = {
+            "name": "Woodpecker",
+            "provider": "woodpecker",
+            "required": True,
+            "api_url": "https://woodie.example.test/api/repos/30/pipelines",
+            "web_url": "https://woodie.example.test/repos/30",
+        }
+        branch = {"name": "stable-3.6", "label": "3.6"}
+        pipeline = {
+            "number": 6852,
+            "event": "push",
+            "branch": "stable-3.6",
+            "ref": "refs/heads/stable-3.6",
+            "status": "killed",
+            "commit": "e" * 40,
+            "workflows": [
+                {
+                    "pid": 1,
+                    "name": "regress",
+                    "state": "killed",
+                    "children": [{
+                        "pid": 4,
+                        "name": "test-upgrades",
+                        "state": "failure",
+                        "exit_code": 0,
+                        "error": "Post docker.sock/wait: context deadline exceeded",
+                    }],
+                },
+            ],
+        }
+
+        with mock.patch.object(CI_STATUS, "http_json", return_value=[pipeline]):
+            result = CI_STATUS.woodpecker_check(check_config, branch, timeout=5)
+
+        self.assertEqual(CI_STATUS.UNKNOWN, result["status"])
+        self.assertEqual("Agent lost", result["status_label"])
+
+    def test_woodpecker_killed_pipeline_with_nonzero_failure_is_failure(self):
+        check_config = {
+            "name": "Woodpecker",
+            "provider": "woodpecker",
+            "required": True,
+            "api_url": "https://woodie.example.test/api/repos/30/pipelines",
+            "web_url": "https://woodie.example.test/repos/30",
+        }
+        branch = {"name": "master", "label": "master"}
+        pipeline = {
+            "number": 6874,
+            "event": "push",
+            "branch": "master",
+            "ref": "refs/heads/master",
+            "status": "killed",
+            "commit": "f" * 40,
+            "workflows": [
+                {
+                    "pid": 1,
+                    "name": "tools",
+                    "state": "failure",
+                    "children": [{"pid": 4, "name": "build", "state": "failure", "exit_code": 2}],
+                },
+            ],
+        }
+
+        with mock.patch.object(CI_STATUS, "http_json", return_value=[pipeline]):
+            result = CI_STATUS.woodpecker_check(check_config, branch, timeout=5)
+
+        self.assertEqual(CI_STATUS.FAILURE, result["status"])
+        self.assertEqual("failed: tools (build)", result["message"])
 
     def test_woodpecker_running_workflows_are_summarized(self):
         check_config = {

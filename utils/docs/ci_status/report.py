@@ -388,7 +388,7 @@ def normalize_woodpecker_status(value):
         "success": SUCCESS,
         "failure": FAILURE,
         "error": FAILURE,
-        "killed": FAILURE,
+        "killed": UNKNOWN,
         "blocked": IN_PROGRESS,
         "declined": FAILURE,
         "running": IN_PROGRESS,
@@ -537,32 +537,61 @@ def woodpecker_leaf_steps(workflow):
     return [workflow]
 
 
+def woodpecker_step_is_agent_loss(step):
+    state = str(step.get("state") or step.get("status")).lower()
+    if step.get("exit_code") != 0:
+        return False
+    if state == "killed":
+        return True
+    if state != "failure":
+        return False
+
+    error = " ".join(
+        str(step.get(key) or "")
+        for key in ("error", "message")
+    ).lower()
+    return (
+        "context deadline exceeded" in error
+        or "canceled" in error
+        or "cancelled" in error
+    )
+
+
+def woodpecker_has_conclusive_failure(pipeline):
+    for workflow in pipeline.get("workflows") or []:
+        for step in woodpecker_leaf_steps(workflow):
+            status = normalize_woodpecker_status(step.get("state") or step.get("status"))
+            if status == FAILURE and not woodpecker_step_is_agent_loss(step):
+                return True
+    return False
+
+
 def woodpecker_killed_details(pipeline):
     workflows = pipeline.get("workflows") or []
     if not workflows:
         return None
 
     non_success = []
-    killed_zero = []
+    agent_loss = []
     for workflow in workflows:
         for step in woodpecker_leaf_steps(workflow):
             status = normalize_woodpecker_status(step.get("state") or step.get("status"))
             if status == SUCCESS:
                 continue
             non_success.append(step)
-            if str(step.get("state") or step.get("status")).lower() == "killed" and step.get("exit_code") == 0:
-                killed_zero.append(step)
+            if woodpecker_step_is_agent_loss(step):
+                agent_loss.append(step)
 
-    if not non_success or len(non_success) != len(killed_zero):
+    if not non_success or len(non_success) != len(agent_loss):
         return None
 
     labels = [
         str(step.get("name") or f"step {step.get('pid') or step.get('id')}")
-        for step in killed_zero[:3]
+        for step in agent_loss[:3]
     ]
-    suffix = f" ({', '.join(labels)}" + (", ..." if len(killed_zero) > len(labels) else "") + ")"
+    suffix = f" ({', '.join(labels)}" + (", ..." if len(agent_loss) > len(labels) else "") + ")"
     return {
-        "message": f"agent lost: {plural(len(killed_zero), 'step')} killed at exit 0{suffix}",
+        "message": f"agent lost: {plural(len(agent_loss), 'step')} stopped at exit 0{suffix}",
         "status_label": "Agent lost",
     }
 
@@ -604,13 +633,19 @@ def woodpecker_check(check, branch, timeout):
             current = {**current, **http_json(detail_url, timeout=timeout)}
         except RECOVERABLE_PROVIDER_ERRORS:
             pass
+    current_status = normalize_woodpecker_status(current.get("status"))
+    if (
+        str(current.get("status")).lower() == "killed"
+        and woodpecker_has_conclusive_failure(current)
+    ):
+        current_status = FAILURE
     message = current.get("message")
     extra = {}
-    if normalize_woodpecker_status(current.get("status")) != SUCCESS:
+    if current_status != SUCCESS:
         details = None
         if str(current.get("status")).lower() == "error" and not (current.get("workflows") or []):
             details = woodpecker_error_details(current)
-        if not details and str(current.get("status")).lower() == "failure":
+        if not details and str(current.get("status")).lower() in ("failure", "killed"):
             details = woodpecker_killed_details(current)
         if not details:
             details = woodpecker_workflow_details(current, web_url)
@@ -618,10 +653,12 @@ def woodpecker_check(check, branch, timeout):
             message = details["message"]
             run_url = details.get("url") or run_url
             extra.update({key: details[key] for key in ("status_label",) if key in details})
+            if details.get("status_label") == "Agent lost":
+                current_status = UNKNOWN
     result = make_result(
         check,
         branch,
-        normalize_woodpecker_status(current.get("status")),
+        current_status,
         url=run_url or web_url,
         debug_url=url,
         revision=current.get("commit"),
@@ -1058,7 +1095,7 @@ def jenkins_matrix_configuration_label(configuration, selected):
     return configuration.get("name") or configuration.get("url") or "configuration"
 
 
-def jenkins_matrix_details(job_url, timeout):
+def jenkins_matrix_details(job_url, timeout, parent_build_number):
     try:
         configurations = jenkins_matrix_configurations(job_url, timeout)
     except RECOVERABLE_PROVIDER_ERRORS:
@@ -1075,6 +1112,8 @@ def jenkins_matrix_details(job_url, timeout):
     }
     for configuration in configurations:
         build = configuration.get("lastBuild") or {}
+        if build.get("number") != parent_build_number:
+            continue
         status = normalize_jenkins_status(build)
         if status == SUCCESS:
             continue
@@ -1195,7 +1234,7 @@ def jenkins_check(check, branch, timeout):
         message=f"build {current.get('number')}",
     )
     if result["status"] != SUCCESS:
-        details = jenkins_matrix_details(job_url, timeout)
+        details = jenkins_matrix_details(job_url, timeout, current.get("number"))
         if details:
             result["message"] = f"{result['message']}; {details['message']}"
             if details.get("url"):
