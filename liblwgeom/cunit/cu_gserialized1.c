@@ -155,6 +155,83 @@ static void test_lwgeom_calculate_gbox(void)
 	CU_ASSERT_DOUBLE_EQUAL(b.ymax, 0.5, 0.0000001);
 	lwgeom_free(g);
 
+	/* The curve apex is inside the parameter range, not at a control point. */
+	g = lwgeom_from_wkt("NURBSCURVE(2, (0 0, 1 1000000000, 2 -62000000000))", LW_PARSER_CHECK_NONE);
+	lwgeom_calculate_gbox_cartesian(g, &b);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmin, 0.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.ymin, -62000000000.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmax, 2.0, 0.0000001);
+	CU_ASSERT_EQUAL(next_float_up(b.ymax), next_float_up(15625000.0));
+	lwgeom_free(g);
+
+	/* The bbox must expand through the extremum's outward float boundary. */
+	g = lwgeom_from_wkt("NURBSCURVE(2, (0 0.99898996343746105, 1 1.000999975937461, 2 0.99900998843746103))",
+			    LW_PARSER_CHECK_NONE);
+	lwgeom_calculate_gbox_cartesian(g, &b);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmin, 0.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmax, 2.0, 0.0000001);
+	CU_ASSERT(b.ymax >= 1.000000001);
+	CU_ASSERT_EQUAL(next_float_up(b.ymax), next_float_up(1.000000001));
+	lwgeom_free(g);
+
+	/* This entire Bezier arch lies between two adjacent samples of the old
+	 * uniform derivative scan. Knot-span decomposition must still find it. */
+	g = lwgeom_from_wkt(
+	    "NURBSCURVE(2, (0 0, 0.25 0, 0.5 0, 0.5 0, 0.5005 1, 0.501 0, 0.501 0, 0.75 0, 1 0), "
+	    "(1, 1, 1, 1, 1, 1, 1, 1, 1), "
+	    "(0, 0, 0, 0.5, 0.5, 0.5, 0.501, 0.501, 0.501, 1, 1, 1))",
+	    LW_PARSER_CHECK_NONE);
+	lwgeom_calculate_gbox_cartesian(g, &b);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmin, 0.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmax, 1.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.ymin, 0.0, 0.0000001);
+	CU_ASSERT_EQUAL(next_float_up(b.ymax), next_float_up(0.5));
+	lwgeom_free(g);
+
+	/* Rational Bezier spans use the projected weighted control hull. */
+	g = lwgeom_from_wkt("NURBSCURVE(2, (0 0, 1 1, 2 0), (1, 3, 1), (0, 0, 0, 1, 1, 1))", LW_PARSER_CHECK_NONE);
+	lwgeom_calculate_gbox_cartesian(g, &b);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmin, 0.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmax, 2.0, 0.0000001);
+	CU_ASSERT_EQUAL(next_float_up(b.ymax), next_float_up(0.75));
+	lwgeom_free(g);
+
+	/* Repeated knots split the curve into independent Bezier spans. */
+	g = lwgeom_from_wkt("NURBSCURVE(2, (0 0, 1 1, 2 0, 3 1, 4 0), (1, 1, 1, 1, 1), (0, 0, 0, 0.5, 0.5, 1, 1, 1))",
+			    LW_PARSER_CHECK_NONE);
+	lwgeom_calculate_gbox_cartesian(g, &b);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmin, 0.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmax, 4.0, 0.0000001);
+	CU_ASSERT_EQUAL(next_float_up(b.ymax), next_float_up(0.5));
+	lwgeom_free(g);
+
+	/* A non-finite control point coordinate must not make the recursive
+	 * Bezier-subdivision bbox spin: NaN never compares equal to itself, so
+	 * the stop tests in lwnurbscurve_add_bezier_span_gbox() could not
+	 * converge and depth-first recursion ran to DBL_MANT_DIG on every span
+	 * before this guard, an easy backend CPU denial of service from WKT
+	 * input. What matters here is that this call returns promptly instead of
+	 * spending exponential time; the exact ymax is a side effect of the
+	 * ordinary FP_MIN/FP_MAX/gbox_merge comparisons silently discarding a
+	 * NaN contender once a finite one has been recorded, same as elsewhere
+	 * in this file (see the NaN and Inf propagation cases below), not a
+	 * property this fix promises to preserve. */
+	g = lwgeom_from_wkt("NURBSCURVE(2, (0 NaN, 1 1, 2 0))", LW_PARSER_CHECK_NONE);
+	lwgeom_calculate_gbox_cartesian(g, &b);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmin, 0.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmax, 2.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.ymin, 0.0, 0.0000001);
+	CU_ASSERT(isfinite(b.ymax) && b.ymax >= 0.0 && b.ymax < 1e-10);
+	lwgeom_free(g);
+
+	/* The same guard must terminate promptly for a NaN Z ordinate. */
+	g = lwgeom_from_wkt("NURBSCURVE Z(2, (0 0 NaN, 1 1 1, 2 0 0))", LW_PARSER_CHECK_NONE);
+	lwgeom_calculate_gbox_cartesian(g, &b);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmin, 0.0, 0.0000001);
+	CU_ASSERT_DOUBLE_EQUAL(b.xmax, 2.0, 0.0000001);
+	CU_ASSERT(isfinite(b.zmax));
+	lwgeom_free(g);
+
 	/* Inf = 0x7FF0000000000000 */
 	/* POINT(0 0) = 00 00000001 0000000000000000 0000000000000000 */
 	/* POINT(0 Inf) = 00 00000001 0000000000000000 7FF0000000000000 */
@@ -1257,6 +1334,13 @@ gserialized1_test_payload_p(GSERIALIZED *g)
 	return (uint8_t *)(void *)g + gserialized1_header_size(g);
 }
 
+/*
+ * A ring point count that claims far more points than the serialized
+ * buffer actually holds implies a read past the end of the payload; that
+ * is the memory-safety hazard OSSFuzz 544800490 found, and it must stay
+ * rejected regardless of whether the claimed count is itself a
+ * geometrically plausible ring size.
+ */
 static void
 test_gserialized1_malformed_polygon_ring_count(void)
 {
@@ -1266,7 +1350,7 @@ test_gserialized1_malformed_polygon_ring_count(void)
 	uint8_t *payload;
 	uint32_t type;
 	uint32_t nrings;
-	uint32_t npoints = 1;
+	uint32_t npoints = 0x10000000; /* claims ~4GB of ring ordinates */
 
 	CU_ASSERT_PTR_NOT_NULL_FATAL(lwgeom);
 	g = gserialized1_from_lwgeom(lwgeom, NULL);
@@ -1286,6 +1370,51 @@ test_gserialized1_malformed_polygon_ring_count(void)
 
 	lwgeom_free(lwgeom);
 	lwfree(g);
+}
+
+/*
+ * Rings with 1-3 points are geometrically invalid (not simple closed
+ * rings) but memory-safe: their declared point count still fits the
+ * serialized buffer. PostGIS intentionally stores and round-trips such
+ * polygons; ST_IsValid, not deserialization, is where that gets flagged.
+ * See Trac #408 and #4470, and ST_GeomFromGeoJSON's degenerate-ring
+ * handling.
+ */
+static void
+test_gserialized1_short_polygon_ring_roundtrip(void)
+{
+	const char *short_ring_wkt[] = {
+	    "POLYGON((0 0))",
+	    "POLYGON((0 0, 1 0, 1 1))",
+	};
+	const uint32_t expected_npoints[] = {1, 3};
+	size_t i;
+
+	for (i = 0; i < sizeof(short_ring_wkt) / sizeof(short_ring_wkt[0]); i++)
+	{
+		LWGEOM *lwgeom = lwgeom_from_wkt(short_ring_wkt[i], LW_PARSER_CHECK_NONE);
+		GSERIALIZED *g;
+		LWGEOM *roundtrip;
+		LWPOLY *poly;
+
+		CU_ASSERT_PTR_NOT_NULL_FATAL(lwgeom);
+		g = gserialized1_from_lwgeom(lwgeom, NULL);
+		CU_ASSERT_PTR_NOT_NULL_FATAL(g);
+
+		cu_error_msg_reset();
+		roundtrip = lwgeom_from_gserialized1(g);
+		CU_ASSERT_PTR_NOT_NULL_FATAL(roundtrip);
+		CU_ASSERT_EQUAL(strlen(cu_error_msg), 0);
+
+		CU_ASSERT_EQUAL(roundtrip->type, POLYGONTYPE);
+		poly = (LWPOLY *)roundtrip;
+		CU_ASSERT_EQUAL(poly->nrings, 1);
+		CU_ASSERT_EQUAL(poly->rings[0]->npoints, expected_npoints[i]);
+
+		lwgeom_free(lwgeom);
+		lwgeom_free(roundtrip);
+		lwfree(g);
+	}
 }
 
 static void
@@ -1343,5 +1472,6 @@ void gserialized1_suite_setup(void)
 	PG_ADD_TEST(suite, test_signum_macro);
 	PG_ADD_TEST(suite, test_gserialized1_peek_first_point);
 	PG_ADD_TEST(suite, test_gserialized1_malformed_polygon_ring_count);
+	PG_ADD_TEST(suite, test_gserialized1_short_polygon_ring_roundtrip);
 	PG_ADD_TEST(suite, test_gserialized1_malformed_declared_size);
 }

@@ -8,6 +8,9 @@ These are only changes since 3.7.0beta2.
 
 * Bug Fixes *
 
+ - Codex security scan, guard the recursive NURBSCURVE bounding box
+          against non-finite control points to stop a backend CPU denial
+          of service reachable from WKT input (Darafei Praliaskouski)
  - Fix geometry input parsing to stop malformed SRID prefixes before the
           end of the input string
           (Dennis Tighe, Google)
@@ -25,6 +28,8 @@ These are only changes since 3.7.0beta2.
           comparisons aligned with serialized bbox flags (Darafei Praliaskouski)
  - Reject truncated GSERIALIZED NURBS vector payloads before validating vector
           contents (Darafei Praliaskouski)
+ - Include detected NURBS coordinate extrema in curve bounding boxes
+          (Darafei Praliaskouski)
  - OSSFuzz 6152109301760000, reject overlong encoded polyline coordinate
           varints (Darafei Praliaskouski)
  - OSSFuzz 4743900859006976, reject encoded polyline coordinate deltas
