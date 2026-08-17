@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-04 15:37+0000\n"
-"PO-Revision-Date: 2026-08-07 09:39+0000\n"
+"PO-Revision-Date: 2026-08-17 10:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -32428,6 +32428,8 @@ msgid ""
 "In the second result set, band 2 now points at <literal>Projected2.tif</"
 "literal> and uses out-db band 1."
 msgstr ""
+"結果の二つ目では、2番バンドは <literal>Projected2.tif</literal> を指し、"
+"データベース外ラスターの 1番バンドを使います。"
 
 #. Tag: para
 #, no-c-format
@@ -32476,6 +32478,8 @@ msgid ""
 "In the second result set, band 2 still points at the same file but now reads "
 "external band 1."
 msgstr ""
+"結果の二つ目では、2番バンドは <literal>Projected2.tif</literal> を指しますが"
+"、今回はデータベース外ラスターの 1番バンドを読みます。"
 
 #. Tag: para
 #, no-c-format
@@ -32731,6 +32735,8 @@ msgid ""
 "Example will consider only pixels of band 1 that are not 249 and in named "
 "quantiles."
 msgstr ""
+"例では 1番バンドの 249でないピクセルで、かつ名前のある分位に限って考慮に入れ"
+"ます。"
 
 #. Tag: para
 #, no-c-format
@@ -32806,12 +32812,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Single raster tile."
-msgstr ""
+msgstr "単一のラスタータイル。"
 
 #. Tag: para
 #, no-c-format
 msgid "Summarize pixels that intersect buildings of interest."
-msgstr ""
+msgstr "対象とする建物にインターセクトするピクセルの統計情報の概要。"
 
 #. Tag: para
 #, no-c-format
@@ -32822,11 +32828,16 @@ msgid ""
 "Windows 64-bit with all of Boston Buildings and aerial Tiles (tiles each "
 "150x150 pixels ~ 134,000 tiles), ~102,000 building records."
 msgstr ""
+"この例では、対象建物と選択して、ラスタータイルの 2番バンドを建物境界で切取り"
+"、切り取った領域の統計情報を計算して、建物ごとの統計情報の要約を得ます。"
+"Windows 64ビットの PostGIS を使い、ボストン建物データの約 102,000件と空中写真"
+"タイル (1タイルは 150x150ピクセルで、約 134,000タイル) とで 574ミリ秒かかりま"
+"した。"
 
 #. Tag: para
 #, no-c-format
 msgid "Raster coverage."
-msgstr ""
+msgstr "ラスターカバレッジ。"
 
 #. Tag: para
 #, no-c-format
@@ -32839,6 +32850,8 @@ msgid ""
 "For a table, sampling less than 100% can improve speed. Here the sampling is "
 "set to 25%."
 msgstr ""
+"テーブルに対して 100%より小さい割合でのサンプリングで速度が改善します。ここで"
+"は 25%に設定しています。"
 
 #. Tag: para
 #, no-c-format
@@ -32933,7 +32946,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Example will count only pixels of band 1 that are not 249."
-msgstr ""
+msgstr "この例では 1番バンドで 249でないピクセルのピクセル数を数えます。"
 
 #. Tag: para
 #, no-c-format
@@ -33156,13 +33169,13 @@ msgstr ""
 msgid ""
 "<varname>srid</varname> the spatial reference identifier to embed in the "
 "output raster"
-msgstr ""
+msgstr "<varname>srid</varname> 出力ラスターに組み込む空間参照系識別子。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Export multiple raster tiles as a single JPEG image with 50 percent quality."
-msgstr ""
+msgstr "複数のラスタータイルを一つの 50%品質の JPEG 画像として出力する。"
 
 #. Tag: para
 #, no-c-format
@@ -33176,18 +33189,26 @@ msgid ""
 "psql equivalent lo_ functions which export to the local file system instead "
 "of the server file system."
 msgstr ""
+"ラスターを他の書式で出力する方法の一つに、 <link xlink:href=\"https://"
+"www.postgresql.jp/document/current/html/lo-funcs.html\">PostgreSQL "
+"ラージオブジェクト サーバ側の関数</link> を使うものがあります。次ではもう一"
+"度 JPEG の例を使って結果を出力します。この例では、サーバー側の"
+"ラージオブジェクト関数を使うため、スーパーユーザーのアクセスが求められること"
+"に注意して下さい。また、サーバーネットワーク上のパスに出力します。ローカル側"
+"に出力するには、psql から呼び出す等価な lo_ 関数 (訳注: \\lo_export など) を"
+"使います。"
 
 #. Tag: para
 #, no-c-format
 msgid "Export a raster as a GeoTIFF using the default creation options."
-msgstr ""
+msgstr "ラスターをデフォルトの生成オプションを使って GeoTIFF として出力する。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Export a GeoTIFF using JPEG compression at 90 percent quality and embed SRID "
 "4269."
-msgstr ""
+msgstr "GeoTIFF を、品質 90%のJPEG 圧縮、SRID 4269 として出力する。"
 
 #. Tag: para
 #, no-c-format
@@ -33377,7 +33398,7 @@ msgstr ""
 msgid ""
 "Export the first 3 bands and map band 3 to red, band 1 to green, and band 2 "
 "to blue."
-msgstr ""
+msgstr "最初の 3バンドを、3番バンドを赤、1番バンドを緑、2番バンドを青にして出力する。"
 
 #. Tag: para
 #, no-c-format
@@ -33574,6 +33595,8 @@ msgstr ""
 #, no-c-format
 msgid "Comparing selecting all touched vs. not all touched."
 msgstr ""
+"touched を TRUE にした場合 (all touched) と、そうしなかった場合 (default "
+"clip) との比較。"
 
 #. Tag: para
 #, no-c-format
@@ -33582,41 +33605,44 @@ msgid ""
 "It compares cropping band 1, clipping band 1 without cropping and then "
 "restoring bands 2 and 3, and clipping every band without cropping."
 msgstr ""
+"次の自己完結の例では、三つの単純形状をRGB の 3バンドとして使います。1番バンド"
+"を矩形に切り詰める例、1番バンドを切詰め無しで切り抜きを行って 2番バンドと 3番"
+"バンドを保存する例、全バンドを矩形切詰め無しで切り抜きを行う例です。"
 
 #. Tag: para
 #, no-c-format
 msgid "Crop, single-band clipping, and all-band clipping."
-msgstr ""
+msgstr "矩形切詰め、単一バンドの切抜き、全バンドの切抜き。"
 
 #. Tag: para
 #, no-c-format
 msgid "Source tile"
-msgstr ""
+msgstr "元のタイル"
 
 #. Tag: para
 #, no-c-format
 msgid "Cropped"
-msgstr ""
+msgstr "矩形切詰め"
 
 #. Tag: para
 #, no-c-format
 msgid "One-band source"
-msgstr ""
+msgstr "1バンド切抜きの元データ"
 
 #. Tag: para
 #, no-c-format
 msgid "One-band clip"
-msgstr ""
+msgstr "1バンド切抜き"
 
 #. Tag: para
 #, no-c-format
 msgid "All-band source"
-msgstr ""
+msgstr "全バンド切抜きの元データ"
 
 #. Tag: para
 #, no-c-format
 msgid "All-band clip"
-msgstr ""
+msgstr "全バンド切抜き"
 
 #. Tag: para
 #, no-c-format
@@ -33797,6 +33823,9 @@ msgid ""
 "This example builds a raster from rotated buffered lines and compares the "
 "original values with predefined and custom color maps."
 msgstr ""
+"この例ではラインにバッファーを施したうえで回転させたラスターを構築し、元の値"
+"に対して定義済みのカラーマップを適用した場合と任意に定義したカラーマップを適"
+"用した場合との比較を行います。"
 
 #. Tag: para
 #, no-c-format
@@ -33852,21 +33881,24 @@ msgid ""
 "into three raster bands. It compares the original RGB raster with the "
 "equivalent grayscale results produced by both function variants."
 msgstr ""
+"この自己完結の例では 3バンドに勾配とハイライトを持つリンゴの画像を作成します"
+"。元の RGB ラスターと、そのラスターから二つの異なる形式で生成した等価の"
+"グレースケールのラスター二つとを比較しています。"
 
 #. Tag: para
 #, no-c-format
 msgid "Original photographic illustration:"
-msgstr ""
+msgstr "元の写真の絵:"
 
 #. Tag: para
 #, no-c-format
 msgid "original apple"
-msgstr ""
+msgstr "元のリンゴ"
 
 #. Tag: para
 #, no-c-format
 msgid "grayscale apple"
-msgstr ""
+msgstr "グレースケールのリンゴ"
 
 #. Tag: para
 #, no-c-format
@@ -33999,6 +34031,9 @@ msgid ""
 "raster-space intersection with a geometry, use <xref linkend=\"RT_ST_Clip\"/"
 ">."
 msgstr ""
+"結果範囲のより詳細な制御や NODATA 値の処理については、2ラスター版の <xref "
+"linkend=\"RT_ST_MapAlgebraExpr2\"/> を使います。ジオメトリーとインターセクト"
+"するラスター空間を算出するには　<xref linkend=\"RT_ST_Clip\"/> を使います。"
 
 #. Tag: para
 #, no-c-format
@@ -34006,6 +34041,8 @@ msgid ""
 "Use this function together with <xref linkend=\"RT_ST_Intersects\"/> and an "
 "index on the raster or geometry column when filtering table data."
 msgstr ""
+"テーブルデータから抽出する時には、<xref linkend=\"RT_ST_Intersects\"/> を併用"
+"して、ラスターカラムやジオメトリーカラムのインデックスを使います。"
 
 #. Tag: para
 #, no-c-format
@@ -34029,6 +34066,8 @@ msgid ""
 "footprint and complete input line remain visible behind the returned "
 "intersection pieces."
 msgstr ""
+"同じラインの例を共通の座標範囲内で描画をしています。ラスターの外郭と全ての入"
+"力ラインは、返却されるインターセクトする部分の背後で表示されています。"
 
 #. Tag: para
 #, no-c-format
@@ -34129,6 +34168,10 @@ msgid ""
 "when the output band has a NODATA value. If the output band has no NODATA "
 "value, a <varname>NULL</varname> callback result raises an error."
 msgstr ""
+"コールバック関数の返り値は出力ピクセルの値として使われます。コールバック関数"
+"が <varname>NULL</varname> を返す場合には、NODATA 値が設定されているなら出力"
+"ピクセルは NODATA に設定されます。NODATA 値が設定されていない場合には "
+"<varname>NULL</varname> が返されるとエラーが発生します。"
 
 #. Tag: para
 #, no-c-format
@@ -34150,6 +34193,9 @@ msgid ""
 "<type>double precision[]</type> and <type>integer[]</type> in the "
 "<type>regprocedure</type> signature."
 msgstr ""
+"PostgreSQL 配列型は関数の引数型では次元を指定できず、コールバック関数の多次元"
+"配列は <type>double precision[]</type> と <type>integer[]</type> が <type>"
+"regprocedure</type> の型指定として記述されます。"
 
 #. Tag: para
 #, no-c-format
@@ -34312,6 +34358,8 @@ msgid ""
 "Compare an unmasked mean with neighbor-only and weighted-neighbor masks. The "
 "weighted mask multiplies neighboring values by 2 before computing the result."
 msgstr ""
+"マスク無しの平均値と、隣接のみの平均値と重み付き隣接マスクの平均値との比較。"
+"重み付きマスクは結果計算前に近隣のピクセル値を 2倍にしています。"
 
 #. Tag: para
 #, no-c-format
@@ -34345,12 +34393,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Variants 2 and 3."
-msgstr ""
+msgstr "形式 2、3."
 
 #. Tag: para
 #, no-c-format
 msgid "Variant 4."
-msgstr ""
+msgstr "形式 4."
 
 #. Tag: para
 #, no-c-format
@@ -34637,12 +34685,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Variants 1 and 2."
-msgstr ""
+msgstr "形式 1、2."
 
 #. Tag: para
 #, no-c-format
 msgid "Variant 3 and 4."
-msgstr ""
+msgstr "形式 3、4."
 
 #. Tag: para
 #, no-c-format
@@ -34720,12 +34768,12 @@ msgstr ""
 msgid ""
 "A self-contained source raster and the raster produced by classifying its "
 "values into four display levels."
-msgstr ""
+msgstr "自己完結型の元ラスターと値表示のために 4段階で分類したラスターの再生成。"
 
 #. Tag: para
 #, no-c-format
 msgid "Map algebra altering the first band of a three-band raster."
-msgstr ""
+msgstr "3バンドラスターの最初のバンドを変更する地図代数。"
 
 #. Tag: para
 #, no-c-format
@@ -34804,7 +34852,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "2 Band Intersection and Union."
-msgstr ""
+msgstr "2バンドのインターセクトしている部分と結合。"
 
 #. Tag: para
 #, no-c-format
@@ -34817,6 +34865,8 @@ msgid ""
 "Insert some cool shapes around Boston in Massachusetts state plane meters, "
 "then map their intersection and union."
 msgstr ""
+"メートル単位マサチューセッツ州平面でボストン周囲にイかした形状を挿入して、"
+"インターセクト部分と結合部分とを示します。"
 
 #. Tag: para
 #, no-c-format
@@ -34824,6 +34874,8 @@ msgid ""
 "The same intersection and union operations using two deterministic, self-"
 "contained rasters."
 msgstr ""
+"二つの決定的かつ自己完結型のラスターを使た同じインターセクト部分と結合部分の"
+"計算。"
 
 #. Tag: para
 #, no-c-format
@@ -34831,6 +34883,9 @@ msgid ""
 "Overlaying rasters on a one-unit-per-pixel canvas as separate bands. We use "
 "ST_AsPNG to render the image so all single band ones look grey."
 msgstr ""
+"別のバンドとして1単位 1ピクセルのキャンバスの上にオーバーレイしているラスタ。"
+"ST_AsPNG を使って画像を描画しています。単一バンドのラスターは全ての灰色に見え"
+"ます。"
 
 #. Tag: para
 #, no-c-format
@@ -34840,6 +34895,10 @@ msgid ""
 "the region, unions those smaller shards, and finally adds the first two "
 "bands plus a third-band map algebra overlay."
 msgstr ""
+"空中写真上に、選択した区画の 2メートル幅の境界線を重ねます。クエリーでは最初"
+"に区画ジオメトリーを結合して、元ラスターの破片を領域で切り抜き、小さい破片を"
+"結合し、最後に、バンドの先頭 2バンドと、地図代数で描いた第 3バンドを追加しま"
+"す。"
 
 #. Tag: para
 #, no-c-format
@@ -34848,16 +34907,19 @@ msgid ""
 "the third band overlaid with the geometry. This query took 3.6 seconds on a "
 "64-bit PostGIS Windows installation."
 msgstr ""
+"新しい 3バンドのラスターを生成します。最初の二つは切り抜いたバンドで、三つ目"
+"のバンドはジオメトリーから生成します。クエリーは Windows 用 PostGIS で 3.6秒"
+"かかりました。"
 
 #. Tag: para
 #, no-c-format
 msgid "Parcel-boundary overlay."
-msgstr ""
+msgstr "区画境界による上書き。"
 
 #. Tag: para
 #, no-c-format
 msgid "The blue lines are the boundaries of selected parcels"
-msgstr ""
+msgstr "青線が選択した区画の境界です。"
 
 #. Tag: para
 #, no-c-format
@@ -34865,6 +34927,8 @@ msgid ""
 "The generated four-panel canvas example above shows the same band-overlay "
 "technique without requiring an external aerial-imagery or parcel table."
 msgstr ""
+"上の生成された 4個パネルのキャンバスの例では、外部空中写真や区画テーブルを求"
+"めることなしに同じバンド重ね合わせ技術を示しています。"
 
 #. Tag: para
 #, no-c-format
@@ -35001,13 +35065,16 @@ msgstr ""
 "行った値が入り、NODATA値をユーザ関数に渡される引数の値 (0)に設定します。"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "The deprecated callback form above is equivalent to a modern <xref "
 "linkend=\"RT_ST_MapAlgebra\"/> expression for simple per-pixel transforms. "
 "This build-time example renders the original raster and a modulo-2 "
 "classification."
 msgstr ""
+"上の非推奨のコールバック形式は、単純なピクセルごとの変換用の <xref "
+"linkend=\"RT_ST_MapAlgebra\"/> 表現と等価です。このビルド時の例では元の"
+"ラスターと、2の余剰による分類を行ったものとを描画します。"
 
 #. Tag: para
 #, no-c-format
@@ -35136,14 +35203,14 @@ msgstr "ユーザー定義関数を定義します。"
 #. Tag: para
 #, no-c-format
 msgid "Prepare a test table of rasters."
-msgstr ""
+msgstr "ラスターのテスト用テーブルの準備。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Map algebra on single-band rasters and then collect the result with <xref "
 "linkend=\"RT_ST_AddBand\"/>."
-msgstr ""
+msgstr "単一バンドの地図代数と <xref linkend=\"RT_ST_AddBand\"/> を使った結果の集約。"
 
 #. Tag: para
 #, no-c-format
@@ -35151,6 +35218,8 @@ msgid ""
 "A compact, executable callback example. The source rasters and their "
 "averaged overlap are rendered at build time."
 msgstr ""
+"小型で実行可能なコールバックの例。元のラスターと平均値で上書きしたものが"
+"ビルド時に描画されます。"
 
 #. Tag: title
 #, no-c-format
@@ -35306,6 +35375,8 @@ msgid ""
 "Apply the raster averaging callback within two pixels of each input pixel in "
 "the X and Y directions."
 msgstr ""
+"入力ピクセルの X 方向、Y 方向で各 2ピクセル以内のピクセル値を平均する"
+"コールバック関数を適用する。"
 
 #. Tag: para
 #, no-c-format
@@ -35316,11 +35387,16 @@ msgid ""
 "<literal>ignore</literal> averages background values with the square values, "
 "instead of treating the background as absent."
 msgstr ""
+"自己完結型の近隣ピクセルの平均計算。元ラスターには中心に鋭く値が立ち上がって"
+"いる正方形がありますが、結果では近隣ピクセルの向こう側に拡散しています。元"
+"データは NODATA でない値で背景を作っているので <varname>nodatamode</varname> "
+"<literal>ignore</literal> で、平均の値には背景の値と正方形の値とが使われ、背"
+"景の値を除けることはありません。"
 
 #. Tag: para
 #, no-c-format
 msgid "Neighborhood averaging."
-msgstr ""
+msgstr "近隣の平均化。"
 
 #. Tag: para
 #, no-c-format
@@ -35330,7 +35406,7 @@ msgstr "ラスタの1番バンド"
 #. Tag: para
 #, no-c-format
 msgid "Averaged result"
-msgstr ""
+msgstr "平均化の結果"
 
 #. Tag: para
 #, no-c-format
@@ -35384,7 +35460,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Basic."
-msgstr ""
+msgstr "基本。"
 
 #. Tag: para
 #, no-c-format
@@ -35398,7 +35474,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Advanced using multiple reclassargs."
-msgstr ""
+msgstr "複数の reclassargs による高度利用。"
 
 #. Tag: para
 #, no-c-format
@@ -35416,7 +35492,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Advanced Map a single band 32BF raster to multiple viewable bands."
-msgstr ""
+msgstr "単一の 32BF バンドのラスターの複数の可視バンドへの高度な割当て。"
 
 #. Tag: para
 #, no-c-format
@@ -35496,14 +35572,14 @@ msgstr "小さいラスターを作ってピクセルに新しい値をマップ
 #. Tag: para
 #, no-c-format
 msgid "Create a raster with four pixels: first row 1 2, second row 3 4."
-msgstr ""
+msgstr "4ピクセルでラスターを生成する: 最初の行は 1と 2、二つ目の行は 3と 4。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Reclass the values to new values and dump the values of the new raster for "
 "display."
-msgstr ""
+msgstr "値を新値に再分類して病児のために新しいラスターの値をダンプする。"
 
 #. Tag: para
 #, no-c-format
@@ -35584,7 +35660,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Reconstitute a single band chunked raster tile."
-msgstr ""
+msgstr "単一バンドのラスタータイルの断片の再構成。"
 
 #. Tag: para
 #, no-c-format
@@ -35599,7 +35675,7 @@ msgstr ""
 #, no-c-format
 msgid ""
 "Return a multi-band raster that is the union of tiles intersecting geometry."
-msgstr ""
+msgstr "ジオメトリーとインターセクトするタイルを結合した複数バンドのラスターを返す。"
 
 #. Tag: para
 #, no-c-format
@@ -35619,6 +35695,8 @@ msgstr ""
 msgid ""
 "Select and reorder bands while unioning tiles that intersect a geometry."
 msgstr ""
+"ジオメトリーとインターセクトしたタイルを結合しつつバンドを選択して並べ替える"
+"。"
 
 #. Tag: para
 #, no-c-format
@@ -35747,12 +35825,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "The basic inverse-distance weighted estimate is:"
-msgstr ""
+msgstr "距離の逆数を重みとした基本の見積もりは次の通りです:"
 
 #. Tag: mathphrase
 #, no-c-format
 msgid "z = (Σᵢ zᵢ / dᵢᵏ) / (Σᵢ 1 / dᵢᵏ)"
-msgstr ""
+msgstr "z = (Σᵢ zᵢ / dᵢᵏ) / (Σᵢ 1 / dᵢᵏ)"
 
 #. Tag: para
 #, no-c-format
@@ -35761,6 +35839,9 @@ msgid ""
 "literal> is its distance from the pixel being estimated, and <literal>k</"
 "literal> is a real-valued power factor between 0 and 1."
 msgstr ""
+"<literal>zᵢ</literal> は隣接ピクセル値、<literal>dᵢ</literal> は見積もり対象"
+"のピクセルからの距離、<literal>k</literal> は実値のべき乗計数で、0から 1が入"
+"ります。"
 
 #. Tag: para
 #, no-c-format
@@ -36041,6 +36122,10 @@ msgid ""
 "The generated source raster is large enough for the PNG to show the "
 "directional field around the summit."
 msgstr ""
+"対称的な山によって四隅の期待される方位が分かります。また頂上で <literal>-1</"
+"literal> の傾斜方向 (傾斜が無い場合の数値) が示されます。生成された PNG で、"
+"手作業による図に頼らずに全体の傾斜方向が分かります。生成された元ラスターは、"
+"PNG が頂上周りの方向場を示すのに十分な大きさを持っています。"
 
 #. Tag: para
 #, no-c-format
@@ -36564,6 +36649,9 @@ msgid ""
 "scale, skew, and rotation terms that make the convex hull and envelope "
 "differ for skewed rasters."
 msgstr ""
+"スキューが施されたラスターに対する凸包とエンベロープとで差ができる拡大縮小、"
+"スキュー、回転の各項については <filename>doc/development/internals/raster-"
+"affine.md</filename> を参照して下さい。"
 
 #. Tag: para
 #, no-c-format
