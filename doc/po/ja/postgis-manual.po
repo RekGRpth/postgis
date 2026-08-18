@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-04 15:37+0000\n"
-"PO-Revision-Date: 2026-08-17 10:39+0000\n"
+"PO-Revision-Date: 2026-08-18 10:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -35194,6 +35194,9 @@ msgid ""
 "modern two-raster <xref linkend=\"RT_ST_MapAlgebra\"/> expression variant. "
 "This build-time example renders two input rasters and their averaged overlap."
 msgstr ""
+"非推奨になっている 2ラスターのコールバック形式を、現在有効な 2ラスター用の "
+"<xref linkend=\"RT_ST_MapAlgebra\"/> の式形式で表現することができます。この例"
+"では二つの入力ラスターを描画し、重なる部分を平均化したラスターを構築します。"
 
 #. Tag: para
 #, no-c-format
@@ -35233,6 +35236,9 @@ msgid ""
 "overlap used by this variant; the exact callback result remains available as "
 "text."
 msgstr ""
+"上に示した生成されたコールバックの図はこの形式で使われるラスターの"
+"アライメントとオーバーラップを示します。正確なコールバックの結果はテキストで"
+"見ることができます。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -36658,7 +36664,7 @@ msgstr ""
 msgid ""
 "For regular non-skewed rasters, the envelope and convex hull are more or "
 "less the same."
-msgstr ""
+msgstr "通常のスキューなしラスターでは、エンベロープと凸包は概ね同じです。"
 
 #. Tag: para
 #, no-c-format
@@ -36872,6 +36878,8 @@ msgid ""
 "assigned as the NODATA value. The latter preserves the gap formed by zero-"
 "valued cells."
 msgstr ""
+"ピクセルごとのポリゴン化と、ポリゴン化の後に NODATA 値を 0にしたものとの比較"
+"。後者は 0値セルで形成される隙間を保存します。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -36910,7 +36918,7 @@ msgstr "Availability: 3.6.0 GEOS 3.14以上が必要です。"
 #. Tag: para
 #, no-c-format
 msgid "This rotated square polygon covers half of each cell in the raster."
-msgstr ""
+msgstr "この回転させた正方形はラスターのセルの半分を覆います。"
 
 #. Tag: title
 #, no-c-format
@@ -38150,23 +38158,23 @@ msgstr ""
 msgid ""
 "A LineString contains a MultiPoint whose points lie in its interior or "
 "boundary."
-msgstr ""
+msgstr "LINESTRING はその内部または境界にあるポイントからなる MULTIPOINT を含みます。"
 
 #. Tag: para
 #, no-c-format
 msgid "A Polygon contains a Point in its interior."
-msgstr ""
+msgstr "POLYGON はその内部の POINT を含みます。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "A Polygon contains a LineString with interior points inside the Polygon."
-msgstr ""
+msgstr "POLYGON は、そのポリゴンの内側の点を内部として持つ LINESTRING を含みます。"
 
 #. Tag: para
 #, no-c-format
 msgid "A Polygon contains another Polygon in its interior."
-msgstr ""
+msgstr "POLYGON は、そのポリゴンの内側にある他の POLYGON を含みます。"
 
 #. Tag: para
 #, no-c-format
@@ -38180,12 +38188,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "A Polygon does not contain a MultiPoint when one point lies in a hole."
-msgstr ""
+msgstr "POLYGON は、そのポリゴンの穴に存在する点を持つ MULTIPOINT を含みません。"
 
 #. Tag: para
 #, no-c-format
 msgid "A Polygon does not contain a LineString extending outside it."
-msgstr ""
+msgstr "POLYGON は、その外側に出ている LINESTRING を含みません。"
 
 #. Tag: para
 #, no-c-format
@@ -38201,12 +38209,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "A LineString does not contain a Point lying only on its boundary."
-msgstr ""
+msgstr "LINESTRING は、そのラインストリングの境界にあるポイントは含みません。"
 
 #. Tag: para
 #, no-c-format
 msgid "A Polygon does not contain a LineString lying entirely on its boundary."
-msgstr ""
+msgstr "POLYGON は、その境界上にしかない LINESTRING を含みません。"
 
 #. Tag: para
 #, no-c-format
@@ -38471,7 +38479,7 @@ msgstr "この例ではある円がもう一つの円を覆っているかどう
 #. Tag: para
 #, no-c-format
 msgid "Geography example"
-msgstr ""
+msgstr "ジオグラフィーの例"
 
 #. Tag: para
 #, no-c-format
@@ -38586,6 +38594,8 @@ msgid ""
 "A LineString crosses a MultiPoint when some, but not all, points lie on the "
 "line."
 msgstr ""
+"LINESTRING は、全てでなく一部のポイントがそのラインストリング上にある "
+"MULTIPOINT とクロスします。"
 
 #. Tag: para
 #, no-c-format
@@ -38593,6 +38603,8 @@ msgid ""
 "A Polygon crosses a MultiPoint when some, but not all, points lie in its "
 "interior."
 msgstr ""
+"POLYGON は、全てでなく一部のポイントがそのポリゴンの内部にある MULTIPOINT と"
+"クロスします。"
 
 #. Tag: para
 #, no-c-format
@@ -38600,11 +38612,13 @@ msgid ""
 "A LineString crosses a Polygon when part of the line lies inside and part "
 "outside."
 msgstr ""
+"LINESTRING は、そのラインストリングの一部が内部にあり、かつ一部が外にある "
+"POLYGON とクロスします。"
 
 #. Tag: para
 #, no-c-format
 msgid "Two LineStrings cross when they share an interior point."
-msgstr ""
+msgstr "二つの LINESTRING は、内部のポイントを共有している時には、クロスしています。"
 
 #. Tag: para
 #, no-c-format
@@ -39054,11 +39068,13 @@ msgstr ""
 #, no-c-format
 msgid "Two MultiPoints overlap when they share some, but not all, points."
 msgstr ""
+"二つの MULTIPOINT は、一部のポイントを共有し、かつ全てを共有しない時に、"
+"オーバーラップします。"
 
 #. Tag: para
 #, no-c-format
 msgid "Two LineStrings overlap along part of their paths."
-msgstr ""
+msgstr "二つの LINESTRING が一部でオーバーラップする例。"
 
 #. Tag: para
 #, no-c-format
@@ -39066,6 +39082,8 @@ msgid ""
 "Two Polygons overlap where their interiors intersect and neither contains "
 "the other."
 msgstr ""
+"二つの POLYGON は、内部同士がインターセクトし、一方のポリゴンにインターセクト"
+"していない部分がある時、オーバーラップしています。"
 
 #. Tag: para
 #, no-c-format
@@ -39491,32 +39509,32 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Two Polygons touching along a boundary segment."
-msgstr ""
+msgstr "境界部分に沿って接触する二つの POLYGON。"
 
 #. Tag: para
 #, no-c-format
 msgid "Two Polygons touching at a boundary point."
-msgstr ""
+msgstr "境界上のポイントで接触している二つの POLYGON。"
 
 #. Tag: para
 #, no-c-format
 msgid "A Polygon and a LineString touching at the line endpoint."
-msgstr ""
+msgstr "LINESTRING の終端で接触している POLYGON と LINESTRING。"
 
 #. Tag: para
 #, no-c-format
 msgid "Two LineStrings touching at their endpoints."
-msgstr ""
+msgstr "両方の端点で接触する二つの LINESTRING。"
 
 #. Tag: para
 #, no-c-format
 msgid "Two LineStrings touching where an endpoint meets the other line."
-msgstr ""
+msgstr "一方の端点がもう一方の端点でない点で接触している二つの LINESTRING。"
 
 #. Tag: para
 #, no-c-format
 msgid "A Point touching a Polygon boundary."
-msgstr ""
+msgstr "POLYGON と境界で接触している POINT。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -39621,6 +39639,8 @@ msgid ""
 "This example defines two concentric circles once in a CTE so the same inputs "
 "can be rendered and then reused in related predicate checks."
 msgstr ""
+"この例では、一度二つの同心円を CTE (WITH句) で定義すると、同じ入力を描画に使"
+"うことができ、かつ関連する述語の確認での再利用もできます。"
 
 #. Tag: para
 #, no-c-format
@@ -39630,6 +39650,10 @@ msgid ""
 "<function>ST_Union</function> only when the union does not extend beyond the "
 "larger circle."
 msgstr ""
+"同じ円を使って <function>ST_Within</function> は円ごとに反射的です (自分と自"
+"分との関係が成立する)。また、大きな円から小さな円に向かうと FALSE になります"
+"。<function>ST_Union</function> を施す場合には結合が大きな円の外に広がらない"
+"場合だけ TRUE になります。"
 
 #. Tag: para
 #, no-c-format
@@ -39677,6 +39701,8 @@ msgid ""
 "fails because the Z difference matters even though the 2D footprints are "
 "close enough."
 msgstr ""
+"同じ投影変換を施した 3次元と 2次元のポイントとラインの比較。2次元の場合は平面"
+"上では十分に近いのですが、3次元の場合は Z 値が違うので FALSE を返します。"
 
 #. Tag: para
 #, no-c-format
@@ -39717,6 +39743,9 @@ msgid ""
 "distance-within the line in 3D, but the full 3D line is not within the same "
 "distance of the point."
 msgstr ""
+"この例では、距離が指定範囲内にあるかの述語を 2次元と 3次元とで比較します。"
+"ポイントは 3次元で指定距離内にありますが、3次元のライン全体については同じ距離"
+"になりません。"
 
 #. Tag: para
 #, no-c-format
@@ -39843,6 +39872,8 @@ msgid ""
 "This self-contained geometry example keeps the compared shapes visible while "
 "also returning the boolean results."
 msgstr ""
+"このジオメトリーの自己完結型の例では、真偽値を返すと同時に比較対象の形状を表"
+"示できるようにしています。"
 
 #. Tag: para
 #, no-c-format
@@ -39864,6 +39895,8 @@ msgid ""
 "within 3000 units away from the school. Units are in units of spatial "
 "reference (for example meters, feet, or degrees)."
 msgstr ""
+"近くに病院が無い学校。病院が 3000単位以内に無い学校を全て見つけます。単位は空"
+"間参照系の単位に従います (メートル、フィート、度など)。"
 
 #. Tag: para
 #, no-c-format
@@ -39872,6 +39905,8 @@ msgid ""
 "<literal>NOT EXISTS</literal> so that a location is returned only when no "
 "nearby hospital exists."
 msgstr ""
+"最も近い病院との距離が 3000単位を超える位置を見つける。<literal>NOT EXISTS</"
+"literal> を使って、病院が近くにない位置を返しています。"
 
 #. Tag: para
 #, no-c-format
@@ -39879,6 +39914,8 @@ msgid ""
 "Find broadcasting towers that a receiver with limited range can receive. "
 "Data is geometry in Spherical Mercator (SRID=3857), ranges are approximate."
 msgstr ""
+"範囲が制限されている受信機で受信可能な放送塔の探索。データは球面メルカトル "
+"(SRID=3857) のジオメトリーで、指定範囲は近似的なものです。"
 
 #. Tag: para
 #, no-c-format
@@ -39887,6 +39924,9 @@ msgid ""
 "two conditions are required because the shorter "
 "<literal>LEAST(b.sending_range, 4000)</literal> will not use an index."
 msgstr ""
+"ミンスクのハケルスペイスで距離制限 4kmの受信機が受信できる放送塔のクエリー。"
+"ご注意: 短い方の <literal>LEAST(b.sending_range, 4000)</literal> では"
+"インデックスを使わないので二つの条件が必要です。"
 
 #. Tag: para
 #, no-c-format
@@ -40041,11 +40081,14 @@ msgid ""
 "clockwise. Rings are reversed as needed; coordinates and dimensionality are "
 "preserved. The input must be valid."
 msgstr ""
+"ポリゴン系要素が左手規則に従う等価のジオメトリーを返します。この場合、外側"
+"リングは反時計回りで、内側リングは時計回りです。リングは必要に応じて逆順にし"
+"ます。座標と次元は維持されます。入力は妥当なものでなければなりません。"
 
 #. Tag: para
 #, no-c-format
 msgid "Reorient a polygon and its hole to the left-hand rule."
-msgstr ""
+msgstr "ポリゴンを左手規則に揃えなおす。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -40055,7 +40098,7 @@ msgstr "サーフェスが平面であるかないかをチェックします。
 #. Tag: para
 #, no-c-format
 msgid "Tests whether the input geometry lies in a single plane in 3D."
-msgstr ""
+msgstr "入力ジオメトリーが 3次元の単一平面上にあるかどうかを見る。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -40072,12 +40115,17 @@ msgid ""
 "explicitly converted. This tests the representation, not shell closure or "
 "validity; no validity check is performed."
 msgstr ""
+"入力が立体フラグを持つ時に <varname>TRUE</varname> を返します。<xref "
+"linkend=\"CG_MakeSolid\"/> が生成するジオメトリーなどが該当します。閉じ"
+"た<varname>PolyhedralSurface</varname> は、明示的に変換しない限りサーフェスの"
+"ままです。この関数では表現を調べるものであって、サーフェスが閉じていて妥当か"
+"といったことは調べません。立体の妥当性の確認は行いません。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "Compare the same closed shell before and after converting it to a solid."
-msgstr ""
+msgstr "同じ面が閉じたものから立体に変換する前の物と変換した後の物との比較。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -40096,6 +40144,9 @@ msgid ""
 "describe a closed shell; the function sets the solid representation and does "
 "not validate the shell."
 msgstr ""
+"POLYHEDRALSURFACE または TIN に立体を示すフラグを付けます。入力はサーフェスが"
+"閉じていることが期待されます。この関数は立体表現を設定しますが、立体としての"
+"妥当性評価はしません。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -40187,6 +40238,9 @@ msgid ""
 "linkend=\"CG_MakeSolid\"/> when the geometry value itself must carry the "
 "solid flag."
 msgstr ""
+"閉じたサーフェスジオメトリーは 0でない体積を持つことができます。ジオメトリー"
+"値自体が立体フラグを持たなければならない場合には <xref "
+"linkend=\"CG_MakeSolid\"/> を使います。"
 
 #. Tag: para
 #, no-c-format
@@ -40285,6 +40339,8 @@ msgid ""
 "Subtract a smaller tetrahedral solid and render the two inputs and the "
 "actual remaining solid separately."
 msgstr ""
+"大きい四面体から小さい四面体を引いて、二つの入力と引算の結果残った立体とを別"
+"々に表示します。"
 
 #. Tag: para
 #, no-c-format
@@ -40351,16 +40407,19 @@ msgid ""
 "input. Unlike <xref linkend=\"ST_ConvexHull\"/>, this function uses Z "
 "coordinates when constructing the hull."
 msgstr ""
+"入力を包含する最小の 3次元の凸ジオメトリーを計算します。<xref "
+"linkend=\"ST_ConvexHull\"/> と違って、この関数は凸包を作る時に Z 値を使います"
+"。"
 
 #. Tag: para
 #, no-c-format
 msgid "Compute the 3D convex hull of a 3D LineString."
-msgstr ""
+msgstr "3次元 LINESTRING の 3次元凸包の計算。"
 
 #. Tag: para
 #, no-c-format
 msgid "Compare the extruded source geometry with its 3D convex hull."
-msgstr ""
+msgstr "元のジオメトリーを押し出して生成したものの 3次元凸包の計算。"
 
 #. Tag: para
 #, no-c-format
@@ -40380,12 +40439,12 @@ msgstr "geom1とgeom2の間で共有される部分のジオメトリを返し�
 #. Tag: para
 #, no-c-format
 msgid "3D linestrings and polygons can intersect in a 3D segment."
-msgstr ""
+msgstr "3次元ラインストリングとポリゴンは 3次元の一部区間とインターセクトします。"
 
 #. Tag: para
 #, no-c-format
 msgid "Intersect a cube shell with a vertical polygon."
-msgstr ""
+msgstr "立方体の面が垂直ポリゴンとインターセクトする。"
 
 #. Tag: para
 #, no-c-format
@@ -40393,6 +40452,8 @@ msgid ""
 "A smaller solid contained by a larger solid remains volumetric after "
 "intersection."
 msgstr ""
+"大きい立体に包含された小さい立体はインターセクトする部分を計算した後も体積が"
+"あります。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -40431,7 +40492,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Union two overlapping tetrahedral solids."
-msgstr ""
+msgstr "二つのオーバーラップする四面体立体の結合。"
 
 #. Tag: para
 #, no-c-format
@@ -40522,18 +40583,18 @@ msgstr "Availability: 3.5.0 - SFCGAL &gt;= 1.4.1 が必要です。"
 #, no-c-format
 msgid ""
 "The original point cloud and the alpha-shape share one comparison frame."
-msgstr ""
+msgstr "元のポイントクラウドとアルファシェイプは一つの比較枠に同時に示しています。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "The same point cloud can produce a shape with a hole when holes are allowed."
-msgstr ""
+msgstr "穴の付加が可能な時には、同じポイントクラウドでも穴のある形状を生成します。"
 
 #. Tag: para
 #, no-c-format
 msgid "The second documented point cloud also produces a holed alpha-shape."
-msgstr ""
+msgstr "別のポイントクラウドも穴のあるαシェイプを生成します。"
 
 #. Tag: para
 #, no-c-format
@@ -40648,7 +40709,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "A polygon and its approximate medial axis."
-msgstr ""
+msgstr "ポリゴンと近似内側軸。"
 
 #. Tag: para
 #, no-c-format
@@ -40686,7 +40747,7 @@ msgstr "Availability: 3.7.0 - SFCGAL &gt;= 2.3.0 が必要。"
 #. Tag: para
 #, no-c-format
 msgid "Generate a flat roof two units above a rectangular footprint."
-msgstr ""
+msgstr "四角形の接地面の上方 2単位にある陸屋根。"
 
 #. Tag: para
 #, no-c-format
@@ -40719,6 +40780,8 @@ msgid ""
 "The footprint and hipped roof are shown side-by-side so the generated 3D "
 "faces do not hide behind the input footprint."
 msgstr ""
+"生成した 3次元のフェイスは入力の接地面の背後に隠れないようにするため、接地面"
+"と寄棟屋根とが並んでいます。"
 
 #. Tag: refpurpose
 #, no-c-format
@@ -40745,7 +40808,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Generate a gable roof using a height of 2 and a 30 degree slope."
-msgstr ""
+msgstr "高さ 2単位と傾斜角 30度を使った切妻屋根の生成。"
 
 #. Tag: para
 #, no-c-format
@@ -40808,7 +40871,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "The height 2.0 result is shown with its footprint."
-msgstr ""
+msgstr "高さ 2.0の結果と接地面。"
 
 #. Tag: para
 #, no-c-format
@@ -40875,6 +40938,8 @@ msgid ""
 "The generic dispatcher returns the same 3D roofs as the specialized helpers "
 "for the same footprint."
 msgstr ""
+"同じ接地面に対する一般的な関数から指定に応じた専門関数に渡されて 3次元屋根を"
+"生成します。"
 
 #. Tag: para
 #, no-c-format
@@ -40952,6 +41017,8 @@ msgid ""
 "Repair a self-intersecting bowtie polygon with the default "
 "<literal>EVEN_ODD</literal> rule."
 msgstr ""
+"自己インターセクトする蝶ネクタイ形状のポリゴンをデフォルトの <literal>"
+"EVEN_ODD</literal> 規則で修復する。"
 
 #. Tag: para
 #, no-c-format
@@ -40985,12 +41052,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "Constrained Delaunay triangulation of the polygon and buffered point."
-msgstr ""
+msgstr "ポリゴンとバッファーを施したポイントの制約付きドロネー三角形。"
 
 #. Tag: para
 #, no-c-format
 msgid "applied to the same input. Triangle edges cross polygon boundaries."
-msgstr ""
+msgstr "を同じ入力に適用する。三角形の辺はポリゴン境界とクロスします。"
 
 #. Tag: para
 #, no-c-format
