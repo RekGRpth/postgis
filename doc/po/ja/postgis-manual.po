@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-04 15:37+0000\n"
-"PO-Revision-Date: 2026-08-24 09:39+0000\n"
+"PO-Revision-Date: 2026-08-25 10:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -45008,6 +45008,10 @@ msgid ""
 "prefer requested CXX over pg_config --cc for internal C++ checks, and make "
 "fuzzer linking/runtime dependency packaging portable (Darafei Praliaskouski)"
 msgstr ""
+"[fuzzers] OSS-Fuzz のビルド/依存のロジックを PostGIS スクリプトに一元化し、内"
+"部 C++ チェックでは pg_config --cc より CXX の指定を優先し、fuzzer のリンク"
+"時/実行時の依存関係のパッケージ化を移植可能にしました (Darafei Praliaskouski "
+"さん)"
 
 #. Tag: title
 #, no-c-format
@@ -45320,6 +45324,9 @@ msgid ""
 "link>, Infer constraint metadata for direct view and materialized view "
 "geometry columns (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/1705\">#1705</link>"
+", 通常のビューとマテリアライズドビューにおける、制約で定義された"
+"ジオメトリーカラムの制約メタデータの推測 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45328,6 +45335,9 @@ msgid ""
 "link>, [raster] Honor PostgreSQL interrupts in long-running GDAL progress "
 "callbacks (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://github.com/postgis/postgis/pull/899\">GH-899</"
+"link>, [raster] GDAL で長時間実行する際の進捗コールバックで PostgreSQL の割込"
+"みを処理するよう変更 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45336,6 +45346,9 @@ msgid ""
 "link>, Preserve Z/ZM dimensional qualifiers in ST_AsEWKT output for TIN "
 "(Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/2583\">#2583</link>"
+", TIN の ST_AsEWKT 出力での座標次元の修飾子 Z/ZM を維持するように変更 "
+"(Darafei Praliaskouski さん)"
 
 #. Tag: title
 #, no-c-format
@@ -45456,6 +45469,10 @@ msgid ""
 "executable example, generated figure, validation, HTML, and PDF workflows "
 "used by the manual."
 msgstr ""
+"マニュアルの編集または構築の前にレポジトリーの <link xlink:href=\"https://"
+"git.osgeo.org/gitea/postgis/postgis/src/branch/master/doc/development\">"
+"documentation development guide</link> を読んで下さい。マニュアルで使用する実"
+"行例、図の生成、評価、HTML、PDF の手順を説明しています。"
 
 #. Tag: para
 #, no-c-format
@@ -45608,6 +45625,13 @@ msgid ""
 "is 4D. The coordinate dimension is at least 2, because every geometry has at "
 "least X and Y coordinates."
 msgstr ""
+"座標には Z 座標や M 座標が含まれることがあります。Z 座標はしばしば高さを示し"
+"ます。M 座標は時刻や距離と言った計測された値を持ちます。ジオメトリーに Z 値ま"
+"たは M 値がある場合には、ジオメトリーの個々の点において値が設定されなければな"
+"りません。ジオメトリーが Z 値または M 値を持つ場合には、<emphasis "
+"role=\"bold\">座標次元</emphasis> は 3次元になります。Z 値と M 値の両方を持つ"
+"場合には、4次元になります。座標次元は少なくとも X 座標と Y 座標を持つので、少"
+"なくとも 2です。"
 
 #. Tag: para
 #, no-c-format
@@ -45638,6 +45662,10 @@ msgid ""
 "polygonal types have dimension 2, and solid types have dimension 3. "
 "Collections have the dimension of the maximum element dimension."
 msgstr ""
+"ジオメトリーの <emphasis role=\"bold\">次元</emphasis> はジオメトリータイプの"
+"属性です。ポイントタイプの次元は 0、ライン系タイプの次元は 1、ポリゴン系"
+"タイプの次元は 2、立体系タイプの次元は 3です。コレクションの次元は含まれる要"
+"素の次元の最大値です。"
 
 #. Tag: para
 #, no-c-format
@@ -45680,6 +45708,14 @@ msgid ""
 "boundary of a Polygon is its rings (LineStrings), the boundary of a "
 "LineString is its endpoints (Points), and the boundary of a Point is empty."
 msgstr ""
+"<xref linkend=\"DE-9IM\"/> に書かれている通りジオメトリーモデルによって"
+"トポロジー面での空間関係の評価が可能になります。これに対応するために、"
+"ジオメトリータイプごとに <emphasis role=\"bold\">内部</emphasis>、<emphasis "
+"role=\"bold\">境界</emphasis>、<emphasis role=\"bold\">外部</emphasis> が定義"
+"されています。ジオメトリーはトポロジー的に閉じていて、常に境界を持っています"
+"。境界はジオメトリーの幾何次元数から 1引いた幾何次元になります。たとえば、"
+"POLYGON の境界はリング (LINESTRING) で、LINESTRING の境界は端点 (POINT) で、"
+"POINTの境界は空です。"
 
 #. Tag: para
 #, no-c-format
@@ -45691,6 +45727,13 @@ msgid ""
 "storing and manipulating invalid geometry values. This allows detecting and "
 "fixing them if needed. See <xref linkend=\"OGC_Validity\"/>"
 msgstr ""
+"OGC ジオメトリーモデルでは、ジオメトリータイプごとに妥当性規則を規定していま"
+"す。これらの規則によってジオメトリー値が現実的な状況を表現することが保証され"
+"ます (例えば、穴が外側リングのさらに外にあるポリゴンを生成できますが、"
+"ジオメトリーとしては意味をなさないものであり、不正となります)。PostGIS は、ま"
+"た不正なジオメトリー値を格納、処理できます。これにより、必要に応じて"
+"ジオメトリーの検出、修正が可能です。<xref linkend=\"OGC_Validity\"/> を参照し"
+"て下さい。"
 
 #. Tag: title
 #, no-c-format
@@ -45797,6 +45840,11 @@ msgid ""
 "points or edges on their boundaries). For more details on MultiPolygon "
 "validity, see <xref linkend=\"OGC_Validity\"/>."
 msgstr ""
+"MULTIPOLYGON はポリゴンの重なりも隣接も無いコレクションです。コレクション内の"
+"ポリゴンは有限数のポイントで接触することがあります (二つのポリゴンがエッジを"
+"居有する場合には隣接します。境界のポイントまたはエッジで共有されている場合に"
+"は接触しています)。MULTIPOLGYON の詳細情報については <xref "
+"linkend=\"OGC_Validity\"/> をご覧下さい。"
 
 #. Tag: title
 #, no-c-format
@@ -46078,7 +46126,7 @@ msgstr ""
 "-2,-2 -1,-1 -1)))"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "GEOMETRYCOLLECTION(POINT(2 3), LINESTRING(2 3,3 4))"
 msgstr "GEOMETRYCOLLECTION(POINT(2 3), LINESTRING(2 3,3 4))"
 
@@ -46188,6 +46236,14 @@ msgid ""
 "option</emphasis></link> (SFS) specification, as well many others. See <xref "
 "linkend=\"reference\"/> for the full list of functions."
 msgstr ""
+"<varname>geometry</varname> データ型は <emphasis>透過</emphasis>、すなわち"
+"ジオメトリー値に関する関数の実行で全てのアクセスが可能です。関数で"
+"ジオメトリーオブジェクトの生成、全ての内部フィールドのアクセスと更新、および"
+"新しいジオメトリー値の計算が可能です。PostGIS は OGC <link "
+"xlink:href=\"https://portal.ogc.org/files/?artifact_id=25354\"><emphasis>"
+"Simple feature access - Part 2: SQL option</emphasis></link> (SFS) 仕様で指定"
+"されている全ての関数およびその他の多数の関数に対応しています。関数の完全な一"
+"覧については <xref linkend=\"reference\"/> を参照して下さい。"
 
 #. Tag: para
 #, no-c-format
@@ -46713,18 +46769,18 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "A NAD83 longitude/latitude geography value:"
-msgstr ""
+msgstr "NAD83 経度/緯度 地理座標系値:"
 
 #. Tag: para
 #, no-c-format
 msgid "A NAD27 longitude/latitude geography value:"
-msgstr ""
+msgstr "NAD27 経度/緯度 地理座標系値:"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "NAD83 UTM zone meters fails because it is a meter-based planar projection."
-msgstr ""
+msgstr "NAD83 UTM はメートル単位の投影座標系なので失敗します。"
 
 #. Tag: para
 #, no-c-format
@@ -46739,7 +46795,7 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "This query finds rows within a 1000 km tolerance:"
-msgstr ""
+msgstr "1000 km 範囲内の行を検索する:"
 
 #. Tag: para
 #, no-c-format
@@ -46874,6 +46930,11 @@ msgid ""
 "curvature and non-spherical shape of the Earth, whereas planar calculations "
 "assume a flat surface."
 msgstr ""
+"デフォルトでは、全ての距離と面積の計算が回転楕円体面上で行われます。局所域で"
+"の計算結果が適切な投影法に基づく平面での結果とよく一致します。広い領域に渡る"
+"回転楕円体面での計算は、投影座標系の平面上の計算より精度が上がります。回転楕"
+"円体面は地球の曲率と非球面形状を考慮に入れているのに対して、平面計算は平らな"
+"表面を仮定している点が違います。"
 
 #. Tag: para
 #, no-c-format
@@ -47035,6 +47096,10 @@ msgid ""
 "stated classification; example <emphasis role=\"bold\">(c)</emphasis> also "
 "verifies that the simple LineString is closed."
 msgstr ""
+"線ジオメトリーを分類するには <xref linkend=\"ST_IsSimple\"/> を使います。下に"
+"示すラベル付けした各結果は、関数が示された分類に合致すると判定したときだけ返"
+"されます。たとえば <emphasis role=\"bold\">(c)</emphasis> は LINESTRING が単"
+"純かつ閉じているかの確認をします。"
 
 #. Tag: para
 #, no-c-format
@@ -47055,6 +47120,9 @@ msgid ""
 "lines meet only at a shared endpoint, while in <emphasis role=\"bold\">(g)</"
 "emphasis> they cross in their interiors."
 msgstr ""
+"次の例では、三つの MULTILINESTRING に同じ分類を適用します。<emphasis "
+"role=\"bold\">(f)</emphasis> では、要素のラインが共有している端点だけで繋がり"
+"、<emphasis role=\"bold\">(g)</emphasis> では内部でクロスします。"
 
 #. Tag: para
 #, no-c-format
@@ -47155,6 +47223,11 @@ msgid ""
 "indistinguishable from a single vertex. PostGIS therefore treats them as "
 "redundant vertices, so they do not make an otherwise valid polygon invalid."
 msgstr ""
+"ポリゴン境界リングの連続重複点があるとリングは単純でないと判定されません。"
+"SFS 曲線モデルでは、曲線は連続的にたどれる経路になっています。連続で同じ座標"
+"になることはトポロジー的に頂点が一つだけの場合と判別がつきません。そのため "
+"PostGIS は連続重複点を冗長な頂点として扱い、連続重複点があるだけでは不正と判"
+"別しないようにしています。"
 
 #. Tag: para
 #, no-c-format
@@ -47163,6 +47236,9 @@ msgid ""
 "validity rules. Each labeled geometry is returned only if its computed "
 "validity agrees with the label."
 msgstr ""
+"次の例では <xref linkend=\"ST_IsValid\"/> を使って、妥当性規則を確認します。"
+"ラベルを付けたジオメトリーは、妥当性計算とラベルとが合っている場合にのみ返さ"
+"れます。"
 
 #. Tag: para
 #, no-c-format
@@ -47174,6 +47250,11 @@ msgid ""
 "role=\"bold\">(j)</emphasis> can instead be represented as a valid "
 "<varname>MULTIPOLYGON</varname>."
 msgstr ""
+"次の例の <emphasis role=\"bold\">(j-m)</emphasis> は不正です。ジオメトリーは"
+"それぞれ、内部での非接続、クロスするリング、ラインによる切断、外側リングの外"
+"にある穴です。評価理由は <xref linkend=\"ST_IsValidReason\"/> で確認していま"
+"す。<emphasis role=\"bold\">(j)</emphasis> で内部非接続ポリゴンは、妥当な "
+"<varname>MULTIPOLYGON</varname> として表現できます。"
 
 #. Tag: para
 #, no-c-format
@@ -47204,6 +47285,10 @@ msgid ""
 "<emphasis role=\"bold\">(o)</emphasis> they share an edge, and in <emphasis "
 "role=\"bold\">(p)</emphasis> their interiors overlap."
 msgstr ""
+"次の例では MULTIPOLYGON 規則を確認します。<emphasis role=\"bold\">(n)</"
+"emphasis> でポリゴンは一点だけで接触しています。<emphasis role=\"bold\">(o)</"
+"emphasis> でエッジを共有しています。<emphasis role=\"bold\">(p)</emphasis> で"
+"は内部が重なっています。"
 
 #. Tag: para
 #, no-c-format
@@ -47641,6 +47726,18 @@ msgid ""
 "varname>; the EPSG code is <varname>32600 + zone</varname> in the northern "
 "hemisphere or <varname>32700 + zone</varname> in the southern hemisphere."
 msgstr ""
+"一般的に使われる空間参照系には <link xlink:href=\"http://"
+"spatialreference.org/ref/epsg/4326/\">4326 - WGS 84 地理座標系</link>、<link "
+"xlink:href=\"http://spatialreference.org/ref/epsg/4269/\">4269 - NAD 83 地理"
+"座標系</link> (訳注: 日本では使いません)、<link xlink:href=\"http://"
+"spatialreference.org/ref/epsg/3395/\">3395 - WGS 84 メルカトル図法</link>"
+"、<link xlink:href=\"http://spatialreference.org/ref/epsg/2163/\">2163 - 米国"
+"ナショナルアトラス正積図法</link> (訳注: 日本では使いません)、WGS84 UTM 60個"
+"のゾーンがあります。UTM ゾーンは計測に最も適していますが、対応領域は経度 6度"
+"幅です。WGS84 経度緯度データからUTM ゾーンは <varname>least(floor((longitude "
+"+ 180) / 6) + 1, 60)</varname> (訳注: 北欧の一部ではズレがあります) となり、"
+"EPSG コードは、 北半球では <varname>32600 + zone</varname> となり、南半球で"
+"は <varname>32700 + zone</varname> となります。"
 
 #. Tag: para
 #, no-c-format
@@ -47840,7 +47937,7 @@ msgstr "フィーチャーテーブル内のジオメトリカラムの名前。
 msgid ""
 "The coordinate dimension (2, 3 or 4) of the column. The coordinate dimension "
 "is at least 2, representing X and Y coordinates."
-msgstr ""
+msgstr "カラムの座標次元 (2, 3, 4)。座標次元は、X, Y 座標があるので最低で 2です。"
 
 #. Tag: para
 #, no-c-format
@@ -47897,43 +47994,52 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "For example, suppose you have a view created like this."
-msgstr ""
+msgstr "例えば、次のようなビューを作ったとします。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "To register the geometry column correctly, cast the transformed geometry."
 msgstr ""
+"ジオメトリーカラムを正しく登録するには、ST_Transform の結果ジオメトリーに対し"
+"てキャストします。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "If the geometry type is known to be a 2D Polygon, specify it in the cast."
 msgstr ""
+"ジオメトリータイプが 2次元ポリゴンになると分かっているならキャストで指定でき"
+"ます。"
 
 #. Tag: para
 #, no-c-format
 msgid ""
 "For a derivative table created by a bulk insert, create the table first."
-msgstr ""
+msgstr "バルクインサートで派生テーブルを生成する場合には、先にテーブルを生成します。"
 
 #. Tag: para
 #, no-c-format
 msgid "Create a 2D spatial index on the new table."
-msgstr ""
+msgstr "新しいテーブル上での 2次元空間インデックスの生成。"
 
 #. Tag: para
 #, no-c-format
 msgid "If the points are 3D or measured, an n-D index may be more appropriate."
 msgstr ""
+"ポイントが 3次元または M 値を持つ場合には、n次元インデックスがより適切になり"
+"えます。"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "Manually register the new table's geometry column in "
 "<varname>geometry_columns</varname>. This also changes the underlying table "
 "structure to make the column typmod-based."
 msgstr ""
+"新しいテーブルのジオメトリーカラムを <varname>geometry_columns</varname> に手"
+"動登録します。これによって基礎となるテーブルの構造を変更してカラムを型修飾子"
+"が使われるように変わることにもなります。"
 
 #. Tag: para
 #, no-c-format
@@ -47942,6 +48048,9 @@ msgid ""
 "where all children do not have the same type and SRID, set the optional "
 "<varname>use_typmod</varname> argument to false."
 msgstr ""
+"子テーブル間で異なるジオメトリータイプや SRID を持つ継承テーブルのように、制"
+"約による定義を維持したい場合には、任意引数 <varname>use_typmod</varname> を "
+"FALSE にします。"
 
 #. Tag: para
 #, no-c-format
@@ -47951,6 +48060,9 @@ msgid ""
 "varname> for both typmod-based and constraint-based source columns. In this "
 "example we define a column using typmod and another using constraints."
 msgstr ""
+"従来の制約方式も使えますが、元のカラムを直接参照するビューのカラムは型修飾子"
+"方式と制約方式の両方について <varname>geometry_columns</varname> に正しく登録"
+"されます。この例では型修飾子方式のカラムと制約方式のカラムを定義します。"
 
 #. Tag: para
 #, no-c-format
@@ -47958,6 +48070,8 @@ msgid ""
 "If we run <command>\\d pois_ny</command> in psql, we observe they are "
 "defined differently -- one is typmod, one is constraint."
 msgstr ""
+"psql で <command>\\d pois_ny</command> を使うと異なる定義になることが分かりま"
+"す。一方は型修飾子方式で、もう一方は制約方式です。"
 
 #. Tag: para
 #, no-c-format
@@ -47975,14 +48089,19 @@ msgid ""
 "Both the typmod based geom view column and the direct constraint based view "
 "column register correctly."
 msgstr ""
+"型修飾子方式のビューのジオメトリーカラムと制約方式のビューのカラムで正しく登"
+"録されたものの両方。"
 
 #. Tag: para
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "If the view applies a spatial function to the geometry, such as "
 "<function>ST_Transform</function>, you still need to cast the transformed "
 "column explicitly so the view can expose the correct type and SRID:"
 msgstr ""
+"<function>ST_Transform</function> などの空間関数をジオメトリーに適用すると、"
+"変換されたカラムを明示的にキャストする必要があり、ビューは正しいタイプと "
+"SRID を見せることができます。"
 
 #. Tag: title
 #, no-c-format
@@ -48062,6 +48181,10 @@ msgid ""
 "filename>, <filename>.shx</filename>, and <filename>.dbf</filename> files "
 "before loading."
 msgstr ""
+"入力は、固めていないシェープファイルのパスでなければなりません。ローダーは "
+"<filename>.zip</filename> アーカイブを直接読めません。ロード前に <filename>"
+".shp</filename>、<filename>.shx</filename>、<filename>.dbf</filename> "
+"ファイルを展開します。"
 
 #. Tag: para
 #, no-c-format
@@ -48143,6 +48266,9 @@ msgid ""
 "literal>. The value must be a simple PostgreSQL identifier and cannot use a "
 "PostgreSQL system column name."
 msgstr ""
+"地物識別子のカラム名を指定します。デフォルトは <literal>gid</literal> です。"
+"値は単純な PostgreSQL 識別子でなければなりません。PostgreSQL システムカラム名"
+"は使えません。"
 
 #. Tag: para
 #, no-c-format
@@ -48185,6 +48311,9 @@ msgid ""
 "loading transient staging data, but PostgreSQL does not preserve unlogged "
 "table contents after a crash or unclean shutdown."
 msgstr ""
+"対象テーブルを <literal>UNLOGGED</literal> とします。これにより一時的な中間"
+"データのロード速度が上がりますが、PostgreSQL は異常終了や正常でない"
+"シャットダウンの後に UNLOGGED テーブルの内容を保持しません。"
 
 #. Tag: para
 #, no-c-format
@@ -48194,6 +48323,9 @@ msgid ""
 "two names separated by white space and no trailing or leading space. For "
 "example:"
 msgstr ""
+"長いカラム名を 10文字の DBF カラム名に対応付けるファイルを指定します。"
+"ファイルの内容は 1行以上の空白区切りの 2項目で、行頭行末に空白を入れません。"
+"例えば次のようになります:"
 
 #. Tag: para
 #, no-c-format
@@ -48344,6 +48476,10 @@ msgid ""
 "use a single percent sign interactively and double percent signs in a batch "
 "file:"
 msgstr ""
+"シェープファイルのディレクトリーをロードするのに、ローダーをファイルごとに実"
+"行して、ファイル名からテーブル名を導きます。Windows では次のようにします。 "
+"<filename>cmd.exe</filename> 上ではパーセント記号は一つで、バッチファイルでは"
+"二つです:"
 
 #. Tag: para
 #, no-c-format
@@ -48352,6 +48488,9 @@ msgid ""
 "appended into one table, create the table from the first file and use "
 "<option>-a</option> for the remaining files."
 msgstr ""
+"全てのシェープファイルが同じ属性とデータ型を持っていて、これらを一つの"
+"テーブルに追加したいとき、最初のファイルを作り、残りのファイルは <option>-a</"
+"option> を使います。"
 
 #. Tag: title
 #, no-c-format
