@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-04 15:37+0000\n"
-"PO-Revision-Date: 2026-08-25 10:39+0000\n"
+"PO-Revision-Date: 2026-08-26 09:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -48031,15 +48031,15 @@ msgstr ""
 "えます。"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Manually register the new table's geometry column in "
 "<varname>geometry_columns</varname>. This also changes the underlying table "
 "structure to make the column typmod-based."
 msgstr ""
 "新しいテーブルのジオメトリーカラムを <varname>geometry_columns</varname> に手"
-"動登録します。これによって基礎となるテーブルの構造を変更してカラムを型修飾子"
-"が使われるように変わることにもなります。"
+"動登録します。これによって基礎となるテーブルの構造を変更して、カラムで型修飾"
+"子が使われるようになります。"
 
 #. Tag: para
 #, no-c-format
@@ -48093,15 +48093,15 @@ msgstr ""
 "録されたものの両方。"
 
 #. Tag: para
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "If the view applies a spatial function to the geometry, such as "
 "<function>ST_Transform</function>, you still need to cast the transformed "
 "column explicitly so the view can expose the correct type and SRID:"
 msgstr ""
-"<function>ST_Transform</function> などの空間関数をジオメトリーに適用すると、"
-"変換されたカラムを明示的にキャストする必要があり、ビューは正しいタイプと "
-"SRID を見せることができます。"
+"ビューが <function>ST_Transform</function> などの空間関数をジオメトリーに適用"
+"する場合でも、変換されたカラムを明示的にキャストする必要があります。これによ"
+"りビューは正しいタイプと SRID を示すことができます。"
 
 #. Tag: title
 #, no-c-format
@@ -49620,6 +49620,10 @@ msgid ""
 "matches the overlap pattern <literal>T*T***T**</literal> used by <xref "
 "linkend=\"ST_Overlaps\"/>."
 msgstr ""
+"下に重なっているポリゴンを具体例としてしまします。<xref "
+"linkend=\"ST_Relate\"/> は行列 <literal>212101212</literal> を算出し"
+"、<literal>T*T***T**</literal> パターンと合致します。このパターンは <xref "
+"linkend=\"ST_Overlaps\"/> で使われます。"
 
 #. Tag: para
 #, no-c-format
@@ -49630,6 +49634,9 @@ msgid ""
 "clipped to a finite viewport, since the true exterior/exterior intersection "
 "is unbounded."
 msgstr ""
+"実行可能クエリーと生成されるオーバーレイの上の部分が関係を見る元図です。"
+"クエリーの下の部分で、3x3 で 9要素の同種の例を生成しています。最後の外部/外部"
+"の要素は無限に広がるので有限範囲のビューポートで切り抜いています。"
 
 #. Tag: para
 #, no-c-format
@@ -49731,6 +49738,9 @@ msgid ""
 "computing the full DE-9IM intersection matrix with <xref "
 "linkend=\"ST_Relate\"/>."
 msgstr ""
+"名前のある空間関係は、求める空間フィルター条件を十分に満たせない場合がありま"
+"す。この場合には、<xref linkend=\"ST_Relate\"/> を使って完全な DE-9IM 交差行"
+"列による計算によって表現することができます。"
 
 #. Tag: para
 #, no-c-format
@@ -49765,6 +49775,9 @@ msgid ""
 "evaluated succinctly. The <xref linkend=\"ST_Relate\"/> and <xref "
 "linkend=\"ST_RelateMatch\"/> functions can both test these patterns."
 msgstr ""
+"交差行列のパターンを使って、特定の空間関係が簡潔に評価できます。<xref "
+"linkend=\"ST_Relate\"/> と <xref linkend=\"ST_RelateMatch\"/> は両方ともこの"
+"パターンと合致するかの判定ができます。"
 
 #. Tag: para
 #, no-c-format
@@ -49775,6 +49788,11 @@ msgid ""
 "pattern <literal>1*1***1**</literal> tests for a one-dimensional "
 "intersection instead."
 msgstr ""
+"次に示す二つの道路区間は、ラインの一部を共有しています。<xref "
+"linkend=\"ST_Crosses\"/> にラインを与えた場合には、内部の点でインターセクトす"
+"る時にだけ <varname>TRUE</varname> を返すので、この関係を判定できません"
+"。<literal>1*1***1**</literal> パターンはラインのインターセクションを判定しま"
+"す。"
 
 #. Tag: para
 #, no-c-format
@@ -49784,6 +49802,9 @@ msgid ""
 "nearby counterexamples in the figure. The pattern <literal>102101FF2</"
 "literal> expresses the complete required relationship in one test."
 msgstr ""
+"次の例では、湖の内部から水涯線上に伸びるふ頭を検索します。端点の一方が水涯線"
+"上にあることを条件とします。他のふ頭は該当しない例です。<literal>102101FF2</"
+"literal> は、求める関係の完全なものを表現しています。"
 
 #. Tag: title
 #, no-c-format
@@ -50137,6 +50158,9 @@ msgid ""
 "analyzes the loaded table, records source filenames, and stores the input "
 "rasters in 100 by 100 pixel tiles."
 msgstr ""
+"ローダーが SRID を 4326にし、インデックスを作成し、標準の制約を作成し、ロード"
+"されたテーブルに ANALYZE をかけ、ソースファイル名を記録して、入力ラスターを "
+"100x100 ピクセルのタイルで保存します。"
 
 #. Tag: para
 #, no-c-format
@@ -50176,12 +50200,12 @@ msgstr ""
 #. Tag: para
 #, no-c-format
 msgid "List the raster formats supported by this build:"
-msgstr ""
+msgstr "このコマンドが対応するラスターフォーマットの一覧:"
 
 #. Tag: para
 #, no-c-format
 msgid "The <option>-G</option> command outputs a list something like:"
-msgstr ""
+msgstr "<option>-G</option> コマンドの出力は次のようになります:"
 
 #. Tag: title
 #, no-c-format
@@ -50194,6 +50218,8 @@ msgid ""
 "Long options that take values also accept the <option>--option=value</"
 "option> spelling."
 msgstr ""
+"ロングオプションは値を取り、<option>--option=value</option> の書き方を受け取"
+"ります。"
 
 #. Tag: para
 #, no-c-format
@@ -50240,11 +50266,16 @@ msgid ""
 "literal> for index creation too. This option cannot be used with <option>-d</"
 "option>. Append mode requires an explicit creation action."
 msgstr ""
+"テーブル生成には <literal>IF NOT EXISTS</literal> を使います。<option>-c</"
+"option> と <option>-p</option> モードが該当します。<option>-I</option> また"
+"は <option>--create-index</option> も指定されている時は <literal>IF NOT "
+"EXISTS</literal> を使います。<option>-d</option> と併用できません。追加モード"
+"は明示的にテーブルなどの生成が必要です。"
 
 #. Tag: term
 #, no-c-format
 msgid "Atomic loader actions"
-msgstr ""
+msgstr "ローダーの個別処理"
 
 #. Tag: para
 #, no-c-format
@@ -50259,6 +50290,15 @@ msgid ""
 "before the selected actions. With no mode specified, the default create/load "
 "actions still apply."
 msgstr ""
+"短形式のモードは明示的な処理をまとめたプリセットです。対応する"
+"ロングオプションは <option>--drop-table</option>、<option>--create-table</"
+"option>、<option>--load-data</option>、<option>--create-index</option>"
+"、<option>--add-constraints</option>、<option>--vacuum</option>、<option>--"
+"analyze</option>、<option>--no-transaction</option> です。<option>--if-not-"
+"exists</option> を追加すると、有効な生成処理で <literal>IF NOT EXISTS</"
+"literal> を使います。<option>--drop-table</option> は選択した処理の前に "
+"<literal>DROP TABLE IF EXISTS</literal> を出力します。モード指定をしない場合"
+"には、デフォルトの生成/ロード処理を行います。"
 
 #. Tag: term
 #, no-c-format
@@ -50282,6 +50322,8 @@ msgid ""
 "Disable setting the max extent constraint. Only applied if -C or --add-"
 "constraints is also used."
 msgstr ""
+"最大範囲制約を無効にします。-C または --add-constraints が併せて指定されてい"
+"る場合のみ適用されます。"
 
 #. Tag: para
 #, no-c-format
@@ -50289,6 +50331,9 @@ msgid ""
 "Set the constraints (spatially unique and coverage tile) for regular "
 "blocking. Only applied if -C or --add-constraints is also used."
 msgstr ""
+"規則的なブロック配置に対して、空間的に一意かつカバレッジタイルである制約を課"
+"します。-C または --add-constraints が併せて指定されている場合のみ適用されま"
+"す。"
 
 #. Tag: term
 #, no-c-format
@@ -50306,6 +50351,11 @@ msgid ""
 "or is zero, the raster metadata will be checked to determine an appropriate "
 "source SRID. Reprojection cannot be used with copy mode."
 msgstr ""
+"出力ラスターに指定した SRID を割り当てます。FROM_SRID も与えられた時、"
+"raster2pgsql は入力ラスターに FROM_SRID を設定して、ラスターを指定 SRID に投"
+"影変換した SQL を出力します。元の SRID が省略されるか 0に設定される場合には、"
+"適切な SRID を決定するためにラスターのメタデータを確認します。投影変換は複写"
+"モードでは使うことができません。"
 
 #. Tag: para
 #, no-c-format
@@ -50364,6 +50414,15 @@ msgid ""
 "overview is stored in the database and is not affected by -R. Note that your "
 "generated sql file will contain both the main table and overview tables."
 msgstr ""
+"ラスターのオーバービューを生成します。縮小係数が 2個以上の場合にはコンマ (,) "
+"区切ります。オーバービュー用のテーブルの名前は o_<varname>overview factor</"
+"varname>_<varname>table</varname> のパターンに従います。ここで <varname>"
+"overview factor</varname> にはオーバービューの縮小係数が入り、<varname>"
+"table</varname> は元となるテーブル名に置き換わります。元ラスターが既に寸法の"
+"一致するオーバービューを持っている場合には、そのオーバービューは再利用されま"
+"す。生成されたオーバービューはデータベース内に格納され、-R の影響を受けません"
+"。出力される SQL ファイルには主テーブルとオーバービューテーブルの両方が入るこ"
+"とにご注意下さい。"
 
 #. Tag: para
 #, no-c-format
@@ -50398,7 +50457,7 @@ msgstr "PostgreSQL識別子に引用符を付けます。"
 #. Tag: para
 #, no-c-format
 msgid "Alias for <option>--create-index</option>."
-msgstr ""
+msgstr "<option>--create-index</option> の別名。"
 
 #. Tag: para
 #, no-c-format
@@ -50686,7 +50745,7 @@ msgstr ""
 #. Tag: title
 #, no-c-format
 msgid "Raster Coverages and Raster/Vector Analysis"
-msgstr ""
+msgstr "ラスターカバレッジとラスター/ベクター解析"
 
 #. Tag: para
 #, no-c-format
@@ -50698,6 +50757,11 @@ msgid ""
 "does not expose a generic ISO 19123 coverage SQL type, but geometry tables "
 "and raster values provide the building blocks for both directions."
 msgstr ""
+"カバレッジは、空間データを解釈する手法の一つで、<emphasis>位置集合</"
+"emphasis> から <emphasis>値集合</emphasis> に対応付けます。カバレッジの評価は"
+"、ある位置の値を尋ねることです。逆の問合せでは条件に合う値になる位置を尋ねま"
+"す。PostGIS は包括的な ISO 19123 coverage SQL タイプを出していませんが、"
+"ジオメトリーテーブルとラスター値は順逆両方向のクエリーの構成要素となります。"
 
 #. Tag: para
 #, no-c-format
@@ -50709,6 +50773,12 @@ msgid ""
 "table, or one or more raster values. A time column or function argument can "
 "add a temporal dimension without changing that distinction."
 msgstr ""
+"カバレッジは連続系になることができ、任意位置の計算値または補間値を得ます。離"
+"散系になることもでき、格納された空間オブジェクトまたはグリッドセルから値を得"
+"ます。カバレッジモデルはどうやって位置を値に対応付けるかを示したもので、"
+"モデルは、これらの値が数式から来たのか、テーブルから来たのか、一つ以上の"
+"ラスター値から来たのかは関係ありません。時刻型のカラムまたは関数引数によって"
+"連続/離散の区別の変更なしに時刻次元が追加できます。"
 
 #. Tag: para
 #, no-c-format
@@ -50721,6 +50791,12 @@ msgid ""
 "columns in the same table row describe the raster value or tile as a whole; "
 "they do not attach separate values to individual cells."
 msgstr ""
+"ベクターカバレッジでは、ジオメトリーカラムは位置集合を提供し、他のカラムは属"
+"性値集合を提供します。ベクター値集合は、意味と型がカバレッジがどこで定義され"
+"ても首尾一貫するなら、文字、数値、他の空間値を含むことができます。"
+"ラスターカバレッジでは、各セルの位置は位置集合の一部でセルのバンド値は値集合"
+"を構成します。同じテーブル行の他のカラムはラスター値またはタイル全体を記述す"
+"るもので、個々のセルに個別の値を付けません。"
 
 #. Tag: para
 #, no-c-format
@@ -50731,11 +50807,16 @@ msgid ""
 "constraints exposed by <xref linkend=\"RT_Raster_Columns\"/> record and "
 "validate those properties."
 msgstr ""
+"論理的なラスターカバレッジは一つのラスターまたは一つのテーブルの多数のタイル"
+"として保存することができます。一つのカバレッジに属するタイルは SRID、解像度、"
+"アラインメント、バンド数、ピクセル型、NODATA の扱いに互換性があるべきです"
+"。<xref linkend=\"RT_Raster_Columns\"/> で見ることができる制約は、これらの"
+"プロパティを記録し、検証します。"
 
 #. Tag: title
 #, no-c-format
 msgid "Raster table arrangements."
-msgstr ""
+msgstr "ラスターテーブル構成。"
 
 #. Tag: para
 #, no-c-format
@@ -50745,54 +50826,58 @@ msgid ""
 "assumptions about tile size, alignment, gaps, and overlaps. PostGIS does not "
 "infer the intended arrangement from the column type alone."
 msgstr ""
+"ラスターカラムは画像ウェアハウス、タイル化されたカバレッジ、ラスター化された"
+"オブジェクトのコレクションを表現できます。これらの構成はタイルサイズ、"
+"アラインメント、隙間、重なりに関する前提が異なります。PostGIS はカラムタイプ"
+"だけから意図した構成を推論しません。"
 
 #. Tag: entry
 #, no-c-format
 msgid "Arrangement"
-msgstr ""
+msgstr "構成"
 
 #. Tag: entry
 #, no-c-format
 msgid "Row relationship"
-msgstr ""
+msgstr "行の関係"
 
 #. Tag: entry
 #, no-c-format
 msgid "Typical use"
-msgstr ""
+msgstr "代表的な使用法"
 
 #. Tag: entry
 #, no-c-format
 msgid "Image warehouse"
-msgstr ""
+msgstr "画像ウェアハウス"
 
 #. Tag: entry
 #, no-c-format
 msgid ""
 "Independent rasters; sizes, alignment, and extents may differ or overlap"
-msgstr ""
+msgstr "独立したラスター。サイズ、アラインメント、範囲は離れるか一部重複します"
 
 #. Tag: entry
 #, no-c-format
 msgid "Cataloging unrelated source images"
-msgstr ""
+msgstr "関連しない元画像のカタログ化"
 
 #. Tag: entry
 #, no-c-format
 msgid "Irregular tiled coverage"
-msgstr ""
+msgstr "不規則タイルカバレッジ"
 
 #. Tag: entry
 #, no-c-format
 msgid ""
 "One logical coverage with gaps allowed, variable tile sizes, and normally no "
 "overlap"
-msgstr ""
+msgstr "一つの論理カバレッジ、隙間可、可変タイルサイズ、通常は重複箇所無し"
 
 #. Tag: entry
 #, no-c-format
 msgid "Incremental or source-driven mosaics"
-msgstr ""
+msgstr "逐次追加型またはソース駆動型モザイク"
 
 #. Tag: entry
 #, no-c-format
@@ -50800,63 +50885,71 @@ msgid ""
 "One alignment and tile size with no overlap; gaps may remain at the boundary "
 "or inside the coverage"
 msgstr ""
+"一つのアラインメントとタイルサイズで重複箇所なし。隙間はカバレッジの境界また"
+"は内部に残る可能性あり"
 
 #. Tag: entry
 #, no-c-format
 msgid "Regular tiled coverage"
-msgstr ""
+msgstr "規則的タイルカバレッジ"
 
 #. Tag: entry
 #, no-c-format
 msgid "Indexed analysis over a large coverage"
-msgstr ""
+msgstr "大きなカバレッジの上でのインデックスを使った解析"
 
 #. Tag: entry
 #, no-c-format
 msgid "Equal aligned tiles fill a rectangular extent without gaps or overlaps"
 msgstr ""
+"隙間も重複も無い長方形範囲を満たす同じサイズかつ同じアラインメントを持つ"
+"タイル"
 
 #. Tag: entry
 #, no-c-format
 msgid "Rectangular regular coverage"
-msgstr ""
+msgstr "規則的長方形カバレッジ"
 
 #. Tag: entry
 #, no-c-format
 msgid "Predictable block processing and overview generation"
-msgstr ""
+msgstr "予測可能なブロック処理とオーバービュー生成"
 
 #. Tag: entry
 #, no-c-format
 msgid ""
 "Each image is internally regular but stored in its own table or partition"
 msgstr ""
+"個々の画像は内部では規則的だがそれぞれ別個のテーブルまたはパーティションに格"
+"納"
 
 #. Tag: entry
 #, no-c-format
 msgid "Separate tiled images"
-msgstr ""
+msgstr "分離タイル画像"
 
 #. Tag: entry
 #, no-c-format
 msgid "Keeping source-image identity and lifecycle separate"
-msgstr ""
+msgstr "元画像の識別性の維持と画像ごとの管理できる状態の維持"
 
 #. Tag: entry
 #, no-c-format
 msgid ""
 "Each row is a rasterized feature; extents and sizes may differ and overlap"
 msgstr ""
+"個々の行はラスター化された地物で、範囲とサイズは異なることがあり、かつ"
+"オーバーラップすることがある"
 
 #. Tag: entry
 #, no-c-format
 msgid "Raster-object coverage"
-msgstr ""
+msgstr "地物ラスター化カバレッジ"
 
 #. Tag: entry
 #, no-c-format
 msgid "Object models where cells replace or supplement vector geometry"
-msgstr ""
+msgstr "セルがベクトルジオメトリーを置き換えるか補完する地物モデル"
 
 #. Tag: para
 #, no-c-format
@@ -50866,11 +50959,15 @@ msgid ""
 "spatial indexes and application constraints for relationships that the "
 "catalog cannot express."
 msgstr ""
+"共通の SRID、解像度、アラインメント、バンド、範囲、規則的ブロックのプロパティ"
+"の記録には <xref linkend=\"RT_AddRasterConstraints\"/> を使います。カタログが"
+"表現できない関係のために空間インデックスとアプリケーション側の制約を使います"
+"。"
 
 #. Tag: para
 #, no-c-format
 msgid "Queries against a tiled coverage normally have two stages:"
-msgstr ""
+msgstr "タイルカバレッジに対するクエリーには通常は二つの段階があります:"
 
 #. Tag: para
 #, no-c-format
@@ -50878,6 +50975,8 @@ msgid ""
 "Use the raster spatial index and <xref linkend=\"RT_ST_Intersects\"/> to "
 "select candidate tiles."
 msgstr ""
+"ラスター空間インデックスと <xref linkend=\"RT_ST_Intersects\"/> を使い候補"
+"タイルを選択します。"
 
 #. Tag: para
 #, no-c-format
@@ -50887,6 +50986,10 @@ msgid ""
 "<xref linkend=\"RT_ST_SummaryStatsAgg\"/>, and <xref "
 "linkend=\"RT_ST_DumpAsPolygons\"/>."
 msgstr ""
+"<xref linkend=\"RT_ST_Value\"/>、<xref linkend=\"RT_ST_Clip\"/>、<xref "
+"linkend=\"RT_ST_SummaryStatsAgg\"/>、<xref "
+"linkend=\"RT_ST_DumpAsPolygons\"/> といった関数を使って、これらのタイルの内側"
+"の値を読み、切り取り、集約し、ベクトル化します。"
 
 #. Tag: para
 #, no-c-format
@@ -50896,6 +50999,10 @@ msgid ""
 "inverse coverage queries, but polygonizing many cells is usually more "
 "expensive than keeping the operation in raster space."
 msgstr ""
+"は、ジオメトリーとセル値の組合せとなる <xref linkend=\"geomval\"/> の行を返し"
+"ます。これにより通常のジオメトリーのオーバーレイとフィルタによって逆"
+"カバレッジクエリーの答えを出せるようになりますが、多数のセルのポリゴン化は通"
+"常はラスターで処理を続ける場合よりも計算コストが高くなります。"
 
 #. Tag: para
 #, no-c-format
@@ -50907,6 +51014,12 @@ msgid ""
 "result in an appropriate projected coordinate system. That exact partial-"
 "cell method costs more because it vectorizes the selected cells."
 msgstr ""
+"境界の扱いを慎重に選択します。ラスターピクセルの切抜きと集約は通常は短く早い"
+"手順です。境界セルの一部を、そのセルに覆われる面積に比例して寄与させなければ"
+"ならない場合には、そのジオメトリーと <xref linkend=\"geomval\"/> 行とで"
+"インターセクトさせて、適切な投影座標系上の面積で重みづけした結果を計算します"
+"。この正確な部分セル法は選択セルのベクトル化を行うので、よりコストがかかりま"
+"す。"
 
 #. Tag: para
 #, no-c-format
@@ -50916,6 +51029,10 @@ msgid ""
 "and index overhead. Benchmark representative queries instead of treating one "
 "tile size as a universal default."
 msgstr ""
+"タイルサイズはインデックスを使うクエリーに影響を与えます: 小さいタイルでは、"
+"行とインデックスのオーバーヘッダが増える半面、個々の候補行で調査する"
+"ラスターデーターの数が減ります。一つのタイルサイズを共通のデフォルトとして扱"
+"う代わりに、代表クエリーでベンチマークを行います。"
 
 #. Tag: para
 #, no-c-format
@@ -50929,6 +51046,13 @@ msgid ""
 "tile selection, clipping, and aggregation pattern to an elevation or other "
 "continuous raster coverage."
 msgstr ""
+"現在の一連のラスター/ベクトル処理パターンでは、<xref "
+"linkend=\"RT_Raster_Loader\"/> によるデータのロードとタイル化をし、<xref "
+"linkend=\"RT_ST_SummaryStats\"/> で建物の例を参照します。インターセクトする"
+"タイルを選択し、個々のポリゴンで切り抜き、タイルごとの統計情報を地物ごとの結"
+"果とまとめます。動物の位置情報といったポイント観察では、最初にポイントに対し"
+"て適切な投影座標系の上でバッファーを施して、同じようにタイル選択、切抜き、集"
+"約のパターンを、標高や他の連続系ラスターカバレッジに適用します。"
 
 #. Tag: title
 #, no-c-format
@@ -51435,6 +51559,9 @@ msgid ""
 "srid=2249</literal> to get the raster image in Massachusetts state plane "
 "feet."
 msgstr ""
+"このスクリプトは <literal>http://mywebserver/test_raster.php?srid=2249</"
+"literal> で呼んで、フィート単位マサチューセッツ州平面座標系のラスター画像を得"
+"ます。"
 
 #. Tag: title
 #, no-c-format
