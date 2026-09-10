@@ -5,12 +5,13 @@
 # Yoichi Kayama <yoichi.kayama@gmail.com>, 2024.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>, 2025, 2026.
+# Regina Obe <robe@postgis.net>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-04 15:37+0000\n"
-"PO-Revision-Date: 2026-09-07 07:39+0000\n"
+"PO-Revision-Date: 2026-09-09 08:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -5964,6 +5965,10 @@ msgid ""
 "GEOS is available for download from <link xlink:href=\"https://libgeos.org/"
 "\"> https://libgeos.org </link>."
 msgstr ""
+"GEOS ジオメトリーライブラリー、&min_geos_version; 以上ですが、新しい関数と機"
+"能を完全に活用するには GEOS 3.15 以上が必要です。GEOS は <link "
+"xlink:href=\"https://libgeos.org/\"> https://libgeos.org </link> から"
+"ダウンロードできます。"
 
 #. Tag: para
 #, no-c-format
@@ -5973,6 +5978,10 @@ msgid ""
 "xlink:href=\"https://gitlab.gnome.org/GNOME/libxml2/-/releases\">https://"
 "gitlab.gnome.org/GNOME/libxml2/-/releases</link>."
 msgstr ""
+"LibXML2。現在はインポート関数 (ST_GeomFromGML と ST_GeomFromKML) で使われてい"
+"ます。LibXML2 は <link xlink:href=\"https://gitlab.gnome.org/GNOME/libxml2/-/"
+"releases\">https://gitlab.gnome.org/GNOME/libxml2/-/releases</link> から"
+"ダウンロードできます。"
 
 #. Tag: para
 #, no-c-format
@@ -5980,6 +5989,8 @@ msgid ""
 "Perl is required to build PostGIS. Perl is available for download from <link "
 "xlink:href=\"https://www.perl.org/\">https://www.perl.org/</link>."
 msgstr ""
+"Perl は PostGIS のビルドに必要です。Perl は <link xlink:href=\"https://"
+"www.perl.org/\">https://www.perl.org/</link> からダウンロードできます。"
 
 #. Tag: para
 #, no-c-format
@@ -5989,6 +6000,10 @@ msgid ""
 "platforms you may need a separate <link xlink:href=\"https://www.gnu.org/"
 "software/libiconv/\">libiconv</link> package."
 msgstr ""
+"iconv ライブラリーは shp2pgsql ローダーの文字コード変換に必要です。GNU/Linux "
+"システムでは、伝統的に libc で提供されていますが、他のプラットフォームでは別"
+"途 <link xlink:href=\"https://www.gnu.org/software/libiconv/\">libiconv</"
+"link> パッケージが必要です。"
 
 #. Tag: para
 #, no-c-format
@@ -5999,6 +6014,11 @@ msgid ""
 "link>. It is detected via <command>pkg-config</command> and has no fallback, "
 "so <command>pkg-config</command> must be available for a default build."
 msgstr ""
+"GNU 多倍長精度演算ライブラリー (libgmp)。PostGIS トポロジーでの数学演算の精度"
+"を制御するために使います。GMP は <link xlink:href=\"https://gmplib.org/\">"
+"https://gmplib.org/</link> からダウンロードできます。このライブラリーの検出"
+"は <command>pkg-config</command> が行い、かつ代替手段が無いので、デフォルトの"
+"ビルドでは <command>pkg-config</command> が利用できなければなりません。"
 
 #. Tag: para
 #, no-c-format
@@ -6007,6 +6027,9 @@ msgid ""
 "preferred. <link xlink:href=\"https://gdal.org/download.html\">https://"
 "gdal.org/download.html</link>."
 msgstr ""
+"GDAL、2.4以上、ラスター機能に必要です。GDAL 3以上が望ましいです。<link "
+"xlink:href=\"https://gdal.org/download.html\">https://gdal.org/"
+"download.html</link>。"
 
 #. Tag: para
 #, no-c-format
@@ -6045,6 +6068,12 @@ msgid ""
 "is not found configure only warns and the build continues. Disable with "
 "<varname>--without-json</varname>."
 msgstr ""
+"JSON-C。現在、ST_GeomFromGeoJson による GeoJSON の取り込みに使われます。JSON-"
+"C は <link xlink:href=\"https://github.com/json-c/json-c/releases\">https://"
+"github.com/json-c/json-c/releases/</link> からダウンロードできます。"
+"デフォルトでは有効になっていますが、任意です。configure が警告を表示して"
+"ビルドを継続するだけで済まない場合には、 <varname>--without-json</varname> で"
+"無効にします。"
 
 #. Tag: para
 #, no-c-format
@@ -6054,6 +6083,9 @@ msgid ""
 "xlink:href=\"https://www.gnu.org/software/gettext/\">https://www.gnu.org/"
 "software/gettext/</link>."
 msgstr ""
+"GNU gettext、ローダーと文書翻訳機能に使われます。<varname>--with-gettext=no</"
+"varname> で無効にします。<link xlink:href=\"https://www.gnu.org/software/"
+"gettext/\">https://www.gnu.org/software/gettext/</link>。"
 
 #. Tag: para
 #, no-c-format
@@ -6074,6 +6106,11 @@ msgid ""
 "xlink:href=\"https://sfcgal.gitlab.io/sfcgal/\">https://sfcgal.gitlab.io/"
 "sfcgal/</link>."
 msgstr ""
+"SFCGAL、1.3.1以上が必要ですが、全ての機能を使用できるようにするためには、"
+"2.3以上が必要です。SFCGALは、<xref linkend=\"reference_sfcgal\"/> のような、"
+"追加的な 2次元や 3次元の高度な解析機能を PostGIS に提供するために使います"
+"。<link xlink:href=\"https://sfcgal.gitlab.io/sfcgal/\">https://"
+"sfcgal.gitlab.io/sfcgal/</link>。"
 
 #. Tag: para
 #, no-c-format
@@ -6129,6 +6166,11 @@ msgid ""
 "<command>psql</command> client. Python 3 is available from <link "
 "xlink:href=\"https://www.python.org/\"> https://www.python.org/ </link> ."
 msgstr ""
+"Python 3 はマニュアルの例をテスト実行するために必要です。テスト実行によって "
+"HTML と PDF の文書に組み込まれる図が生成されます。これらの例は <command>"
+"make -C regress visual-examples</command> によって、テスト用に PostGIS を配備"
+"した動作中の PostgreSQL サーバーで実行されます。テスト実行ツールは <command>"
+"psql</command> クライアントを介してサーバーと通信します。"
 
 #. Tag: para
 #, no-c-format
@@ -16713,6 +16755,11 @@ msgid ""
 "detailed GDAL logging to be sent into the PostgreSQL server log. PostgreSQL "
 "clients receive only generic GDAL notice, debug, warning, or error messages."
 msgstr ""
+"デフォルトでは、GDAL のログは標準エラー出力に印字され、低水準"
+"デバッグメッセージは全く印字されません。この GUC を TRUE に変更することにより"
+"、詳細な GDAL ログが PostgreSQL サーバーログに送信されるようになります。ただ"
+"し PostgreSQL クライアントが受信するのは一般的な notice、debug、warning、"
+"error のメッセージまでです。"
 
 #. Tag: title
 #, no-c-format
@@ -19111,6 +19158,9 @@ msgid ""
 "need to match the f_table_schema field shown by the "
 "<varname>geometry_columns</varname> view."
 msgstr ""
+"ジオメトリーカラムを空間テーブルから削除します。schema_name は <varname>"
+"geometry_columns</varname> ビューの f_table_schema フィールドと合致する必要が"
+"あることに注意して下さい。"
 
 #. Tag: para
 #, no-c-format
@@ -44849,6 +44899,10 @@ msgid ""
 "needed. To take advantage of all postgis_sfcgal extension features SFCGAL "
 "2.3+ is needed. Python 3 is a new requirement to build the documentation."
 msgstr ""
+"このバージョンでは GEOS 3.10 以上、PostgreSQL 14-19beta3、Proj 6.1 以上、"
+"libgmp が必要です。全ての PostGIS エクステンションの機能を活用するには GEOS "
+"3.15 以上が必要です。全ての postgis_sfcgal エクステンションの機能を活用するに"
+"は SFCGAL 2.3 以上が必要です。Python 3 は文書構築に新たに必要になりました。"
 
 #. Tag: title
 #, no-c-format
@@ -44947,6 +45001,9 @@ msgid ""
 "GraphicsMagick or ImageMagick supported) now required for doc building "
 "(Darafei Praliaskouski)"
 msgstr ""
+"[docs] 文書構築には Python 3 と SVG ラスター化ツール (rsvg-convert が好ましい"
+"が、GraphicsMagick と ImageMagick にも対応) が必要となっています (Darafei "
+"Praliaskouski さん)"
 
 #. Tag: title
 #, no-c-format
@@ -45229,6 +45286,9 @@ msgid ""
 "link>, [raster] Keep distinct 32-bit integer pixel values separate in "
 "ST_DumpAsPolygons (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/3776\">#3776</link>"
+", [raster] ST_DumpAsPolygons で異なる 32ビット整数ピクセル値を分かれた状態で"
+"維持するように改善 (Darafei Praliaskouskiさん)"
 
 #. Tag: para
 #, no-c-format
@@ -45425,6 +45485,10 @@ msgid ""
 "6074\">#6074</link>, Stabilize geography LRS endpoint interpolation and pole "
 "centroid regressions on 32-bit systems (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/6073\">#6073</link>"
+", <link xlink:href=\"https://trac.osgeo.org/postgis/ticket/6074\">#6074</"
+"link>, 32ビットシステムでのジオグラフィの線形参照の端点補間と極における重心計"
+"算との回帰テストの動作を安定させるよう変更 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45444,6 +45508,9 @@ msgid ""
 "link>, Detect pgsql2shp query keywords case-insensitively (Darafei "
 "Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/4616\">#4616</link>"
+", pgsql2shp がクエリーのキーワードを大文字小文字の区別なく検出するように変更 "
+"(Darafei Praliaskouski)"
 
 #. Tag: para
 #, no-c-format
@@ -45452,6 +45519,9 @@ msgid ""
 "link>, ST_GeomFromGML support for GML ArcString and curved polygon rings "
 "(Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/1986\">#1986</link>"
+", ST_GeomFromGML で GML ArcString と曲線ポリゴンに対応するように変更 "
+"(Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45460,6 +45530,10 @@ msgid ""
 "link>, Use point-in-polygon predicate fast paths for point-only "
 "GeometryCollections, including ST_Disjoint (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/4749\">#4749</link>"
+", ポイントだけで構成されるジオメトリーコレクションに対するテスト関数において"
+"ポリゴン内ポイントの高速処理に変更、ST_Disjoint を含みます(Darafei "
+"Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45468,6 +45542,9 @@ msgid ""
 "link>, Mark geometry and geography btree comparison support functions as "
 "leakproof (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/3676\">#3676</link>"
+", ジオメトリーとジオグラフィの B 木比較用関数に LEAKPROOF マークを追加 "
+"(Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45476,6 +45553,9 @@ msgid ""
 "link>, Allow ST_OrderingEquals joins to use hash and merge join plans "
 "(Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://github.com/postgis/postgis/pull/875\">GH-875</"
+"link>, ST_OrderingEquals がハッシュ結合計画とマージ結合計画を使用して結合でき"
+"るようにしました。 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45484,6 +45564,9 @@ msgid ""
 "link>, [raster] Support curved geometry inputs in ST_AsRaster (Darafei "
 "Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/1168\">#1168</link>"
+", [raster] ST_AsRaster で、曲線ジオメトリの入力に対応するように変更 (Darafei "
+"Praliaskouski)"
 
 #. Tag: para
 #, no-c-format
@@ -45492,6 +45575,9 @@ msgid ""
 "link>, ST_AsX3D outputs NURBSCURVE as X3D NurbsCurve and linearizes other "
 "curve geometries (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/1416\">#1416</link>"
+", ST_AsX3D で NURBSCURVE を X3D NurbsCurve として出力するように変更、他の曲線"
+"ジオメトリーは線形化します (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45500,6 +45586,9 @@ msgid ""
 "link>, ST_AsX3D outputs valid coordinate nodes for 2D multi-geometries and "
 "GeometryCollections (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/3705\">#3705</link>"
+", ST_AsX3D で 2次元マルチ系ジオメトリーとジオメトリーコレクションについて妥当"
+"な Coordinate ノードを出力するように変更 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45508,6 +45597,9 @@ msgid ""
 "484\">GT-484</link>, Use column-level SELECT privileges for metadata views "
 "(Arthur Bazin)"
 msgstr ""
+"<link xlink:href=\"https://gitea.osgeo.org/postgis/postgis/pulls/484\">GT-"
+"484</link>, メタデータビューでカラムレベルの SELECT 権限を使用 (Arthur Bazin "
+"さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45536,11 +45628,33 @@ msgid ""
 "<link xlink:href=\"https://gitea.osgeo.org/postgis/postgis/pulls/"
 "584\">GT-584</link>, Numerous doc enhancements (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/1408\">#1408</link>"
+", <link xlink:href=\"https://trac.osgeo.org/postgis/ticket/2386\">#2386</"
+"link>, <link xlink:href=\"https://trac.osgeo.org/postgis/ticket/2557\">"
+"#2557</link>, <link xlink:href=\"https://trac.osgeo.org/postgis/ticket/"
+"2805\">#2805</link>, <link xlink:href=\"https://trac.osgeo.org/postgis/"
+"ticket/2898\">#2898</link>, <link xlink:href=\"https://trac.osgeo.org/"
+"postgis/ticket/3743\">#3743</link>, <link xlink:href=\"https://"
+"trac.osgeo.org/postgis/ticket/4323\">#4323</link>, <link "
+"xlink:href=\"https://trac.osgeo.org/postgis/ticket/4332\">#4332</link>, "
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/4385\">#4385</link>"
+", <link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5109\">#5109</"
+"link>, <link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5532\">"
+"#5532</link>, <link xlink:href=\"https://trac.osgeo.org/postgis/ticket/"
+"5593\">#5593</link>, <link xlink:href=\"https://trac.osgeo.org/postgis/"
+"ticket/5638\">#5638</link>, <link xlink:href=\"https://trac.osgeo.org/"
+"postgis/ticket/5645\">#5645</link>, <link xlink:href=\"https://"
+"trac.osgeo.org/postgis/ticket/5950\">#5950</link>, <link "
+"xlink:href=\"https://trac.osgeo.org/postgis/ticket/6022\">#6022</link>, "
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/6082\">#6082</link>"
+", <link xlink:href=\"https://github.com/postgis/postgis/pull/1161\">GH-1161</"
+"link>, <link xlink:href=\"https://gitea.osgeo.org/postgis/postgis/pulls/"
+"584\">GT-584</link>, ドキュメントの多数の強化 (Darafei Praliaskouski さん)"
 
 #. Tag: title
 #, no-c-format
 msgid "Bug Fixes"
-msgstr ""
+msgstr "誤り訂正"
 
 #. Tag: para
 #, no-c-format
@@ -45557,6 +45671,9 @@ msgid ""
 "link>, Reject empty geometry type modifiers without an out-of-bounds read "
 "(Egor Ivkov)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/6118\">#6118</link>"
+", 空のジオメトリー型修飾子は範囲外を読むことなく拒絶するよう変更 (Egor Ivkov "
+"さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45564,6 +45681,8 @@ msgid ""
 "Fix WKB and TWKB parser resource exhaustion on malformed input (Darafei "
 "Praliaskouski)"
 msgstr ""
+"WKB と TWKB のパーサーが不正な入力があると資源枯渇に陥る問題を修正 (Darafei "
+"Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45572,6 +45691,9 @@ msgid ""
 "link>, Avoid stale relation lookups in geometry_columns after topology "
 "objects are dropped (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/6038\">#6038</link>"
+", トポロジーオブジェクトが削除された後に geometry_columns の古いリレーション"
+"参照を避けるよう変更 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45580,6 +45702,9 @@ msgid ""
 "link>, Improve error detail for repeated upgrades after an incomplete "
 "deprecated-function cleanup (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5487\">#5487</link>"
+", 非推奨関数の不完全な消去の後に反復してアップグレードする時に出るエラー詳細"
+"表示の改善 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45596,6 +45721,9 @@ msgid ""
 "link>, [topology] Avoid MinGW format warnings when logging topology ids "
 "(Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/5904\">#5904</link>"
+", [topology] トポロジー ID のログを出力する時 MinGW ではフォーマット警告が出"
+"るのを回避するよう変更 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45604,6 +45732,10 @@ msgid ""
 "link>, [sfcgal] Avoid stale detoasted geometry access in CG_Visibility empty-"
 "input handling for SFCGAL &lt; 2.2 (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://github.com/postgis/postgis/pull/888\">GH-888</"
+"link>, [sfcgal] SFCGAL &lt; 2.2 での CG_Visibility で空入力があった場合の処理"
+"で TOAST から戻したオブジェクトのうち無効になったものにアクセスしないように変"
+"更 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45612,6 +45744,10 @@ msgid ""
 "link>, Mark truncated libpgcommon PostgreSQL messages instead of silently "
 "dropping the tail (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/3179\">#3179</link>"
+", libpgcommon から PostgreSQL メッセージを出す時に切り詰めた場合には、表示な"
+"く末尾を捨てていたのを、切り詰めた旨の文字列を出力するように変更 (Darafei "
+"Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45620,6 +45756,9 @@ msgid ""
 "link>, Avoid size_t formats in liblwgeom logging/error wrappers for MinGW "
 "builds (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/6003\">#6003</link>"
+", MinGW ビルドにおける liblwgeom のログ/エラーのラッパーで size_t の"
+"フォーマットの回避 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45668,6 +45807,9 @@ msgid ""
 "link>, geometry_columns handles NOT VALID SRID checks without errors "
 "(Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/4828\">#4828</link>"
+", geometry_columns が「妥当でない SRID」確認をエラーなしで処理するよう変更 "
+"(Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45676,6 +45818,9 @@ msgid ""
 "link>, [raster] ST_Clip no longer crashes when clipping sparse band "
 "selections (Darafei Praliaskouski)"
 msgstr ""
+"<link xlink:href=\"https://trac.osgeo.org/postgis/ticket/6048\">#6048</link>"
+", [raster] バンド選択がまとまっていない場合の ST_Clip の異常終了が無くなるよ"
+"う変更 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
