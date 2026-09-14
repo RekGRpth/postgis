@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: postgis 3.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-08-04 15:37+0000\n"
-"PO-Revision-Date: 2026-09-11 09:39+0000\n"
+"PO-Revision-Date: 2026-09-14 10:39+0000\n"
 "Last-Translator: Teramoto Ikuhiro <teramoto.ikuhiro576@naro.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/postgis-"
 "manual/ja/>\n"
@@ -420,9 +420,10 @@ msgid ""
 "will have a new extension <emphasis>postgis_raster</emphasis> which you can "
 "safely drop, if you don't need raster support."
 msgstr ""
-"PostGIS エクステンションを 3.0.0より前からアップグレードする場合には新しいエ"
-"クステンション<emphasis>postgis_raster</emphasis> が入ることになります。この"
-"エクステンションはラスター機能が不要な場合には安全に削除することができます。"
+"PostGIS エクステンションを 3.0.0より前からアップグレードする場合には新しい"
+"エクステンション <emphasis>postgis_raster</emphasis> が入ることになります。こ"
+"のエクステンションはラスター機能が不要な場合には安全に削除することができます"
+"。"
 
 #. Tag: title
 #, no-c-format
@@ -547,11 +548,11 @@ msgid ""
 "filename>."
 msgstr ""
 "データベースが本当に古くて、ビューや関数の中に、非推奨になってから長い関数が"
-"あるような場合には、それらの関数やビューを使えるようにする"
-"<filename>legacy.sql</filename>をロードする必要があるでしょう。ただし「本当"
-"に」必要な場合に限ります。可能なら、ビューや関数をダンプせずにアップグレード"
-"することを検討して下さい。非推奨関数は、<filename>uninstall_legacy.sql</"
-"filename>で後から削除することができます。"
+"あるような場合には、それらの関数やビューを使えるようにする <filename>"
+"legacy.sql</filename> をロードする必要があるでしょう。ただし「本当に」必要な"
+"場合に限ります。可能なら、ビューや関数をダンプせずにアップグレードすることを"
+"検討して下さい。非推奨関数は、<filename>uninstall_legacy.sql</filename> で後"
+"から削除することができます。"
 
 #. Tag: para
 #, no-c-format
@@ -560,9 +561,9 @@ msgid ""
 "postgis_restore. Unexpected errors, if any, will be printed to the standard "
 "error stream by psql. Keep a log of those."
 msgstr ""
-"バックアップを新しい<varname>newdb</varname>データベースにリストアするには、"
-"postgis_restoreを使います。psqlが予期せぬエラーを標準エラー出力に出すことがあ"
-"ります。このエラーのログは保存しておいて下さい。"
+"バックアップを新しい <varname>newdb</varname> データベースにリストアするには"
+"、postgis_restore を使います。psql が予期せぬエラーを標準エラー出力に出すこと"
+"があります。このエラーのログは保存しておいて下さい。"
 
 #. Tag: para
 #, no-c-format
@@ -580,13 +581,13 @@ msgid ""
 "to fix your code to stop using deprecated functions and drop them loading "
 "<filename>uninstall_legacy.sql</filename>."
 msgstr ""
-"ビューまたは関数の中に非推奨のPostGISオブジェクトを使っているものがある場合。"
-"これの訂正には、リストア前に<filename>legacy.sql</filename>スクリプトのロード"
-"を試してみることができます。非推奨オブジェクトをまだ持っているバージョンの"
-"PostGISに戻して、コードを作り替えた後に再移行を試みることもできます。"
-"<filename>legacy.sql</filename>を利用する場合は、コードを非推奨関数を使わない"
-"ように訂正し、また<filename>uninstall_legacy.sql</filename>をロードして非推奨"
-"オブジェクトを削除するのを忘れないでください。"
+"ビューまたは関数の中に非推奨の PostGIS オブジェクトを使っているものがある場合"
+"。これの訂正には、リストア前に <filename>legacy.sql</filename> スクリプトの"
+"ロードを試してみることができます。非推奨オブジェクトをまだ持っている"
+"バージョンの PostGIS に戻して、コードを作り替えた後に再移行を試みることもでき"
+"ます。<filename>legacy.sql</filename> を利用する場合は、コードを非推奨関数を"
+"使わないように訂正し、また <filename>uninstall_legacy.sql</filename> をロード"
+"して非推奨オブジェクトを削除するのを忘れないでください。"
 
 #. Tag: para
 #, no-c-format
@@ -701,9 +702,9 @@ msgid ""
 "<code>postgresql.conf</code> or <code>postgresql.auto.conf</code> by using "
 "the <code>ALTER SYSTEM</code> command."
 msgstr ""
-"<code>postgresql.conf</code>または<code>postgresql.auto.conf</code>を触らなく"
-"ても、 <code>ALTER SYSTEM</code>コマンドでサーバーレベルのコンフィギュレー"
-"ションが可能です。"
+"<code>postgresql.conf</code> または <code>postgresql.auto.conf</code> を触ら"
+"なくても、 <code>ALTER SYSTEM</code> コマンドでサーバーレベルの"
+"コンフィギュレーションが可能です。"
 
 #. Tag: para
 #, no-c-format
@@ -722,8 +723,8 @@ msgid ""
 "In addition to the Postgres settings, PostGIS has some custom settings which "
 "are listed in <xref linkend=\"PostGIS_GUC\"/>."
 msgstr ""
-"PostgreSQLの設定に加えて、PostGISには <xref linkend=\"PostGIS_GUC\"/>で挙げる"
-"独自設定があります。"
+"PostgreSQLの設定に加えて、PostGISには <xref linkend=\"PostGIS_GUC\"/> で挙げ"
+"る独自設定があります。"
 
 #. Tag: title
 #, no-c-format
@@ -733,7 +734,7 @@ msgstr "起動時"
 #. Tag: para
 #, no-c-format
 msgid "These settings are configured in <code>postgresql.conf</code>:"
-msgstr "次に示す設定は<code>postgresql.conf</code>にあります:"
+msgstr "次に示す設定は <code>postgresql.conf</code> にあります:"
 
 #. Tag: link
 #, no-c-format
@@ -830,8 +831,8 @@ msgstr "デフォルト: 1-4MB"
 #, no-c-format
 msgid "Adjust up for large dbs, complex queries, lots of RAM"
 msgstr ""
-"大きなデータベースの場合や、複雑なクエリの場合、RAMが多い場合は値を大きくする"
-"ように調整します。"
+"大きなデータベースの場合や、複雑なクエリの場合、RAM が多い場合は値を大きくす"
+"るように調整します。"
 
 #. Tag: para
 #, no-c-format
@@ -902,8 +903,8 @@ msgstr ""
 "設定した場合には、これらの関係する <code>ST_Intersects</code> のような関係関"
 "数を含むクエリーが複数のプロセスを使うことができ、そうすると 2倍を超える速度"
 "になります。多数の予備プロセスがあるなら、この値を持っているプロセス数まで上"
-"げるべきです。ただし、これにあわせて<code>max_worker_processes</code>を少なく"
-"ともこの数と同じまで増やすのを忘れないでください。"
+"げるべきです。ただし、これにあわせて <code>max_worker_processes</code> を少な"
+"くともこの数と同じまで増やすのを忘れないでください。"
 
 #. Tag: para
 #, no-c-format
@@ -1699,7 +1700,7 @@ msgid ""
 "<type>topology.topoelement</type>. The domain requires a two-element array, "
 "so the dimension check fails."
 msgstr ""
-"この例では 3要素配列を <type>topology.topoelement</type>へのキャストで発生す"
+"この例では 3要素配列を <type>topology.topoelement</type> へのキャストで発生す"
 "ることを示しています。ここでは 2要素配列が求められるので次元チェックに失敗し"
 "ます。"
 
@@ -1812,8 +1813,8 @@ msgid ""
 "Once the layer is created (its id is returned by the AddTopoGeometryColumn "
 "function) you're ready to construct TopoGeometry objects in it"
 msgstr ""
-"レイヤが生成される (これの識別番号は、AddTopoGeometryColumn 関数が返します) "
-"と、TopoGeometry オブジェクトをこの中に構築する準備ができます。"
+"レイヤーが生成される (これの識別番号は、AddTopoGeometryColumn 関数が返しま"
+"す) と、TopoGeometry オブジェクトをこの中に構築する準備ができます。"
 
 #. Tag: para
 #, no-c-format
@@ -1837,9 +1838,9 @@ msgid ""
 "<varname>topology_name</varname> and <varname>schema_name</varname> would be "
 "different."
 msgstr ""
-"この例では、<varname>ma_topo</varname>の新しいテーブルを生成しています。異な"
+"この例では、<varname>ma_topo</varname> の新しいテーブルを生成しています。異な"
 "るスキーマでテーブルを作ることができ、この場合、<varname>topology_name</"
-"varname>と<varname>schema_name</varname> は異なります。"
+"varname> と <varname>schema_name</varname> は異なります。"
 
 #. Tag: para
 #, no-c-format
@@ -2539,9 +2540,9 @@ msgid ""
 "<varname>gridSize</varname> as a puntal geometry, optionally limiting the "
 "check to the area specified by the <varname>bbox</varname> parameter."
 msgstr ""
-"トポロジまたは与えられた<varname>gridSize</varname>に丸められた頂点のすべてを"
-"点ジオメトリーで返します。任意で、確認範囲を<varname>bbox</varname>パラメータ"
-"で指定される範囲に制限できます。"
+"トポロジーまたは与えられた <varname>gridSize</varname> に丸められた頂点のすべ"
+"てを点ジオメトリーで返します。任意で、確認範囲を <varname>bbox</varname> "
+"パラメータで指定される範囲に制限できます。"
 
 #. Tag: para
 #, no-c-format
@@ -2574,10 +2575,10 @@ msgid ""
 "This safeguards adjacent topological relationships by preventing precision "
 "snapping from removing primitives altogether."
 msgstr ""
-"最小エッジ範囲より大きい<varname>gridSize</varname>を使うと、エッジが空ジオメ"
-"トリに縮退するのでなく例外が発生します。これにより、精密なスナップ処理の際に"
-"プリミティブを完全に削除しないようにすることで、隣接するトポロジー関係を保護"
-"します。"
+"最小エッジ範囲より大きい <varname>gridSize</varname> を使うと、エッジが空"
+"ジオメトリーに縮退するのでなく例外が発生します。これにより、精密なスナップ処"
+"理の際にプリミティブを完全に削除しないようにすることで、隣接するトポロジー関"
+"係を保護します。"
 
 #. Tag: para
 #, no-c-format
@@ -3208,11 +3209,11 @@ msgid ""
 "boundaries) then an exception is thrown. If the point already exists as a "
 "node, an exception is thrown."
 msgstr ""
-"ポイントジオメトリーの空間参照系 (SRID) がトポロジと同じでない場合、"
-"<varname>apoint</varname> がポイントジオメトリーでない場合、ポイントが NULL "
-"である場合、または、ポイントが既存のエッジ (境界も含む) とインターセクトする"
-"場合には、例外が投げられます。また、ポイントが既にノードとして存在する場合、"
-"例外が投げられます。"
+"ポイントジオメトリーの空間参照系 (SRID) がトポロジーと同じでない場合"
+"、<varname>apoint</varname> がポイントジオメトリーでない場合、ポイントが "
+"NULL である場合、または、ポイントが既存のエッジ (境界も含む) とインターセクト"
+"する場合には、例外が投げられます。また、ポイントが既にノードとして存在する場"
+"合、例外が投げられます。"
 
 #. Tag: para
 #, no-c-format
@@ -6072,7 +6073,7 @@ msgstr ""
 "C は <link xlink:href=\"https://github.com/json-c/json-c/releases\">https://"
 "github.com/json-c/json-c/releases/</link> からダウンロードできます。"
 "デフォルトでは有効になっていますが、任意です。configure が警告を表示して"
-"ビルドを継続するだけでは済まない場合には、 <varname>--without-json</varname> "
+"ビルドを継続するだけでは済まない場合には、<varname>--without-json</varname> "
 "で無効にします。"
 
 #. Tag: para
@@ -35579,10 +35580,9 @@ msgid ""
 "linkend=\"RT_ST_Rescale\"/> examples"
 msgstr ""
 "単一タイルとしてロードされたカトリーナのラスターを使った例です。<link "
-"xlink:href=\"https://gdal.org/user/drivers/raster/"
-"postgisraster.html\">https://gdal.org/user/drivers/raster/"
-"postgisraster.html</link>に説明があります。また、<xref "
-"linkend=\"RT_ST_Rescale\"/>の例で準備を行っています"
+"xlink:href=\"https://gdal.org/drivers/raster/postgisraster.html\">https://"
+"gdal.org/drivers/raster/postgisraster.html</link>に説明があります。また"
+"、<xref linkend=\"RT_ST_Rescale\"/>の例で準備を行っています"
 
 #. Tag: para
 #, no-c-format
@@ -45664,8 +45664,8 @@ msgid ""
 "selectivity estimation (Maksim Korotkov)"
 msgstr ""
 "<link xlink:href=\"https://github.com/postgis/postgis/pull/1175\">GH-1175</"
-"link>, 空間インデックスの選択性見積もりでノードタグを読む前に被演算子が無い場"
-"合の防護を追加 (Maksim Korotkov さん)"
+"link>, 空間インデックスの選択性見積もりでノードタグを読む前に被演算子の有無を"
+"確認するよう変更 (Maksim Korotkov さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45740,8 +45740,8 @@ msgid ""
 msgstr ""
 "<link xlink:href=\"https://github.com/postgis/postgis/pull/888\">GH-888</"
 "link>, [sfcgal] SFCGAL &lt; 2.2 での CG_Visibility で空入力があった場合の処理"
-"で TOAST から戻したオブジェクトのうち無効になったものにアクセスしないように変"
-"更 (Darafei Praliaskouski さん)"
+"で TOAST から戻したオブジェクトが無効になった後にアクセスしないように変更 "
+"(Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -45796,8 +45796,8 @@ msgid ""
 "Praliaskouski)"
 msgstr ""
 "<link xlink:href=\"https://github.com/postgis/postgis/pull/890\">GH-890</"
-"link>, GIDX の BRIN での要約情報の統合において次元が異なる場合には行わないよ"
-"う変更 (Darafei Praliaskouski さん)"
+"link>, GIDX の BRIN での要約情報の統合において座標次元が異なる場合には行わな"
+"いよう変更 (Darafei Praliaskouski さん)"
 
 #. Tag: para
 #, no-c-format
@@ -48606,7 +48606,7 @@ msgid ""
 "based one does not."
 msgstr ""
 "ビュー内で型修飾子による定義がされている geom カラムは正しく登録され、制約に"
-"よる定義カラムは正しくは登録されていません。"
+"よる定義がされているカラムは正しい登録になっていません。"
 
 #. Tag: para
 #, no-c-format
