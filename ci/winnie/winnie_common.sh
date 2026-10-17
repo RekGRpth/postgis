@@ -9,7 +9,8 @@ export PROJECTS=/projects
 # Don't convert paths
 # See https://trac.osgeo.org/postgis/ticket/5436#comment:5
 export MSYS2_ARG_CONV_EXCL=/config/tags
-export XML_CATALOG_FILES="/projects/docbook/docbook-5.0.1/catalog.xml"
+export XML_CATALOG_FILES="/projects/dockbook/docbook-xsl/catalog.xml"
+export XLSBASE="/projects/dockbook/docbook-xsl"
 
 if  [[ "${OVERRIDE}" == '' ]] ; then
 	export GEOS_VER=3.15.0
@@ -57,6 +58,10 @@ if  [[ "${LZ4_VER}" == '' ]] ; then
 fi;
 
 echo "LZ4_VER ${LZ4_VER}"
+
+if  [[ "${WITH_VISUAL_EXAMPLES}" == '' ]] ; then
+  export WITH_VISUAL_EXAMPLES=0
+fi;
 
 if  [[ "${REGRESS_WITHOUT_TOPOLOGY}" == '' ]] ; then
   export REGRESS_WITHOUT_TOPOLOGY=0
