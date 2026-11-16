@@ -9,7 +9,7 @@
  * Copyright (C) 2009-2011 Pierre Racine <pierre.racine@sbf.ulaval.ca>
  * Copyright (C) 2009-2011 Mateusz Loskot <mateusz@loskot.net>
  * Copyright (C) 2008-2009 Sandro Santilli <strk@kbt.io>
- * Copyright (C) 2025 Darafei Praliaskouski <me@komzpa.net>
+ * Copyright (C) 2025-2026 Darafei Praliaskouski <me@komzpa.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -180,8 +180,9 @@ rt_band_get_summary_stats(
 	RASTER_DEBUGF(3, "hasnodata = %d", hasnodata);
 	RASTER_DEBUGF(3, "exclude_nodata_value = %d", exclude_nodata_value);
 
-	/* entire band is nodata */
-	if (rt_band_get_isnodata_flag(band) != FALSE) {
+	/* Included NODATA pixels need normal sampling and coverage moments. */
+	if (exclude_nodata_value && rt_band_get_isnodata_flag(band) != FALSE)
+	{
 		stats = (rt_bandstats) rtalloc(sizeof(struct rt_bandstats_t));
 		if (NULL == stats) {
 			rterror("rt_band_get_summary_stats: Could not allocate memory for stats");
@@ -192,22 +193,13 @@ rt_band_get_summary_stats(
 		stats->sorted = 0;
 		stats->values = NULL;
 
-		if (exclude_nodata_value) {
-			rtwarn("All pixels of band have the NODATA value");
+		rtwarn("All pixels of band have the NODATA value");
 
-			stats->count = 0;
-			stats->min = stats->max = 0;
-			stats->sum = 0;
-			stats->mean = 0;
-			stats->stddev = -1;
-		}
-		else {
-			stats->count = band->width * band->height;
-			stats->min = stats->max = nodata;
-			stats->sum = stats->count * nodata;
-			stats->mean = nodata;
-			stats->stddev = 0;
-		}
+		stats->count = 0;
+		stats->min = stats->max = 0;
+		stats->sum = 0;
+		stats->mean = 0;
+		stats->stddev = -1;
 
 		return stats;
 	}

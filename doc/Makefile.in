@@ -43,6 +43,7 @@ htmldir = @htmldir@
 POSTGIS_MAJOR_VERSION=@POSTGIS_MAJOR_VERSION@
 POSTGIS_MINOR_VERSION=@POSTGIS_MINOR_VERSION@
 POSTGIS_MICRO_VERSION=@POSTGIS_MICRO_VERSION@
+POSTGIS_SFCGAL_VERSION=@POSTGIS_SFCGAL_VERSION@
 
 DOCSUFFIX=-en
 
@@ -98,6 +99,9 @@ XSLTPROC_PATH_OPT= \
 XSLTPROC_CUSTOM_VARS = \
 	--stringparam postgis_version $(POSTGIS_MAJOR_VERSION).$(POSTGIS_MINOR_VERSION) \
 	--stringparam postgis_language $(patsubst -%,%,$(DOCSUFFIX))/
+
+XSLTPROC_COMMENT_VARS = \
+	--stringparam postgis_sfcgal_version $(POSTGIS_SFCGAL_VERSION)
 
 XSLTPROC_COMMONOPTS= \
 	$(XSLTPROC_PATH_OPT) \
@@ -438,7 +442,7 @@ $(TAG_GENERATED_SOURCES): xsl/node_by_xpath.xsl xsl-config.xml | Makefile
 endif
 
 $(GENERATED_COMMENT_FILES): %.sql: xsl/%.sql.xsl postgis-out.xml xsl/common_utils.xsl xsl/common_comments.xsl
-	$(XSLTPROC) --novalid $(XSLTPROCFLAGS) $(XSLTPROC_PATH_OPT) -o $@ $< postgis-out.xml
+	$(XSLTPROC) --novalid $(XSLTPROCFLAGS) $(XSLTPROC_PATH_OPT) $(XSLTPROC_COMMENT_VARS) -o $@ $< postgis-out.xml
 
 $(GENERATED_CHEATSHEET_FILES): $(html_builddir)/%$(DOCSUFFIX).html: xsl/%.html.xsl postgis-out.xml xsl/common_cheatsheet.xsl xsl/common_utils.xsl
 	$(XSLTPROC) --novalid $(XSLTPROCFLAGS) $(XSLTPROC_PATH_OPT) $(XSLTPROC_CUSTOM_VARS) -o $@ $< postgis-out.xml
@@ -778,8 +782,13 @@ else
 garden: postgis_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql raster_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql sfcgal_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql topology_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql
 endif
 
+RASTER_GARDEN_OUTDBFILE=/tmp/postgis_raster_garden_outdb_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.tif
+
 %_gardentest_${POSTGIS_MAJOR_VERSION}${POSTGIS_MINOR_VERSION}.sql: xsl/%_gardentest.sql.xsl postgis-out.xml
-	$(XSLTPROC) -o $@ $(XSLTPROC_PATH_OPT) $^
+	$(INSTALL_DATA) "$(abs_top_srcdir)/raster/test/regress/loader/SourceOverview.tif" "$(RASTER_GARDEN_OUTDBFILE)"
+	$(XSLTPROC) -o $@ $(XSLTPROC_PATH_OPT) \
+		--stringparam raster_garden_outdbfile "$(RASTER_GARDEN_OUTDBFILE)" \
+		$^
 
 exampletest-report: postgis-out.xml $(abs_top_srcdir)/utils/docs/postgis_exampletest.py $(abs_top_srcdir)/utils/docs/xml_tree.py ## Report manual examples selected, parseable, or skipped for known reasons
 ifeq ($(PYTHON3),)
