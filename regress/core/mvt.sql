@@ -584,6 +584,18 @@ SELECT 'TA15', encode(ST_AsMVT(q, 'test', 4096, 'geom'), 'base64') FROM
 			ST_MakeBox2D(ST_Point(0, 0), ST_Point(4096, 4096)), 4096, 0, false) AS geom
 ) AS q;
 
+-- Real, boolean and signed values
+SELECT 'TA16', encode(ST_AsMVT(q, 'test', 4096, 'geom'), 'base64') FROM
+(
+	SELECT 1.5::real AS f, true AS b, -3::bigint AS i, 2.25::double precision AS d,
+	       ST_AsMVTGeom(ST_GeomFromText('POINT(25 17)'),
+			ST_MakeBox2D(ST_Point(0, 0), ST_Point(4096, 4096)), 4096, 0, false) AS geom
+	UNION ALL
+	SELECT -0.5::real, false, 5::bigint, -2.25::double precision,
+	       ST_AsMVTGeom(ST_GeomFromText('POINT(30 20)'),
+			ST_MakeBox2D(ST_Point(0, 0), ST_Point(4096, 4096)), 4096, 0, false)
+) AS q;
+
 -- default values tests
 SELECT 'D1', encode(ST_AsMVT(q, 'test', 4096, 'geom'), 'base64') FROM (SELECT 1 AS c1, 'abcd'::text AS c2,
 	ST_AsMVTGeom(ST_GeomFromText('POINT(25 17)'),
@@ -614,6 +626,10 @@ SELECT 'TU2';
 SELECT encode(ST_AsMVT(1, 'test', 4096, 'geom'), 'base64');
 SELECT 'TU3', encode(ST_AsMVT(q, 'test', 4096, 'geom'), 'base64')
 	FROM (SELECT NULL::integer AS c1, NULL AS geom) AS q;
+SELECT 'TU4', encode(ST_AsMVT(q, 'test', 4096, 'geom'), 'base64')
+	FROM (SELECT 1 AS c1, 1::bigint AS geom) AS q;
+SELECT 'TU5', encode(ST_AsMVT(q, 'test', 4096, 'geom'), 'base64')
+	FROM (SELECT 1 AS c1, 'POINT(1 1)'::text AS geom) AS q;
 
 -- Ticket #3922 (Check for crash)
 SELECT '#3922', St_GeometryType(ST_AsMVTGeom(
@@ -772,3 +788,19 @@ WITH geom AS (
 	SELECT 3 as id, 'TRIANGLE EMPTY'::geometry geom
 )
 select '#4399', id, 'ST_AsMVTGeom', ST_AsText(ST_AsMVTGeom(geom, ST_MakeBox2D(ST_Point(0, 0), ST_Point(32, 32))))::text from geom order by id asc;
+
+-- https://trac.osgeo.org/postgis/ticket/6148
+-- NULL rows are skipped by ST_AsMVT
+CREATE TEMP TABLE mvt_null_row (id int, geom geometry);
+INSERT INTO mvt_null_row VALUES (1, 'POINT(1 1)'), (2, 'POINT(2 2)'), (3, 'POINT(3 3)');
+SELECT '#6148.a', ST_AsMVT(NULL::mvt_null_row) = (SELECT ST_AsMVT(t) FROM mvt_null_row t WHERE false);
+SELECT '#6148.b', ST_AsMVT(CASE WHEN id = 2 THEN NULL::mvt_null_row ELSE t END) =
+	(SELECT ST_AsMVT(t) FROM mvt_null_row t WHERE id <> 2)
+FROM mvt_null_row t;
+SELECT '#6148.c', ST_AsMVT(CASE WHEN id = 1 THEN NULL::mvt_null_row ELSE t END) =
+	(SELECT ST_AsMVT(t) FROM mvt_null_row t WHERE id <> 1)
+FROM mvt_null_row t;
+DROP TABLE mvt_null_row;
+
+-- NULL values of a non-row type are still rejected
+SELECT '#6148.d', ST_AsMVT(NULL::int);

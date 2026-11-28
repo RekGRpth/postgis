@@ -21,8 +21,18 @@ PostGIS 3.8.0dev
           (Andrew Kroh)
  - #1558, GT-419, Document RETURNS TABLE signatures with returned columns
           (Darafei Praliaskouski)
+ - #6156, GH-1192, Faster ST_AsMVT tile packing without protobuf-c's generic
+          packer (John Carmack)
 
 * Bug Fixes *
+
+ - GT-837, Keep ND traversal boxes safe across dimensions
+   (reported by Sven Klemm, Aleksander Alekseev, Tiger Data; fixed by Aleksander Alekseev, Darafei Praliaskouski)
+ - GT-837, GH-1195, GH-1197, GH-1198, Fix SP-GiST index correctness
+   (Bilal Kahraman, Darafei Praliaskouski)
+ - GT-812, Check named geometry column types in row encoders (Andrew Kroh)
+ - GT-814, [raster] Respect the enabled GDAL drivers setting (Andrew Kroh)
+ - GH-1183, Handle allocation failures during shape creation (Maksim Korotkov)
 
  - GH-1178, Harden loader column-map allocation checks and partial cleanup
           (Maksim Korotkov)
@@ -33,6 +43,20 @@ PostGIS 3.8.0dev
           (John Carmack)
  - GH-1191, [topology] Return SQL NULL for a NULL topology name in
           _RegisterMissingFaces (Bilal Kahraman)
+ - #6146, GT-807, Fix crash in ST_CombineBBox(box3d, geometry) with a NULL box
+          (Alexander Lakhin)
+ - #6147, GT-808, Fix crash in ST_AsFlatGeobuf() with a NULL row
+          (Alexander Lakhin)
+ - #6148, GT-809, Fix crash in ST_AsMVT() with a NULL row (Alexander Lakhin)
+ - GT-813, Fix ST_LocateBetween error on an empty multilinestring with equal
+          measures; ST_LocateAlong now returns an empty multipoint for it
+          (Andrew Kroh)
+ - Keep accumulated rows when ST_AsGeobuf() meets a NULL row
+          (Darafei Praliaskouski)
+ - #6158, GH-1194, [raster] Accept ST_Reskew geotransforms with small nonzero
+          determinants (Waniya Badar)
+ - GH-1194, [raster] Stop rejecting or silently zeroing small non-zero scales
+          and skews in ST_Reskew and raster warping (Darafei Praliaskouski)
 
 
 PostGIS 3.7.0rc3
